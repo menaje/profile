@@ -14,6 +14,13 @@ Boundary rules:
 - Write generated PDFs to the workspace-root `output/` directory.
 - Import shared settings from `../shared/theme.typ`.
 
+Shared import example:
+
+```typst
+#import "../shared/theme.typ": shared-doc
+#show: shared-doc
+```
+
 Smoke check:
 
 ```bash

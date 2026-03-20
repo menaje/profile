@@ -25,16 +25,16 @@
   right: 18mm,
 )
 
-#let shared-doc(doc) = {
+#let shared-doc(doc, margin: page-margin, body-size: 10.5pt) = {
   set page(
     paper: "a4",
-    margin: page-margin,
+    margin: margin,
   )
   set text(
     lang: "ko",
     font: base-fonts,
     fallback: true,
-    size: 10.5pt,
+    size: body-size,
     fill: palette.ink,
     cjk-latin-spacing: auto,
     hyphenate: auto,
