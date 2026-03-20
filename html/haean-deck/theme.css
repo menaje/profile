@@ -163,6 +163,33 @@ body {
   font-size: 0.82rem;
 }
 
+.card-copy {
+  margin-top: 0.9rem;
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+.card-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+  padding-left: 1.1rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+
+.card-list li::marker {
+  color: var(--color-accent);
+}
+
+.emphasis-copy {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
 .chip-row,
 .slot-row {
   display: flex;
@@ -197,6 +224,10 @@ body {
 .support-note,
 .closing-line {
   margin: 0;
+}
+
+.compact-grid .message-card {
+  min-height: 8.6rem;
 }
 
 .scene-quote {
