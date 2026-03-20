@@ -513,6 +513,7 @@
 .technical-timeline-list li {
   display: grid;
   gap: var(--space-xs);
+  break-inside: avoid;
 }
 
 .technical-timeline-period {
