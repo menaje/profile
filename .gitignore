@@ -1,3 +1,4 @@
 .DS_Store
 output/*.pdf
 typst/**/*.pdf
+node_modules/
