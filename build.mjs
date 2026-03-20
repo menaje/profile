@@ -17,12 +17,6 @@ const browserExecutable = findBrowserExecutable();
 
 const documentPdfOptions = {
   format: 'A4',
-  margin: {
-    top: '18mm',
-    bottom: '18mm',
-    left: '18mm',
-    right: '18mm',
-  },
   preferCSSPageSize: true,
   printBackground: true,
 };
