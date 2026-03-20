@@ -21,4 +21,10 @@ python3 -m http.server -d project/html 8080
 
 Open `http://127.0.0.1:8080/shared/smoke.html`.
 
-One-off PDF smoke export can be done with Puppeteer against the same URL. Full build automation is intentionally deferred beyond WP-16.
+Batch PDF builds now live in WP-19:
+
+```bash
+cd project && npm run build:all
+```
+
+Target-specific commands are `npm run build:resume`, `npm run build:technical`, `npm run build:statement`, and `npm run build:slides`. If an upstream HTML entrypoint is still missing, the build script exits with a clear preflight error instead of silently skipping it.

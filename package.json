@@ -1,0 +1,37 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:resume": "node build.mjs resume",
+    "build:technical": "node build.mjs technical",
+    "build:statement": "node build.mjs statement",
+    "build:slides": "node build.mjs slides",
+    "build:all": "node build.mjs all",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/menaje/coni-example.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/menaje/coni-example/issues"
+  },
+  "homepage": "https://github.com/menaje/coni-example#readme",
+  "dependencies": {
+    "reveal.js": "^6.0.0"
+  },
+  "devDependencies": {
+    "decktape": "^3.15.0",
+    "live-server": "^1.2.2",
+    "puppeteer-core": "^24.40.0"
+  }
+}
