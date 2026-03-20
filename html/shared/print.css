@@ -16,6 +16,8 @@
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    animation: none !important;
+    transition: none !important;
   }
 
   a {
@@ -51,13 +53,25 @@
     page-break-after: auto;
   }
 
-  .page-shell::before {
-    display: none;
-  }
-
   .surface-card,
   .metric-card,
-  .keep-together {
+  .keep-together,
+  .panel-plain,
+  .panel_plain,
+  .panel-tint,
+  .panel_tint,
+  .rail-panel,
+  .rail_panel,
+  .opener-band,
+  .opener_band,
+  .evidence-strip,
+  .evidence_strip,
+  .chapter-header,
+  .chapter_header,
+  .editorial-break,
+  .editorial_break,
+  .timeline-rail,
+  .timeline_rail {
     break-inside: avoid;
     page-break-inside: avoid;
   }
