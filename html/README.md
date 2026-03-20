@@ -10,7 +10,8 @@ Boundary rules:
 
 - Keep source content in `project/output/*.md` and `project/docs/**`.
 - Keep final PDFs in the workspace-root `output/`.
-- Import shared styles in the order `tokens.css`, `base.css`, `print.css`.
+- Print documents import shared styles in the order `tokens-base.css`, `tokens-print.css`, `base.css`, `print.css`.
+- The slide deck imports `tokens-base.css`, `tokens-slide.css`, `base.css`, and then `theme.css`.
 - Use `shared/smoke.html` only for structure, font, and print verification.
 
 Quick preview:

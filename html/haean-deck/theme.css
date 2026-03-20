@@ -1,21 +1,6 @@
-@import url("../shared/tokens.css");
-@import url("../shared/base.css");
-@import url("../shared/print.css");
-
 @page {
   size: 297mm 167mm;
   margin: 0;
-}
-
-:root {
-  --r-background-color: #f7f2e8;
-  --r-main-font: var(--font-family-sans);
-  --r-heading-font: var(--font-family-sans);
-  --r-main-color: var(--color-ink);
-  --r-heading-color: var(--color-ink);
-  --r-link-color: var(--color-primary);
-  --r-link-color-hover: var(--color-secondary);
-  --r-selection-background-color: rgba(15, 76, 129, 0.2);
 }
 
 html,
@@ -24,14 +9,12 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(198, 107, 61, 0.18), transparent 28rem),
-    linear-gradient(180deg, #ede4d5 0%, #f9f5ee 100%);
+  background: var(--stage-background);
 }
 
 .reveal {
   font-family: var(--font-family-sans);
-  color: var(--color-ink);
+  color: var(--color-text, var(--color-ink));
 }
 
 .reveal .slides {
@@ -49,13 +32,11 @@ body {
   gap: 1.6rem;
   width: 100%;
   height: 100%;
-  padding: 3rem;
-  border: 1px solid rgba(31, 41, 51, 0.08);
-  border-radius: 1.8rem;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(248, 243, 235, 0.98)),
-    linear-gradient(180deg, rgba(15, 76, 129, 0.02), rgba(29, 120, 116, 0.04));
-  box-shadow: 0 24px 60px rgba(31, 41, 51, 0.14);
+  padding: var(--slide-shell-padding);
+  border: 1px solid var(--slide-shell-border-color);
+  border-radius: var(--slide-shell-radius);
+  background: var(--slide-shell-background);
+  box-shadow: var(--slide-shell-shadow);
   overflow: hidden;
 }
 
@@ -64,7 +45,11 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top right, rgba(15, 76, 129, 0.08), transparent 32rem),
+    radial-gradient(
+      circle at top right,
+      rgba(15, 76, 129, 0.08),
+      transparent 32rem
+    ),
     linear-gradient(120deg, transparent 0%, rgba(29, 120, 116, 0.05) 100%);
   pointer-events: none;
 }
@@ -92,12 +77,12 @@ body {
 }
 
 .slide-kicker {
-  color: var(--color-secondary);
+  color: var(--slide-kicker-color);
   font-size: 0.9rem;
 }
 
 .slide-counter {
-  color: rgba(15, 76, 129, 0.28);
+  color: var(--slide-counter-color);
   font-size: 1rem;
 }
 
@@ -119,14 +104,14 @@ body {
   max-width: 34ch;
   font-size: 1.28rem;
   line-height: 1.55;
-  color: var(--color-muted);
+  color: var(--slide-lead-color);
 }
 
 .slide-footer {
   min-height: 2.4rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(31, 41, 51, 0.08);
-  color: var(--color-muted);
+  color: var(--slide-footer-color);
   font-size: 0.82rem;
 }
 
@@ -151,11 +136,10 @@ body {
 .message-card {
   min-height: 10.2rem;
   padding: 1.2rem 1.3rem;
-  border: 1px solid rgba(15, 76, 129, 0.12);
+  border: 1px solid var(--slide-card-border-color);
   border-radius: 1.25rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(244, 241, 234, 0.92));
-  box-shadow: 0 10px 24px rgba(31, 41, 51, 0.07);
+  background: var(--slide-card-background);
+  box-shadow: var(--slide-card-shadow);
 }
 
 .card-label {
@@ -215,9 +199,9 @@ body {
 }
 
 .slot-chip {
-  border: 1px dashed rgba(198, 107, 61, 0.42);
-  background: rgba(198, 107, 61, 0.08);
-  color: var(--color-accent);
+  border: 1px dashed var(--slot-chip-border-color);
+  background: var(--slot-chip-background);
+  color: var(--slot-chip-color);
 }
 
 .scene-quote,
@@ -233,9 +217,9 @@ body {
 .scene-quote {
   max-width: 28ch;
   padding: 1.6rem 1.8rem;
-  border-left: 0.45rem solid var(--color-accent);
+  border-left: 0.45rem solid var(--scene-quote-border);
   border-radius: 0 1.25rem 1.25rem 0;
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--scene-quote-background);
   font-size: 1.65rem;
   line-height: 1.4;
   color: var(--color-ink);
@@ -263,7 +247,11 @@ body {
 
 .spotlight-slide {
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(244, 241, 234, 0.98)),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.96),
+      rgba(244, 241, 234, 0.98)
+    ),
     linear-gradient(160deg, rgba(15, 76, 129, 0.04), rgba(198, 107, 61, 0.06));
 }
 
