@@ -1,20 +1,21 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
+  const posts = await getCollection("blog", (entry: CollectionEntry<"blog">) => {
+    return import.meta.env.PROD ? entry.data.draft !== true : true;
   });
 
-  return posts.map((post) => ({
+  return posts.map((post: CollectionEntry<"blog">) => ({
     params: { slug: post.id },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
-const { Content, headings } = await render(post);
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+const { Content } = await render(post);
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("ko-KR", {

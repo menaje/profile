@@ -1,13 +1,14 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const allPosts = await getCollection("blog", ({ data }) => {
-  return import.meta.env.PROD ? data.draft !== true : true;
+const allPosts = await getCollection("blog", (entry: CollectionEntry<"blog">) => {
+  return import.meta.env.PROD ? entry.data.draft !== true : true;
 });
 
 const posts = allPosts.sort(
-  (a, b) =>
+  (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
     b.data.publishedDate.getTime() - a.data.publishedDate.getTime(),
 );
 
@@ -35,7 +36,7 @@ function formatDate(date: Date): string {
     {
       posts.length > 0 ? (
         <ul class="site-blog__list">
-          {posts.map((post) => (
+          {posts.map((post: CollectionEntry<"blog">) => (
             <li class="site-blog-card">
               <a href={`/blog/${post.id}/`} class="site-blog-card__link">
                 <article>
