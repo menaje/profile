@@ -1,0 +1,107 @@
+:root {
+  color-scheme: light;
+
+  --font-family-sans:
+    "Pretendard", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic",
+    "Segoe UI", sans-serif;
+  --font-family-mono:
+    "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
+
+  --color-ink: #0f172a;
+  --color-text: var(--color-ink);
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-muted: var(--color-text-muted);
+  --color-primary: #1e3a8a;
+  --color-secondary: #166534;
+  --color-accent: #c2410c;
+  --color-paper: #ffffff;
+  --color-bg-page: #ffffff;
+  --color-bg-surface: #f1f5f9;
+  --color-bg-subtle: #f8fafc;
+  --color-surface: var(--color-bg-surface);
+  --color-subtle: var(--color-bg-subtle);
+  --color-line: #cbd5e1;
+  --color-line-strong: #94a3b8;
+
+  --line-height-tight: 1.15;
+  --line-height-body: 1.6;
+  --line-height-relaxed: 1.72;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-pill: 999px;
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.25rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 2.5rem;
+  --space-4xl: 3.75rem;
+  --space-5xl: 5rem;
+
+  --section-gap: var(--space-2xl);
+  --stack-gap: var(--space-xl);
+  --cluster-gap: var(--space-sm);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-5xl: 3.75rem;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.1);
+  --shadow-page: var(--shadow-lg);
+  --page-rule: 1px solid rgba(15, 23, 42, 0.08);
+
+  --shell-screen-margin: var(--space-md);
+  --shell-screen-gutter: 2rem;
+  --page-shell-background: var(--color-bg-page);
+  --page-shell-border-color: rgba(15, 23, 42, 0.08);
+  --page-shell-shadow: var(--shadow-lg);
+  --page-shell-radius: var(--radius-xl);
+  --page-shell-margin: var(--space-4xl);
+
+  --panel-padding: var(--space-lg);
+  --panel-radius: var(--radius-lg);
+  --panel-border-color: var(--color-line);
+  --panel-background: var(--color-bg-page);
+  --panel-tint-background: var(--color-bg-surface);
+  --panel-shadow: none;
+  --rail-panel-accent: var(--color-primary);
+  --rail-panel-background: transparent;
+
+  --chip-gap: var(--space-2xs);
+  --chip-padding-block: 0.4rem;
+  --chip-padding-inline: 0.75rem;
+  --chip-border-color: rgba(30, 58, 138, 0.14);
+  --chip-background: rgba(30, 58, 138, 0.06);
+  --chip-color: var(--color-primary);
+  --status-chip-border-color: rgba(194, 65, 12, 0.24);
+  --status-chip-background: rgba(194, 65, 12, 0.12);
+  --status-chip-color: #9a3412;
+
+  --eyebrow-color: var(--color-text-muted);
+  --section-title-color: var(--color-text);
+  --section-lead-color: var(--color-text-secondary);
+  --accent-rule-width: 3rem;
+  --accent-rule-height: 0.24rem;
+  --accent-rule-background: var(--color-primary);
+
+  --opener-band-background: var(--color-bg-subtle);
+  --chapter-divider-color: rgba(15, 23, 42, 0.12);
+  --editorial-break-background: rgba(241, 245, 249, 0.72);
+  --timeline-rail-line: var(--color-line);
+  --timeline-rail-marker: var(--color-primary);
+}

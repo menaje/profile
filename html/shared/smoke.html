@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WP-16 Shared CSS Smoke Test</title>
-    <link rel="stylesheet" href="./tokens.css" />
+    <title>WP-33 Shared CSS Smoke Test</title>
+    <link rel="stylesheet" href="./tokens-base.css" />
+    <link rel="stylesheet" href="./tokens-print.css" />
     <link rel="stylesheet" href="./base.css" />
     <link rel="stylesheet" href="./print.css" />
     <link rel="stylesheet" href="./smoke.css" />
@@ -13,120 +14,145 @@
     <main>
       <article class="page-shell smoke-page">
         <header class="smoke-hero stack">
-          <p class="eyebrow">WP-16 Shared CSS Smoke</p>
+          <p class="eyebrow">WP-33 Shared CSS Smoke</p>
           <div class="accent-rule" aria-hidden="true"></div>
-          <h1 class="smoke-title">한국어와 English가 함께 있는 A4 인쇄 smoke test</h1>
+          <h1 class="smoke-title">
+            한국어와 English가 함께 있는 A4 인쇄 smoke test
+          </h1>
           <p class="section-lead">
-            이 문서는 shared token, base, print CSS만으로 Pretendard와 Noto Sans
-            CJK KR fallback, 18mm A4 여백, 배경 인쇄, keep-all 동작을 점검하기 위한
-            최소 검증 페이지입니다.
+            이 문서는 cool-neutral 팔레트, 확대된 타이포 스케일, sharp 보더
+            반경, 차별화된 패널 프리미티브가 공통 CSS 위에서 안정적으로
+            동작하는지 점검하기 위한 최소 검증 페이지입니다.
           </p>
           <div class="cluster">
-            <span class="pill">Pretendard 400/600/700</span>
-            <span class="pill">Noto Sans CJK KR fallback</span>
-            <span class="pill">A4 18mm</span>
-            <span class="pill">@media print</span>
+            <span class="meta-chip">Pretendard 400/600/700</span>
+            <span class="meta-chip">Noto Sans CJK KR fallback</span>
+            <span class="meta-chip">A4 18mm</span>
+            <span class="status-chip">compatibility layer enabled</span>
           </div>
         </header>
 
         <section class="smoke-grid">
           <div class="smoke-column">
-            <section class="surface-card smoke-copy">
+            <section class="panel-plain smoke-copy">
               <p>
-                기준일은 <strong>2026-03-20</strong>이며, 이 smoke page는 실제
-                이력서 콘텐츠를 포함하지 않습니다. 대신 한국어 문장, Latin token,
-                number, punctuation, 그리고 카드형 블록이 공통 CSS 위에서 안정적으로
-                보이는지만 확인합니다.
+                기준일은 <strong>2026-03-21</strong>이며, 이 smoke page는 실제
+                이력서 콘텐츠를 포함하지 않습니다. 대신 한국어 문장, Latin
+                token, number, punctuation, 그리고 새 shared component들이 공통
+                CSS 위에서 안정적으로 보이는지만 확인합니다.
               </p>
               <p>
-                예시 문장: CONI shared layer keeps Korean copy readable while
-                preserving color contrast, print background, and predictable page
-                breaks for PDF export.
+                예시 문장: the shared layer now separates base, print, and slide
+                semantics so later document workplans can differentiate layout
+                and accent without fighting a beige global skin.
               </p>
             </section>
 
-            <section class="surface-card stack keep-together">
+            <section class="panel-tint stack keep-together">
               <p class="eyebrow">Verification Focus</p>
               <ul class="smoke-checklist">
                 <li>한글 glyph가 네모 tofu 없이 렌더링되는지</li>
-                <li>한국어와 영문이 섞여도 줄바꿈이 과하게 깨지지 않는지</li>
-                <li>카드 배경색과 gradient가 인쇄 미리보기에서 유지되는지</li>
+                <li>
+                  tokens-base / tokens-print 분리가 print 문서에서 유지되는지
+                </li>
+                <li>neutral panel primitives가 shared 기본값으로 동작하는지</li>
                 <li>두 번째 페이지로 넘어갈 때 page break가 안정적인지</li>
               </ul>
             </section>
 
-            <aside class="note-panel keep-together">
+            <aside class="rail-panel keep-together">
               <p class="eyebrow">Scope Boundary</p>
               <p>
-                WP-16은 구조와 shared layer만 다룹니다. resume, technical-career,
-                personal-statement, haean-deck의 문서별 HTML 조판은 후속 WP에서
-                구현합니다.
+                WP-33은 shared layer의 실제 색상값·타이포·반경·프리미티브를 전면
+                교체합니다. 문서별 레이아웃 적용은 후속 WP에서 구현합니다.
               </p>
             </aside>
           </div>
 
           <div class="smoke-column">
-            <section class="surface-card stack">
+            <section class="chapter-header">
+              <p class="eyebrow">Core Tokens</p>
+              <h2 class="section-title">Base / Print split</h2>
+              <p class="section-lead">
+                매체 분리를 위한 foundation token과 print token의 책임을 빠르게
+                확인하기 위한 요약입니다.
+              </p>
+            </section>
+
+            <section class="panel-plain stack">
               <p class="eyebrow">Core Tokens</p>
               <dl class="meta-list">
                 <div>
                   <dt>Ink</dt>
-                  <dd>#1f2933</dd>
+                  <dd>#0F172A</dd>
                 </div>
                 <div>
                   <dt>Primary</dt>
-                  <dd>#0f4c81</dd>
+                  <dd>#1E3A8A</dd>
                 </div>
                 <div>
                   <dt>Secondary</dt>
-                  <dd>#1d7874</dd>
+                  <dd>#166534</dd>
                 </div>
                 <div>
                   <dt>Accent</dt>
-                  <dd>#c66b3d</dd>
+                  <dd>#C2410C</dd>
                 </div>
                 <div>
                   <dt>Margin</dt>
                   <dd>18mm</dd>
                 </div>
                 <div>
-                  <dt>Paper</dt>
-                  <dd>A4</dd>
+                  <dt>Media</dt>
+                  <dd>print split active</dd>
                 </div>
               </dl>
             </section>
 
-            <section class="surface-card stack keep-together">
+            <section class="panel-tint stack keep-together">
               <p class="eyebrow">Palette</p>
               <div class="color-swatch-grid">
                 <div class="color-swatch swatch-ink">
                   <strong>Ink</strong>
-                  <span>#1f2933</span>
+                  <span>#0F172A</span>
                 </div>
                 <div class="color-swatch swatch-primary">
                   <strong>Primary</strong>
-                  <span>#0f4c81</span>
+                  <span>#1E3A8A</span>
                 </div>
                 <div class="color-swatch swatch-secondary">
                   <strong>Secondary</strong>
-                  <span>#1d7874</span>
+                  <span>#166534</span>
                 </div>
                 <div class="color-swatch swatch-accent">
                   <strong>Accent</strong>
-                  <span>#c66b3d</span>
+                  <span>#C2410C</span>
                 </div>
                 <div class="color-swatch swatch-muted">
                   <strong>Muted</strong>
-                  <span>#667085</span>
+                  <span>#64748B</span>
                 </div>
                 <div class="color-swatch swatch-surface">
                   <strong>Surface</strong>
-                  <span>#f4f1ea</span>
+                  <span>#F1F5F9</span>
                 </div>
                 <div class="color-swatch swatch-line">
                   <strong>Line</strong>
-                  <span>#d6d0c4</span>
+                  <span>#CBD5E1</span>
                 </div>
+              </div>
+            </section>
+
+            <section class="editorial-break keep-together">
+              <p class="eyebrow">Legacy Compatibility</p>
+              <p>
+                기존 문서가 아직 `.surface-card`, `.pill`, `.accent-rule`,
+                `.eyebrow`를 사용하더라도 공통 계층이 즉시 깨지지 않도록 alias를
+                유지합니다.
+              </p>
+              <div class="cluster">
+                <span class="pill">legacy .pill</span>
+                <span class="meta-chip">new .meta-chip</span>
               </div>
             </section>
           </div>
@@ -135,49 +161,80 @@
 
       <article class="page-shell smoke-page">
         <header class="stack">
-          <p class="eyebrow">Break Behavior</p>
+          <p class="eyebrow">Primitive Demo</p>
           <div class="accent-rule" aria-hidden="true"></div>
-          <h2 class="section-title">페이지 흐름과 keep-all 샘플</h2>
+          <h2 class="section-title">페이지 흐름과 새 공통 primitive 샘플</h2>
           <p class="section-lead">
-            아래 블록들은 break-inside: avoid와 인쇄용 배경색 유지 여부를 함께 보기
-            위한 예시입니다.
+            아래 블록들은 `break-inside: avoid`, 새 panel 계열, timeline rail,
+            그리고 legacy class 호환 여부를 함께 보기 위한 예시입니다.
           </p>
         </header>
 
         <section class="spec-grid">
-          <article class="surface-card demo-break">
-            <div class="demo-block">
-              <h3>Paragraph Sample A</h3>
-              <p>
-                복합적인 경력 서사를 다룰 때에도 문단이 중간에서 어색하게 잘리지
-                않고, 숫자 2026-03-20, 영문 약어 AI, PDF, HTML 같은 토큰이 한글과
-                자연스럽게 어울리는지를 확인합니다.
-              </p>
+          <article class="panel-plain demo-break">
+            <div class="demo-block demo-block--plain">
+              <h3>opener-band</h3>
+              <section class="opener-band">
+                <p class="eyebrow">Shared Starter</p>
+                <p>
+                  문서별 accent와 레이아웃은 후속 WP가 책임지되, shared layer는
+                  neutral opener와 spacing contract만 제공합니다.
+                </p>
+              </section>
             </div>
-            <div class="demo-block">
-              <h3>Paragraph Sample B</h3>
-              <p>
-                이 블록은 배경색, 보더, 라운드 값이 print preview에서도 유지되는지
-                확인합니다. 동시에 너무 강한 shared style이 문서 고유의 개성을
-                가로막지 않도록 기본값만 두는 방향을 점검합니다.
-              </p>
+            <div class="demo-block demo-block--plain">
+              <h3>timeline-rail</h3>
+              <div class="timeline-rail">
+                <div>
+                  <strong>tokens-base.css</strong>
+                  <p>foundation token 정의</p>
+                </div>
+                <div>
+                  <strong>tokens-print.css</strong>
+                  <p>print page metric과 surface default 정의</p>
+                </div>
+                <div>
+                  <strong>tokens-slide.css</strong>
+                  <p>slide 전용 semantic token 분리</p>
+                </div>
+              </div>
             </div>
           </article>
 
-          <article class="surface-card demo-break keep-together">
-            <div class="demo-block">
-              <h3>List Sample</h3>
-              <ul>
-                <li>viewport unit 없이도 A4 preview가 안정적으로 보이는지</li>
-                <li>`word-break: keep-all`이 과도한 줄쪼개기를 줄이는지</li>
-                <li>`print-color-adjust: exact`가 카드 톤을 유지하는지</li>
-              </ul>
+          <article class="panel-tint demo-break keep-together">
+            <div class="demo-block demo-block--tint">
+              <h3>Legacy surface-card</h3>
+              <article class="surface-card stack">
+                <p class="eyebrow">Compatibility Card</p>
+                <p>legacy selector도 새 token 체계 위에서 계속 렌더링됩니다.</p>
+              </article>
             </div>
-            <div class="demo-block">
-              <h3>Fallback Sample</h3>
+            <div class="demo-block demo-block--tint">
+              <h3>rail-panel</h3>
+              <aside class="rail-panel">
+                <p>
+                  시각 강조는 rail로 제한하고, shared layer는 과도한 overlay
+                  없이 텍스트와 spacing 위계로만 구조를 드러냅니다.
+                </p>
+              </aside>
+            </div>
+          </article>
+
+          <article class="panel-plain demo-break keep-together">
+            <div class="demo-block demo-block--plain">
+              <h3>Paragraph Sample</h3>
               <p>
-                가나다라마바사 아자차카타파하, ABCDEFG, 1234567890, !?%와 같은 문자가
-                함께 있어도 fallback 전환이 자연스러운지를 본다.
+                복합적인 경력 서사를 다룰 때에도 문단이 중간에서 어색하게 잘리지
+                않고, 숫자 2026-03-21, 영문 약어 AI, PDF, HTML 같은 토큰이
+                한글과 자연스럽게 어울리는지를 확인합니다.
+              </p>
+            </div>
+            <div class="demo-block demo-block--plain">
+              <h3>Spacing Sample</h3>
+              <p>
+                이 블록은 spacing token만으로도 컴포넌트 간격과 여백 리듬이
+                유지되는지 확인합니다. 후속 문서 WP는 이 기반 위에서 accent와
+                layout을 분화합니다.
               </p>
             </div>
           </article>
