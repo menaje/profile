@@ -652,6 +652,14 @@
   display: grid;
   gap: var(--space-xs);
   break-inside: avoid;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--technical-accent) 16%, var(--color-paper));
+}
+
+.technical-timeline-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .technical-timeline-period {
@@ -1077,6 +1085,9 @@
 
   .technical-timeline-list li {
     gap: 0.125rem;
+    padding-bottom: var(--space-2xs);
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--technical-accent) 12%, var(--color-paper));
   }
 
   .technical-timeline-list::before,
