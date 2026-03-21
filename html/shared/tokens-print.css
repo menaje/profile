@@ -4,7 +4,7 @@
   --page-margin: 18mm;
   --page-shell-padding: var(--page-margin);
 
-  --stage-background: #f8fafc;
+  --stage-background: var(--color-bg-surface);
   --body-copy-size: var(--text-sm);
   --body-copy-line-height: 1.65;
 
@@ -18,13 +18,13 @@
   --rail-panel-background: var(--color-bg-subtle);
   --rail-panel-accent: var(--color-primary);
 
-  --chip-background: rgba(30, 58, 138, 0.06);
-  --chip-border-color: rgba(30, 58, 138, 0.14);
+  --chip-background: rgba(15, 76, 129, 0.06);
+  --chip-border-color: rgba(15, 76, 129, 0.14);
   --chip-color: var(--color-primary);
-  --status-chip-border-color: rgba(194, 65, 12, 0.24);
-  --status-chip-background: rgba(194, 65, 12, 0.12);
-  --status-chip-color: #9a3412;
+  --status-chip-border-color: rgba(198, 107, 61, 0.24);
+  --status-chip-background: rgba(198, 107, 61, 0.12);
+  --status-chip-color: #a0563c;
 
   --opener-band-background: var(--color-bg-subtle);
-  --editorial-break-background: rgba(241, 245, 249, 0.72);
+  --editorial-break-background: rgba(244, 241, 234, 0.72);
 }

@@ -171,9 +171,9 @@
                 2025.11 ~ 진행 중 (2026-03-20 기준)
               </p>
               <p>
-                Objective → Workplan → Commit 구조로 AI 협업과 Git 기반 작업
-                추적을 연결하고, 대화 세션이 바뀌어도 작업이 이어지도록 설계한
-                CLI 기반 협업 시스템
+                5단계 파이프라인 자동화, 6가지 비정상 상태 감지, DB 이중화를
+                갖춘 CLI 기반 AI 협업 시스템. tmux 멀티 에이전트
+                오케스트레이션과 7단계 하네스 분석 체계 통합
               </p>
             </article>
 
@@ -184,9 +184,9 @@
               <h3>제안서 에이전트</h3>
               <p class="technical-project-snapshot-meta">2024.05 ~ 2025.11</p>
               <p>
-                20여 종의 보고서와 슬라이드가 한 흐름 안에서 생성되도록 다중
-                에이전트 오케스트레이션과 컨텍스트 전달 체계를 설계한 문서
-                자동화 시스템
+                26개 API, 16개 서비스, 15개 DB 테이블 기반으로 20여 종의
+                보고서·슬라이드를 한 흐름으로 자동 생성하는 다중 에이전트
+                문서 자동화 시스템
               </p>
             </article>
 
@@ -197,8 +197,9 @@
               <h3>CM 업무관리 시스템</h3>
               <p class="technical-project-snapshot-meta">2023.01 ~ 2024.05</p>
               <p>
-                5개 현장의 문서, 계약, 사업비 데이터를 한 흐름으로 연결하고 문서
-                등록·요약·보고를 자동화한 현장형 협업 시스템
+                대전시청 발주 5개 현장의 문서·계약·사업비 데이터를 통합
+                관리하고, OCR/LLM 기반 문서 자동 등록·요약 및 월간보고 자동
+                생성 체계를 구축한 현장형 협업 시스템
               </p>
             </article>
           </aside>
@@ -337,28 +338,57 @@
             <div class="technical-outcome-label">Outcome</div>
             <div class="technical-outcome-body">
               <ul>
-                <li>대화가 끊겨도 작업이 이어지는 협업 구조를 구현했습니다.</li>
                 <li>
-                  여러 AI CLI를 병렬로 운영하는 오케스트레이션 체계를 정리해,
-                  전략/실행/검증 역할을 분리할 수 있게 했습니다.
+                  idle→breakdown→execute→verify→complete 5단계 작업
+                  파이프라인을 구현해 전략 수립부터 검증까지 단계별 자동
+                  전환을 실현했습니다.
                 </li>
                 <li>
-                  Git 커밋 기반 작업 자동 추적과 세션 기반 작업 시간 측정을
-                  구현해 협업 이력의 연속성을 높였습니다.
+                  6가지 비정상 상태 자동 감지와 fail-safe 정책(모든 에러
+                  exit 0)으로 도구 장애가 실무 흐름을 막지 않도록
+                  했습니다.
                 </li>
                 <li>
-                  6가지 비정상 상태 자동 감지와 fail-safe 정책으로 도구 장애가
-                  실무 흐름을 막지 않도록 했습니다.
+                  tmux 기반 멀티 에이전트 오케스트레이션으로 전략/실행/검증
+                  역할을 분리하고, agent-agnostic 설계로 Claude, Gemini,
+                  Codex 등 다양한 AI CLI를 병렬 운영합니다.
                 </li>
                 <li>
-                  프로젝트 메모리 방향성을 명확히 정의해 코드, 문서, 커밋을
-                  연결하는 장기 맥락 관리 기반을 만들었습니다.
+                  DB 이중화(SQLite + Supabase)와 Git 커밋 기반 작업 자동
+                  추적, 세션 기반 작업 시간 측정을 구현해 협업 이력의
+                  연속성을 확보했습니다.
                 </li>
                 <li>
-                  프로젝트 맞춤 하네스 워크플로우를 통해 새 저장소에 들어가도
-                  동일한 협업 프로토콜을 빠르게 적용할 수 있게 했습니다.
+                  7단계 하네스 엔지니어링 분석 프로세스를 설계해 새
+                  저장소에서도 프로젝트 맞춤 협업 프로토콜을 빠르게 적용할
+                  수 있게 했습니다.
+                </li>
+                <li>
+                  임베딩 기반 프로젝트 메모리(시맨틱 검색, 영향 분석, 코드
+                  그래프)를 설계해 코드·문서·커밋을 연결하는 장기 맥락 관리
+                  기반을 만들었습니다.
                 </li>
               </ul>
+              <div class="technical-metric-strip">
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">5단계</span>
+                  <span class="technical-metric-label"
+                    >작업 파이프라인 자동 전환</span
+                  >
+                </div>
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">6가지</span>
+                  <span class="technical-metric-label"
+                    >비정상 상태 자동 감지</span
+                  >
+                </div>
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">7단계</span>
+                  <span class="technical-metric-label"
+                    >하네스 분석 프로세스</span
+                  >
+                </div>
+              </div>
             </div>
           </footer>
         </section>
@@ -483,16 +513,19 @@
             <div class="technical-outcome-body">
               <ul>
                 <li>
-                  한 번의 실행으로 20여 종의 보고서와 슬라이드 자동 생성 체계를
-                  구축했습니다.
+                  26개 API 엔드포인트, 16개 서비스, 15개 DB 테이블로 구성된
+                  운영 체계를 구축하고, 한 번의 실행으로 20여 종의 보고서와
+                  슬라이드를 자동 생성하는 체계를 완성했습니다.
                 </li>
                 <li>
-                  컨텍스트 누적 전달 방식으로 문서 간 용어와 스토리 흐름의
-                  일관성을 높였습니다.
+                  컨텍스트 누적 전달 방식과 3종 자산 타입(companyinfo,
+                  guideline, projectdata) 기반 데이터 모델로 문서 간 용어와
+                  스토리 흐름의 일관성을 확보했습니다.
                 </li>
                 <li>
-                  재시도, RecoveryService, Health Check를 포함한 운영 안정성을
-                  확보했습니다.
+                  재시도(MAX_RETRIES=3), RecoveryService, Health Check를
+                  포함한 운영 안정성 체계와 이벤트 기반+폴링 백업 하이브리드
+                  아키텍처를 구현했습니다.
                 </li>
                 <li>
                   문제 해결 과정에서 정리한 방식이 이후 Context Engineering과
@@ -500,6 +533,22 @@
                   확인했습니다.
                 </li>
               </ul>
+              <div class="technical-metric-strip">
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">26개</span>
+                  <span class="technical-metric-label">API 엔드포인트</span>
+                </div>
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">16개</span>
+                  <span class="technical-metric-label">서비스 모듈</span>
+                </div>
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">20여 종</span>
+                  <span class="technical-metric-label"
+                    >문서 자동 생성</span
+                  >
+                </div>
+              </div>
             </div>
           </footer>
         </section>
@@ -532,8 +581,8 @@
         </header>
 
         <blockquote class="technical-pullquote">
-          5개 현장의 문서, 계약, 사업비 데이터를 한 흐름으로 연결하고 문서
-          등록·요약·보고를 자동화한 현장형 협업 시스템
+          대전시청 발주 5개 현장의 문서·계약·사업비 데이터를 통합 관리하고,
+          OCR/LLM 기반 자동화로 현장 전체의 핵심 협업 시스템을 구축
         </blockquote>
 
         <section class="technical-prso-stack">
@@ -623,19 +672,36 @@
             <div class="technical-outcome-label">Outcome</div>
             <div class="technical-outcome-body">
               <ul>
-                <li>5개 현장 통합 문서 중앙 관리 체계를 구축했습니다.</li>
                 <li>
-                  OCR + LLM 기반 문서 자동 등록 및 요약 흐름을 구현했습니다.
+                  대전시청 발주 5개 현장의 문서·계약·사업비 데이터를 통합
+                  관리하는 중앙 협업 체계를 구축했습니다.
                 </li>
                 <li>
-                  월간보고서 자동 생성 파이프라인을 도입해 반복 업무를
-                  줄였습니다.
+                  OCR(Apple Vision, Gemini 멀티모달) + LLM 기반 문서 자동
+                  등록 및 요약 파이프라인을 구현했습니다.
                 </li>
                 <li>
-                  결과적으로 현장 전체의 핵심 협업 시스템으로 정착시켜, 기술
-                  도입과 현장 안착을 동시에 검증했습니다.
+                  월간보고서 자동 생성 파이프라인을 도입해 현장별 반복
+                  보고 작업을 체계화했습니다.
+                </li>
+                <li>
+                  비IT 사용자 중심의 현장에서 핵심 협업 시스템으로
+                  정착시켜, 기술 도입과 실사용 안착을 동시에
+                  검증했습니다.
                 </li>
               </ul>
+              <div class="technical-metric-strip">
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">5개</span>
+                  <span class="technical-metric-label"
+                    >현장 통합 관리</span
+                  >
+                </div>
+                <div class="technical-metric-card">
+                  <span class="technical-metric-value">대전시청</span>
+                  <span class="technical-metric-label">발주 공공사업</span>
+                </div>
+              </div>
             </div>
           </footer>
         </section>
@@ -684,8 +750,10 @@
                 OpenAI API, Gemini API, 공공데이터 API
               </p>
               <p>
-                <strong>Outcome</strong> 법령·기준 데이터 자동 수집과 의미 기반
-                검색 체계를 구축해 RAG 파이프라인 경험을 쌓았습니다.
+                <strong>Outcome</strong> 4개 서브프로젝트(법령 수집, 기준 벡터
+                검색, LLM 데이터 추출, 자율 지식 생성)를 구축하고, 법제처·
+                국가기술표준 2개 공공 API를 연동한 의미 기반 검색 체계를
+                완성했습니다.
               </p>
             </div>
           </article>
@@ -758,8 +826,9 @@
               </p>
               <p><strong>Stack</strong> Python, MLX, FastAPI, Homebrew 배포</p>
               <p>
-                <strong>Outcome</strong> 임베딩, 리랭킹, 토큰 카운트, 서비스
-                관리 기능을 갖춘 로컬 추론 인프라 도구를 만들었습니다.
+                <strong>Outcome</strong> OpenAI·Jina·Ollama 3종 호환 API를
+                제공하고, Homebrew·pip 2종 채널로 배포하는 로컬 추론 인프라
+                도구를 만들었습니다.
               </p>
             </div>
           </article>
@@ -785,9 +854,9 @@
                 <strong>Stack</strong> TypeScript, Node.js, PostgreSQL, Supabase
               </p>
               <p>
-                <strong>Outcome</strong> 스키마, Functions/Triggers, RLS,
-                Grants, Storage까지 다루는 데이터 이전 도구로 DB 운영 이해도를
-                확장했습니다.
+                <strong>Outcome</strong> Schema→Functions→Triggers→Data→RLS→
+                GRANTs→Storage→Verify 8단계 마이그레이션을 자동화하는
+                데이터 이전 도구를 구축해 DB 운영 역량을 확장했습니다.
               </p>
             </div>
           </article>
