@@ -32,6 +32,7 @@
   "homepage": "https://github.com/menaje/coni-example#readme",
   "dependencies": {
     "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.2",
     "astro": "^6.0.8",
     "reveal.js": "^6.0.0",
     "typescript": "^5.9.3",
