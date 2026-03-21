@@ -2,29 +2,40 @@
 import type {
   PublicEmployment,
   PublicOrganization,
+  PublicProject,
 } from "../lib/public-profile";
 
 interface Props {
   employmentTimeline: PublicEmployment[];
   organizations: PublicOrganization[];
+  projects?: PublicProject[];
 }
 
-const { employmentTimeline, organizations } = Astro.props;
+const { employmentTimeline, organizations, projects = [] } = Astro.props;
+
+type DomainKey = "construction-cm" | "ai-it";
 
 function getOrgName(orgId: string): string {
   const org = organizations.find((o) => o.id === orgId);
   return org?.displayName ?? "—";
 }
 
-function domainLabel(domain: string): string {
-  switch (domain) {
-    case "construction-cm":
-      return "건설 CM";
-    case "ai-it":
-      return "AI / IT";
-    default:
-      return domain;
+function normalizeDomain(domain: string): DomainKey {
+  const value = domain.trim().toLowerCase();
+
+  if (
+    value === "construction-cm" ||
+    value.includes("construction") ||
+    value.includes("건설")
+  ) {
+    return "construction-cm";
   }
+
+  return "ai-it";
+}
+
+function domainLabel(domain: string): string {
+  return normalizeDomain(domain) === "construction-cm" ? "건설 CM" : "AI / IT";
 }
 
 const sortedTimeline = [...employmentTimeline].sort((a, b) => {
@@ -34,13 +45,91 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
 });
 
 function domainBadgeClass(domain: string): string {
-  return domain === "construction-cm"
+  return normalizeDomain(domain) === "construction-cm"
     ? "site-badge site-badge--secondary"
     : "site-badge site-badge--primary";
 }
+
+function statusLabel(status: string): string {
+  return status === "ongoing" ? "진행 중" : "완료";
+}
+
+function statusBadgeClass(status: string): string {
+  return status === "ongoing"
+    ? "site-badge site-badge--accent"
+    : "site-badge";
+}
+
+function domainFocus(domain: string): string {
+  return normalizeDomain(domain) === "construction-cm"
+    ? "현장 운영, 일정 조율, 문서 체계화"
+    : "서비스 기획, 에이전트 설계, 자동화 구현";
+}
+
+function domainNarrative(domain: string): string {
+  return normalizeDomain(domain) === "construction-cm"
+    ? "복잡한 현장 운영과 이해관계자 조율을 구조화하며, 실무 문제를 시스템 요구사항으로 바꾸는 기반을 만든 시기입니다."
+    : "도메인 문제를 AI 서비스와 자동화 흐름으로 번역해 조직 안팎의 제품과 개인 시스템으로 확장한 시기입니다.";
+}
+
+function compareStartDesc(a: PublicProject, b: PublicProject): number {
+  const aStart = a.period.start?.value ?? "";
+  const bStart = b.period.start?.value ?? "";
+  return bStart.localeCompare(aStart);
+}
+
+function getRelatedProjects(employment: PublicEmployment): PublicProject[] {
+  const domain = normalizeDomain(employment.domain);
+  const employmentStart = employment.period.start?.value ?? "";
+
+  return [...projects]
+    .filter((project) => {
+      if (project.organizationId === employment.organizationId) {
+        return true;
+      }
+
+      if (project.organizationId !== null) {
+        return false;
+      }
+
+      if (domain !== "ai-it") {
+        return false;
+      }
+
+      const projectStart = project.period.start?.value ?? "";
+      return projectStart >= employmentStart;
+    })
+    .sort(compareStartDesc);
+}
+
+const timelineEntries = sortedTimeline.map((employment, index) => {
+  const relatedProjects = getRelatedProjects(employment);
+  const panelId = `timeline-panel-${employment.id}`;
+  const buttonId = `timeline-toggle-${employment.id}`;
+
+  return {
+    employment,
+    index,
+    panelId,
+    buttonId,
+    domainKey: normalizeDomain(employment.domain),
+    domainDisplay: domainLabel(employment.domain),
+    domainBadge: domainBadgeClass(employment.domain),
+    organizationName: getOrgName(employment.organizationId),
+    narrative: domainNarrative(employment.domain),
+    focus: domainFocus(employment.domain),
+    statusDisplay: statusLabel(employment.statusAtBasisDate),
+    statusBadge: statusBadgeClass(employment.statusAtBasisDate),
+    relatedProjects,
+  };
+});
 ---
 
-<section class="site-timeline" aria-labelledby="timeline-heading">
+<section
+  class="site-timeline"
+  aria-labelledby="timeline-heading"
+  data-timeline-root
+>
   <div class="site-timeline__inner">
     <div class="site-timeline__header site-section-header">
       <div class="site-section-header__rule" aria-hidden="true"></div>
@@ -53,29 +142,340 @@ function domainBadgeClass(domain: string): string {
       <p class="site-timeline__lead site-section-header__lead">
         건설 사업관리에서 AI 서비스 개발로, 도메인을 넘나드는 여정입니다.
       </p>
+      <p class="site-timeline__meta site-section-header__meta">
+        항목을 선택하면 해당 시기의 역할 맥락과 연결 프로젝트를 확인할 수
+        있습니다.
+      </p>
     </div>
 
-    <ol class="site-timeline__rail timeline-rail" role="list">
+    <div class="site-timeline__body" data-timeline-body>
+      <div class="site-timeline__rail" aria-hidden="true">
+        <span class="site-timeline__rail-track"></span>
+        <span class="site-timeline__rail-progress" data-timeline-progress></span>
+      </div>
+
+      <ol class="site-timeline__list" role="list">
       {
-        sortedTimeline.map((emp) => (
-          <li class="site-timeline__entry">
-            <span class:list={[domainBadgeClass(emp.domain), "site-timeline__domain"]}>
-              {domainLabel(emp.domain)}
+        timelineEntries.map((entry) => (
+          <li
+            class="site-timeline__item"
+            data-timeline-item
+            data-index={entry.index}
+            data-current={entry.index === 0 ? "true" : "false"}
+            data-expanded={entry.index === 0 ? "true" : "false"}
+            data-domain-tone={entry.domainKey}
+          >
+            <span class="site-timeline__marker" data-timeline-marker aria-hidden="true">
+              <span class="site-timeline__marker-core"></span>
             </span>
-            <h3 class="site-timeline__role">{emp.roleTitle}</h3>
-            <p class="site-timeline__org">{getOrgName(emp.organizationId)}</p>
-            <p class="site-timeline__period">{emp.period.display}</p>
+
+            <article class="site-timeline__card site-card site-card--interactive">
+              <button
+                id={entry.buttonId}
+                type="button"
+                class="site-timeline__toggle"
+                aria-expanded={entry.index === 0 ? "true" : "false"}
+                aria-controls={entry.panelId}
+                data-timeline-toggle
+              >
+                <span class="site-timeline__toggle-top">
+                  <span class:list={[entry.domainBadge, "site-timeline__domain"]}>
+                    {entry.domainDisplay}
+                  </span>
+                  <span class:list={[entry.statusBadge, "site-timeline__status"]}>
+                    {entry.statusDisplay}
+                  </span>
+                  {entry.relatedProjects.length > 0 && (
+                    <span class="site-badge site-timeline__count">
+                      연결 프로젝트 {entry.relatedProjects.length}건
+                    </span>
+                  )}
+                </span>
+
+                <span class="site-timeline__toggle-body">
+                  <span class="site-timeline__summary">
+                    <span class="site-timeline__role">
+                      {entry.employment.roleTitle}
+                    </span>
+                    <span class="site-timeline__org">{entry.organizationName}</span>
+                  </span>
+                  <span class="site-timeline__period-row">
+                    <span class="site-timeline__period">
+                      {entry.employment.period.display ?? "기간 확인 필요"}
+                    </span>
+                    <span class="site-timeline__chevron" aria-hidden="true">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              <div
+                id={entry.panelId}
+                class="site-timeline__panel"
+                role="region"
+                aria-labelledby={entry.buttonId}
+                data-timeline-panel
+                hidden={entry.index !== 0}
+              >
+                <p class="site-timeline__detail">{entry.narrative}</p>
+
+                <dl class="site-timeline__details site-metadata-block">
+                  <div class="site-metadata-block__item">
+                    <dt>조직</dt>
+                    <dd>{entry.organizationName}</dd>
+                  </div>
+                  <div class="site-metadata-block__item">
+                    <dt>핵심 포커스</dt>
+                    <dd>{entry.focus}</dd>
+                  </div>
+                  <div class="site-metadata-block__item">
+                    <dt>상태</dt>
+                    <dd>{entry.statusDisplay}</dd>
+                  </div>
+                </dl>
+
+                {entry.relatedProjects.length > 0 && (
+                  <div class="site-timeline__projects">
+                    <p class="site-timeline__projects-label">연결 프로젝트</p>
+                    <ul class="site-timeline__project-list" role="list">
+                      {entry.relatedProjects.map((project) => (
+                        <li class="site-timeline__project-item">
+                          <div class="site-timeline__project-head">
+                            <p class="site-timeline__project-name">
+                              {project.canonicalName}
+                            </p>
+                            {project.statusAtBasisDate === "ongoing" && (
+                              <span class="site-badge site-badge--accent">
+                                진행 중
+                              </span>
+                            )}
+                          </div>
+                          <p class="site-timeline__project-role">{project.role}</p>
+                          <p class="site-timeline__project-period">
+                            {project.period.display ?? "기간 확인 필요"}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </article>
           </li>
         ))
       }
-    </ol>
+      </ol>
+    </div>
   </div>
 </section>
+
+<script>
+  const timelineSections =
+    document.querySelectorAll<HTMLElement>("[data-timeline-root]");
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+  const legacyMotionList = prefersReducedMotion as MediaQueryList & {
+    addListener?: (callback: () => void) => void;
+  };
+
+  function bindMotionListener(callback: () => void) {
+    if (typeof prefersReducedMotion.addEventListener === "function") {
+      prefersReducedMotion.addEventListener("change", callback);
+      return;
+    }
+
+    legacyMotionList.addListener?.(callback);
+  }
+
+  timelineSections.forEach((section) => {
+    if (section.dataset.timelineReady === "true") {
+      return;
+    }
+
+    section.dataset.timelineReady = "true";
+
+    const body = section.querySelector<HTMLElement>("[data-timeline-body]");
+    const items = Array.from(
+      section.querySelectorAll<HTMLElement>("[data-timeline-item]"),
+    );
+    const toggles = Array.from(
+      section.querySelectorAll<HTMLButtonElement>("[data-timeline-toggle]"),
+    );
+    const panels = Array.from(
+      section.querySelectorAll<HTMLElement>("[data-timeline-panel]"),
+    );
+
+    if (
+      !body ||
+      !items.length ||
+      items.length !== toggles.length ||
+      toggles.length !== panels.length
+    ) {
+      return;
+    }
+
+    const bodyElement = body;
+    let currentIndex = Math.max(
+      0,
+      toggles.findIndex((toggle) => toggle.getAttribute("aria-expanded") === "true"),
+    );
+    let expandedIndex: number | null = currentIndex;
+
+    function getMarkerCenter(item: HTMLElement, bodyRectTop: number) {
+      const marker = item.querySelector<HTMLElement>("[data-timeline-marker]");
+      if (!marker) {
+        return 0;
+      }
+
+      const markerRect = marker.getBoundingClientRect();
+      return markerRect.top + markerRect.height / 2 - bodyRectTop;
+    }
+
+    function updateProgress(index: number) {
+      const bodyRect = bodyElement.getBoundingClientRect();
+      const firstCenter = getMarkerCenter(items[0], bodyRect.top);
+      const lastCenter = getMarkerCenter(items[items.length - 1], bodyRect.top);
+      const currentCenter = getMarkerCenter(items[index], bodyRect.top);
+      const railHeight = Math.max(lastCenter - firstCenter, 2);
+      const progressHeight = prefersReducedMotion.matches
+        ? railHeight
+        : Math.max(currentCenter - firstCenter, 2);
+
+      bodyElement.style.setProperty("--site-timeline-rail-start", `${firstCenter}px`);
+      bodyElement.style.setProperty("--site-timeline-rail-height", `${railHeight}px`);
+      bodyElement.style.setProperty("--site-timeline-progress", `${progressHeight}px`);
+    }
+
+    function setCurrent(index: number) {
+      currentIndex = index;
+
+      items.forEach((item, itemIndex) => {
+        item.dataset.current = String(itemIndex === index);
+      });
+
+      requestAnimationFrame(() => updateProgress(index));
+    }
+
+    function setExpanded(nextIndex: number | null) {
+      expandedIndex = nextIndex;
+
+      toggles.forEach((toggle, toggleIndex) => {
+        const expanded = nextIndex === toggleIndex;
+        toggle.setAttribute("aria-expanded", String(expanded));
+        items[toggleIndex].dataset.expanded = String(expanded);
+        panels[toggleIndex].hidden = !expanded;
+      });
+
+      requestAnimationFrame(() => updateProgress(currentIndex));
+    }
+
+    toggles.forEach((toggle, index) => {
+      toggle.addEventListener("click", () => {
+        const nextExpanded = expandedIndex === index ? null : index;
+        setExpanded(nextExpanded);
+        setCurrent(index);
+      });
+    });
+
+    section.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || expandedIndex === null) {
+        return;
+      }
+
+      const activeElement = document.activeElement;
+      const openPanel = panels[expandedIndex];
+      const openToggle = toggles[expandedIndex];
+
+      if (
+        activeElement instanceof Node &&
+        (openPanel.contains(activeElement) || openToggle === activeElement)
+      ) {
+        event.preventDefault();
+        setExpanded(null);
+        openToggle.focus();
+      }
+    });
+
+    if (!prefersReducedMotion.matches && "IntersectionObserver" in window) {
+      const visibleItems = new Map<number, number>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const item = entry.target as HTMLElement;
+            const index = Number(item.dataset.index ?? "-1");
+
+            if (index < 0) {
+              return;
+            }
+
+            if (entry.isIntersecting) {
+              visibleItems.set(index, entry.intersectionRatio);
+            } else {
+              visibleItems.delete(index);
+            }
+          });
+
+          if (!visibleItems.size) {
+            return;
+          }
+
+          const nextCurrent = [...visibleItems.entries()].sort(
+            (a, b) => b[1] - a[1],
+          )[0]?.[0];
+
+          if (typeof nextCurrent === "number") {
+            setCurrent(nextCurrent);
+          }
+        },
+        {
+          threshold: [0.3, 0.55, 0.8],
+          rootMargin: "-18% 0px -42% 0px",
+        },
+      );
+
+      items.forEach((item) => observer.observe(item));
+    }
+
+    const refreshLayout = () => {
+      updateProgress(currentIndex);
+    };
+
+    bindMotionListener(refreshLayout);
+    window.addEventListener("resize", refreshLayout, { passive: true });
+
+    setExpanded(expandedIndex);
+    setCurrent(currentIndex);
+  });
+</script>
 
 <style>
   .site-timeline {
     padding: var(--space-5xl) var(--site-gutter);
-    background: var(--color-bg-subtle);
+    background:
+      radial-gradient(
+        circle at top left,
+        var(--site-glow-secondary),
+        transparent 32rem
+      ),
+      linear-gradient(
+        180deg,
+        var(--site-surface-muted),
+        var(--site-surface-default)
+      );
   }
 
   .site-timeline__inner {
@@ -83,45 +483,343 @@ function domainBadgeClass(domain: string): string {
     margin: 0 auto;
   }
 
-  .site-timeline__rail {
-    list-style: none;
-    margin: 0;
-    padding-left: var(--space-xl);
+  .site-timeline__body {
+    --site-timeline-rail-start: 0px;
+    --site-timeline-rail-height: 0px;
+    --site-timeline-progress: 0px;
+    position: relative;
   }
 
-  .site-timeline__entry {
+  .site-timeline__rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0.625rem;
+    width: 2px;
+  }
+
+  .site-timeline__rail-track,
+  .site-timeline__rail-progress {
+    position: absolute;
+    top: var(--site-timeline-rail-start);
+    left: 0;
+    width: 100%;
+    border-radius: var(--radius-pill);
+  }
+
+  .site-timeline__rail-track {
+    height: var(--site-timeline-rail-height);
+    background: color-mix(
+      in srgb,
+      var(--site-border-default) 72%,
+      var(--color-paper)
+    );
+  }
+
+  .site-timeline__rail-progress {
+    height: var(--site-timeline-progress);
+    background: linear-gradient(
+      180deg,
+      var(--color-secondary),
+      var(--color-primary)
+    );
+    transition: height var(--transition-slow);
+  }
+
+  .site-timeline__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .site-timeline__item {
+    --site-timeline-accent: var(--color-primary);
+    --site-timeline-accent-soft: var(--site-glow-primary);
+    position: relative;
+    padding-left: calc(var(--space-xl) + 0.25rem);
+  }
+
+  .site-timeline__item[data-domain-tone="construction-cm"] {
+    --site-timeline-accent: var(--color-secondary);
+    --site-timeline-accent-soft: var(--site-glow-secondary);
+  }
+
+  .site-timeline__marker {
+    position: absolute;
+    top: var(--space-lg);
+    left: 0.625rem;
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: color-mix(
+      in srgb,
+      var(--site-timeline-accent) 18%,
+      var(--color-paper)
+    );
+    box-shadow: 0 0 0 6px var(--site-surface-default);
+  }
+
+  .site-timeline__marker-core {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 999px;
+    background: var(--site-timeline-accent);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      background var(--transition-base);
+  }
+
+  .site-timeline__card {
+    gap: var(--space-md);
+    transition:
+      border-color var(--transition-base),
+      background var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  .site-timeline__item[data-current="true"] .site-timeline__card {
+    border-color: color-mix(
+      in srgb,
+      var(--site-timeline-accent) 34%,
+      var(--site-border-strong)
+    );
+    background: color-mix(
+      in srgb,
+      var(--site-surface-elevated) 88%,
+      var(--site-timeline-accent) 12%
+    );
+    box-shadow:
+      0 0 0 1px color-mix(
+        in srgb,
+        var(--site-timeline-accent) 14%,
+        transparent
+      ),
+      0 18px 40px var(--site-timeline-accent-soft);
+  }
+
+  .site-timeline__item[data-current="true"] .site-timeline__marker-core {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--site-timeline-accent) 18%, transparent);
+  }
+
+  .site-timeline__item:has(.site-timeline__toggle:focus-visible)
+    .site-timeline__card {
+    box-shadow:
+      0 0 0 var(--focus-ring-width)
+        color-mix(in srgb, var(--site-timeline-accent) 20%, transparent),
+      var(--site-card-shadow-hover);
+  }
+
+  .site-timeline__toggle {
+    display: grid;
+    gap: var(--space-md);
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .site-timeline__toggle:focus-visible {
+    outline: none;
+  }
+
+  .site-timeline__toggle-top,
+  .site-timeline__period-row {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .site-timeline__toggle-body,
+  .site-timeline__summary {
+    display: grid;
     gap: var(--space-2xs);
-    padding-bottom: var(--space-lg);
+  }
+
+  .site-timeline__summary {
+    min-width: 0;
   }
 
   .site-timeline__domain {
     align-self: flex-start;
   }
 
+  .site-timeline__count {
+    margin-left: auto;
+  }
+
   .site-timeline__role {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-ink);
     margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-ink);
   }
 
   .site-timeline__org {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
     margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .site-timeline__period-row {
+    justify-content: space-between;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
   }
 
   .site-timeline__period {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
     margin: 0;
   }
 
+  .site-timeline__chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--site-timeline-accent);
+    transition: transform var(--transition-base);
+  }
+
+  .site-timeline__item[data-expanded="true"] .site-timeline__chevron {
+    transform: rotate(180deg);
+  }
+
+  .site-timeline__panel {
+    display: grid;
+    gap: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid color-mix(in srgb, var(--site-border-default) 88%, var(--site-timeline-accent) 12%);
+  }
+
+  .site-timeline__detail,
+  .site-timeline__project-role,
+  .site-timeline__project-period,
+  .site-timeline__projects-label,
+  .site-timeline__project-name {
+    margin: 0;
+  }
+
+  .site-timeline__detail {
+    font-size: var(--text-md);
+    line-height: var(--line-height-body);
+    color: var(--color-text-secondary);
+  }
+
+  .site-timeline__details {
+    padding: var(--space-md);
+  }
+
+  .site-timeline__projects {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-timeline__projects-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-timeline__project-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-timeline__project-item {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-md);
+    border: 1px solid color-mix(in srgb, var(--site-border-default) 84%, var(--site-timeline-accent) 16%);
+    border-radius: var(--radius-md);
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 84%,
+      var(--site-timeline-accent) 16%
+    );
+  }
+
+  .site-timeline__project-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .site-timeline__project-name {
+    font-size: var(--text-md);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .site-timeline__project-role,
+  .site-timeline__project-period {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-timeline__rail-progress,
+    .site-timeline__marker-core,
+    .site-timeline__chevron,
+    .site-timeline__card {
+      transition: none;
+    }
+  }
+
   @media (min-width: 768px) {
+    .site-timeline__list {
+      gap: var(--space-xl);
+    }
+
+    .site-timeline__item {
+      padding-left: calc(var(--space-2xl) + 0.25rem);
+    }
+
+    .site-timeline__toggle-body {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: var(--space-lg);
+    }
+
+    .site-timeline__period-row {
+      justify-content: flex-end;
+    }
+
+    .site-timeline__projects {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-timeline__item {
+      padding-left: calc(var(--space-3xl) + var(--space-sm));
+    }
+
     .site-timeline__rail {
-      padding-left: var(--space-3xl);
+      left: 0.875rem;
+    }
+
+    .site-timeline__marker {
+      left: 0.875rem;
+    }
+
+    .site-timeline__project-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>
