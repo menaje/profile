@@ -4,3 +4,4 @@ public/downloads/*.pdf
 typst/**/*.pdf
 node_modules/
 dist/
+.astro/
