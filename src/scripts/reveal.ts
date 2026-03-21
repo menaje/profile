@@ -1,6 +1,10 @@
 const READY_ATTR = "data-reveal-ready";
 const REDUCED_ATTR = "data-reveal-reduced";
 const STATE_ATTR = "data-reveal-state";
+const globalScope =
+  typeof window === "undefined"
+    ? undefined
+    : (window as Window & { __siteRevealBootstrapped?: boolean });
 
 let observer: IntersectionObserver | null = null;
 const REVEAL_SELECTOR = [
@@ -77,6 +81,9 @@ export function initScrollReveal(root: ParentNode = document) {
     return;
   }
 
+  observer?.disconnect();
+  observer = null;
+
   const targets = Array.from(
     root.querySelectorAll<HTMLElement>(REVEAL_SELECTOR),
   );
@@ -124,9 +131,17 @@ function boot() {
 }
 
 if (typeof document !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
+  if (!globalScope?.__siteRevealBootstrapped) {
+    if (globalScope) {
+      globalScope.__siteRevealBootstrapped = true;
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot, { once: true });
+    } else {
+      boot();
+    }
+
+    document.addEventListener("astro:page-load", boot);
   }
 }
