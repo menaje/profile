@@ -8,6 +8,15 @@
   --resume-accent-soft: rgb(224 122 95 / 10%);
   --resume-accent-line: rgb(224 122 95 / 22%);
   --resume-ink-soft: #465262;
+  --panel-radius: 1rem;
+  --panel-shadow: 0 18px 42px rgb(15 23 42 / 6%);
+  --panel-border-color: rgb(15 23 42 / 7%);
+  --panel-background: #ffffff;
+  --panel-tint-background: linear-gradient(
+    180deg,
+    rgb(244 241 234 / 95%),
+    rgb(255 255 255 / 98%)
+  );
 
   --rail-panel-accent: var(--resume-accent);
   --accent-rule-background: var(--resume-accent);
@@ -100,6 +109,8 @@
 .resume-positioning {
   display: grid;
   gap: var(--space-md);
+  grid-template-columns: minmax(0, 1.18fr) minmax(16rem, 0.94fr);
+  align-items: end;
 }
 
 .resume-headline {
@@ -123,14 +134,14 @@
 
 .resume-body-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.9fr);
-  gap: var(--space-xl);
+  grid-template-columns: minmax(0, 1.35fr) minmax(14.5rem, 0.92fr);
+  gap: var(--space-lg);
   align-items: start;
 }
 
 .resume-main,
 .resume-sidebar {
-  --stack-space: var(--space-lg);
+  --stack-space: var(--space-md);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -195,7 +206,7 @@
 
 .resume-projects {
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .resume-project-rows {
@@ -260,18 +271,22 @@
    ═══════════════════════════════════════════════════ */
 
 .resume-sidebar-title {
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   color: var(--color-ink);
 }
 
 .resume-career {
   display: grid;
-  gap: var(--space-sm);
+  gap: var(--space-md);
+  background:
+    linear-gradient(180deg, rgb(255 248 245 / 92%), rgb(255 255 255 / 100%)),
+    #ffffff;
 }
 
 .resume-career-totals {
-  font-size: var(--text-sm);
+  font-size: var(--text-md);
   font-weight: 600;
+  line-height: 1.45;
   color: var(--resume-ink-soft);
 }
 
@@ -311,6 +326,15 @@
   font-size: var(--text-sm);
   color: var(--resume-ink-soft);
   line-height: 1.5;
+}
+
+.resume-career-focus {
+  --cluster-space: var(--space-2xs);
+}
+
+.resume-career-focus .meta_chip {
+  font-size: var(--text-xs);
+  padding: 0.28rem 0.55rem;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -358,28 +382,21 @@
 
 .resume-strengths {
   display: grid;
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 
 .resume-strength-list {
   display: grid;
-  gap: 0;
+  gap: var(--space-sm);
 }
 
 .resume-strength-item {
   display: grid;
   gap: var(--space-2xs);
-  padding: var(--space-xs) 0;
-  border-bottom: 1px solid var(--resume-accent-line);
-}
-
-.resume-strength-item:first-child {
-  padding-top: 0;
-}
-
-.resume-strength-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+  padding: var(--space-sm);
+  border: 1px solid rgb(15 23 42 / 6%);
+  border-radius: calc(var(--panel-radius) - 0.125rem);
+  background: rgb(250 248 245 / 82%);
 }
 
 .resume-strength-item dt {
@@ -395,6 +412,179 @@
   font-size: var(--text-sm);
   line-height: 1.5;
   color: var(--color-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════
+   Page 1 — Skills-First Refresh
+   ═══════════════════════════════════════════════════ */
+
+.resume-positioning-copy {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.resume-focus-chips {
+  --cluster-space: var(--space-2xs);
+}
+
+.resume-focus-chips .meta_chip {
+  font-size: var(--text-xs);
+  padding: 0.38rem 0.7rem;
+}
+
+.resume-positioning .accent-rule {
+  grid-column: 1 / -1;
+}
+
+.resume-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.resume-metric-card {
+  display: grid;
+  gap: var(--space-2xs);
+  align-content: start;
+  min-block-size: 7.25rem;
+  padding: var(--space-md);
+  border-color: rgb(15 76 129 / 10%);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 98%), rgb(244 241 234 / 82%)),
+    #ffffff;
+}
+
+.resume-metric-value {
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--color-ink);
+}
+
+.resume-metric-label {
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  color: var(--resume-ink-soft);
+}
+
+.resume-skill-snapshot {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.resume-skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.resume-skill-card {
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px solid rgb(15 23 42 / 6%);
+  border-radius: calc(var(--panel-radius) - 0.125rem);
+  background: rgb(255 255 255 / 84%);
+}
+
+.resume-skill-kicker {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--resume-accent-strong);
+}
+
+.resume-skill-card h3 {
+  font-size: var(--text-md);
+  color: var(--color-ink);
+}
+
+.resume-skill-description {
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+.resume-skill-chip-cloud {
+  --cluster-space: var(--space-2xs);
+}
+
+.resume-skill-chip-cloud .meta_chip {
+  font-size: var(--text-xs);
+  padding: 0.33rem 0.65rem;
+}
+
+.resume-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.resume-project-card {
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border-radius: calc(var(--panel-radius) + 0.125rem);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 100%), rgb(250 248 245 / 92%)),
+    #ffffff;
+}
+
+.resume-project-card--featured {
+  grid-column: 1 / -1;
+  border-color: rgb(224 122 95 / 24%);
+  background:
+    linear-gradient(180deg, rgb(255 251 248 / 100%), rgb(255 244 239 / 92%)),
+    #ffffff;
+}
+
+.resume-project-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--space-sm);
+}
+
+.resume-project-card-head h3 {
+  font-size: var(--text-xl);
+  color: var(--color-ink);
+}
+
+.resume-project-card .resume-project-org {
+  display: block;
+  margin-top: var(--space-2xs);
+  white-space: normal;
+}
+
+.resume-project-summary {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.resume-project-outcome-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.resume-project-outcome-list li {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.4rem 0.72rem;
+  border: 1px solid rgb(224 122 95 / 18%);
+  border-radius: var(--radius-pill);
+  background: rgb(224 122 95 / 8%);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--resume-accent-strong);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -497,8 +687,21 @@
    ═══════════════════════════════════════════════════ */
 
 @media screen and (width <= 1024px) {
+  .resume-positioning,
   .resume-body-layout {
     grid-template-columns: 1fr;
+  }
+
+  .resume-skill-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .resume-career-detail-grid {
@@ -524,17 +727,17 @@
     max-width: none;
   }
 
+  .resume-positioning {
+    gap: var(--space-sm);
+  }
+
+  .resume-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
   .resume-header-top {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .resume-evidence-item {
-    grid-template-columns: 2rem 1fr;
-  }
-
-  .resume-evidence-num {
-    font-size: var(--text-xl);
   }
 
   .resume-detail-list {
@@ -602,6 +805,10 @@
     gap: var(--space-2xs);
   }
 
+  .resume-positioning-copy {
+    gap: var(--space-2xs);
+  }
+
   .resume-headline {
     font-size: 1.2rem;
     max-width: 22ch;
@@ -616,9 +823,34 @@
     display: none;
   }
 
+  .resume-focus-chips .meta_chip {
+    font-size: 0.6rem;
+    padding: 0.24rem 0.45rem;
+  }
+
+  .resume-metric-grid {
+    gap: var(--space-2xs);
+  }
+
+  .resume-metric-card {
+    min-block-size: auto;
+    padding: var(--space-xs);
+    border-radius: 0.8rem;
+    box-shadow: none;
+  }
+
+  .resume-metric-value {
+    font-size: 1rem;
+  }
+
+  .resume-metric-label {
+    font-size: var(--text-xs);
+    line-height: 1.35;
+  }
+
   /* ── Page 1: Body layout ── */
   .resume-body-layout {
-    grid-template-columns: minmax(0, 1.42fr) minmax(11.5rem, 0.88fr);
+    grid-template-columns: minmax(0, 1.36fr) minmax(10.9rem, 0.88fr);
     gap: var(--space-2xs);
   }
 
@@ -640,56 +872,80 @@
     font-weight: 700;
   }
 
-  /* ── Page 1: Evidence ── */
-  .resume-evidence-list {
-    gap: 0;
-  }
-
-  .resume-evidence-item {
-    grid-template-columns: 1.5rem 1fr;
+  .resume-skill-snapshot {
     gap: var(--space-2xs);
-    padding-bottom: var(--space-2xs);
+    padding: var(--space-xs);
+    box-shadow: none;
   }
 
-  .resume-evidence-num {
-    font-size: var(--text-lg);
+  .resume-skill-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2xs);
   }
 
-  .resume-evidence-item h3 {
+  .resume-skill-card:last-child {
+    grid-column: auto;
+  }
+
+  .resume-skill-card {
+    gap: var(--space-2xs);
+    padding: var(--space-xs);
+    box-shadow: none;
+  }
+
+  .resume-skill-kicker {
+    font-size: 0.6rem;
+  }
+
+  .resume-skill-card h3 {
     font-size: var(--text-sm);
   }
 
-  .resume-evidence-item p {
-    font-size: var(--text-xs);
-    line-height: 1.4;
+  .resume-skill-description {
+    display: none;
+  }
+
+  .resume-skill-chip-cloud .meta_chip {
+    font-size: 0.6rem;
+    padding: 0.22rem 0.45rem;
   }
 
   /* ── Page 1: Projects ── */
-  .resume-projects {
+  .resume-projects,
+  .resume-project-grid {
     gap: var(--space-2xs);
   }
 
-  .resume-project-row {
+  .resume-project-card {
+    gap: var(--space-2xs);
+    padding: var(--space-xs);
+    border-radius: 0.8rem;
+    box-shadow: none;
+  }
+
+  .resume-project-card-head {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0;
-    padding: var(--space-2xs) 0;
   }
 
-  .resume-project-row:first-child {
-    padding-top: 0;
-  }
-
-  .resume-project-row--featured {
-    padding-inline-start: var(--space-2xs);
-    border-inline-start-width: 0.15rem;
-  }
-
-  .resume-project-row-head h3 {
+  .resume-project-card-head h3 {
     font-size: var(--text-sm);
   }
 
-  .resume-project-row > p:last-child {
+  .resume-project-summary {
     font-size: var(--text-xs);
-    line-height: 1.4;
+    line-height: 1.35;
+  }
+
+  .resume-project-outcome-list {
+    gap: 0.18rem;
+  }
+
+  .resume-project-outcome-list li {
+    min-height: auto;
+    padding: 0.24rem 0.42rem;
+    font-size: 0.6rem;
   }
 
   /* ── Page 1: Sidebar panels ── */
@@ -701,6 +957,11 @@
 
   .resume-sidebar .panel_tint {
     padding: var(--space-2xs);
+  }
+
+  .resume-sidebar .surface-card {
+    padding: var(--space-2xs);
+    box-shadow: none;
   }
 
   .resume-sidebar-title {
@@ -744,18 +1005,9 @@
     line-height: 1.3;
   }
 
-  /* ── Page 1: Sidebar stack ── */
-  .resume-stack-panel {
-    gap: var(--space-2xs);
-  }
-
-  .resume-stack-groups {
-    gap: var(--space-2xs);
-  }
-
-  .resume-stack-group .meta_chip {
+  .resume-career-focus .meta_chip {
     font-size: 0.6rem;
-    padding: var(--space-2xs) var(--space-2xs);
+    padding: 0.2rem 0.4rem;
   }
 
   /* ── Page 1: Sidebar strengths ── */
@@ -765,11 +1017,7 @@
 
   .resume-strength-item {
     gap: 0;
-    padding: var(--space-2xs) 0;
-  }
-
-  .resume-strength-item:first-child {
-    padding-top: 0;
+    padding: var(--space-2xs);
   }
 
   .resume-strength-item dt {
