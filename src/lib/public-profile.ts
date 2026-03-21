@@ -170,6 +170,30 @@ export function anonymize(data: ProfileData): PublicProfileData {
   };
 }
 
+// --- Organization / client anonymization helpers ---
+
+const ORG_ANON_MAP: Record<string, string> = {
+  "junglim-cm": "A사",
+};
+
+const CLIENT_ANON_MAP: Record<string, string> = {
+  "cm-work-management-system": "A 지자체",
+};
+
+export function getAnonymizedOrgName(orgId: string): string {
+  if (ORG_ANON_MAP[orgId]) return ORG_ANON_MAP[orgId];
+  const profile = getPublicProfile();
+  const org = profile.organizations.find((o) => o.id === orgId);
+  return org?.displayName ?? orgId;
+}
+
+export function getAnonymizedClient(
+  projectId: string,
+  fallback?: string,
+): string {
+  return CLIENT_ANON_MAP[projectId] ?? fallback ?? "";
+}
+
 // --- Public loader ---
 
 let cached: PublicProfileData | null = null;

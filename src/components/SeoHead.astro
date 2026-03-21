@@ -1,4 +1,12 @@
 ---
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import {
+  SUPPORTED_LOCALES,
+  DEFAULT_LOCALE,
+  getOgLocale,
+  getAlternateLocales,
+} from "../lib/i18n";
+
 interface Props {
   title: string;
   description: string;
@@ -8,6 +16,9 @@ interface Props {
   noindex?: boolean;
 }
 
+const currentLocale = Astro.currentLocale ?? DEFAULT_LOCALE;
+const pathWithoutLocale = Astro.url.pathname.replace(/^\/en(\/|$)/, "/");
+
 const {
   title,
   description,
@@ -16,15 +27,36 @@ const {
   ogType = "website",
   noindex = false,
 } = Astro.props;
+
+const alternateLocales = getAlternateLocales(currentLocale);
+const hreflangEntries = SUPPORTED_LOCALES.map((locale) => ({
+  locale,
+  href: getAbsoluteLocaleUrl(locale, pathWithoutLocale),
+}));
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
+{
+  hreflangEntries.map(({ locale, href }) => (
+    <link rel="alternate" hreflang={locale} href={href} />
+  ))
+}
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href={getAbsoluteLocaleUrl(DEFAULT_LOCALE, pathWithoutLocale)}
+/>
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={ogType} />
-<meta property="og:locale" content="ko_KR" />
+<meta property="og:locale" content={getOgLocale(currentLocale)} />
+{
+  alternateLocales.map((locale) => (
+    <meta property="og:locale:alternate" content={getOgLocale(locale)} />
+  ))
+}
 {ogImage && <meta property="og:image" content={ogImage} />}
 {noindex && <meta name="robots" content="noindex,nofollow" />}

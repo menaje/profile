@@ -14,7 +14,7 @@ interface Props {
 }
 
 const {
-  lang = "ko",
+  lang = Astro.currentLocale ?? "ko",
   title,
   description,
   ogImage,

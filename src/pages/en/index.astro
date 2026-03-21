@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Coming Soon — Seongsik Kim"
+  description="The English version of this site is currently being prepared."
+  noindex={true}
+>
+  <section class="coming-soon">
+    <h1>Coming Soon</h1>
+    <p>The English version of this site is currently being prepared.</p>
+    <a href="/">한국어 사이트로 이동</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .coming-soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+    padding: var(--space-2xl) var(--site-gutter);
+  }
+
+  .coming-soon h1 {
+    font-size: var(--text-3xl);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .coming-soon p {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-xl);
+  }
+
+  .coming-soon a {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-xl);
+    background: var(--color-primary);
+    color: var(--color-paper);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: background var(--transition-fast);
+  }
+
+  .coming-soon a:hover {
+    background: var(--color-ink);
+  }
+</style>

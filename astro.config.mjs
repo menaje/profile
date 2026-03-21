@@ -8,6 +8,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   site: "https://example.com",
   outDir: "./dist",
+  i18n: {
+    defaultLocale: "ko",
+    locales: ["ko", "en"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [mdx()],
   vite: {
     resolve: {
