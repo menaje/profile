@@ -230,7 +230,7 @@
 }
 
 /* ==========================================================================
-   Print — A4 2-page editorial
+   Print — A4 2-page editorial (cover + journey)
    ========================================================================== */
 @media print {
   @page {
@@ -243,7 +243,8 @@
   }
 
   .statement-document {
-    --body-copy-line-height: 1.55;
+    --body-copy-size: 0.8rem;
+    --body-copy-line-height: 1.38;
   }
 
   .statement-page {
@@ -255,7 +256,7 @@
     border-radius: 0;
     box-shadow: none;
     background: transparent;
-    gap: var(--space-md);
+    gap: var(--space-xs);
   }
 
   .statement-page--cover {
@@ -268,68 +269,101 @@
     page-break-after: auto;
   }
 
+  /* --- Hero (cover) --- */
   .statement-hero {
-    gap: var(--space-sm);
+    gap: var(--space-2xs);
   }
 
-  .statement-title {
-    font-size: var(--text-3xl);
+  .statement-eyebrow {
+    font-size: 0.65rem;
+  }
+
+  .statement-hero-rule {
+    block-size: 0.15rem;
+    inline-size: 2.5rem;
   }
 
   .statement-positioning {
-    margin-top: var(--space-2xs);
+    font-size: 0.7rem;
+    margin-top: 0;
+  }
+
+  .statement-title {
+    font-size: var(--text-2xl);
+    margin-top: 0;
   }
 
   .statement-meta {
-    margin-top: var(--space-sm);
+    margin-top: var(--space-2xs);
+    font-size: 0.65rem;
+    gap: var(--space-2xs);
   }
 
+  /* --- Lead paragraph --- */
   .statement-lead {
-    padding-inline-start: var(--space-md);
+    padding-inline-start: var(--space-sm);
   }
 
   .statement-lead p {
-    font-size: var(--text-sm);
-    line-height: 1.55;
+    font-size: 0.8rem;
+    line-height: 1.38;
   }
 
+  /* --- Divider --- */
   .editorial-divider {
-    margin-block: var(--space-md);
+    margin-block: var(--space-xs);
   }
 
+  /* --- Narrative blocks --- */
   .statement-block {
-    gap: var(--space-sm);
+    gap: var(--space-2xs);
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
-  .statement-block-title {
-    font-size: var(--text-md);
+  .statement-block-eyebrow {
+    font-size: 0.65rem;
+    gap: var(--space-2xs);
   }
 
   .statement-block-number {
-    font-size: var(--text-lg);
+    font-size: var(--text-md);
+  }
+
+  .statement-block-title {
+    font-size: 0.95rem;
+  }
+
+  .statement-block-meta {
+    font-size: 0.65rem;
+    gap: var(--space-2xs);
   }
 
   .statement-block-body {
-    gap: var(--space-sm);
+    gap: var(--space-2xs);
   }
 
+  .statement-block-body p {
+    font-size: 0.8rem;
+    line-height: 1.38;
+  }
+
+  /* --- Pull quote --- */
   .pull-quote {
-    margin-block: var(--space-md);
-    padding: var(--space-sm) 0;
+    margin-block: var(--space-xs);
+    padding: var(--space-2xs) 0;
     break-inside: avoid;
     page-break-inside: avoid;
   }
 
   .pull-quote p {
-    font-size: var(--text-md);
+    font-size: 0.85rem;
+    line-height: 1.35;
   }
 
-  .statement-block {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
+  /* --- Drop cap --- */
   .drop-cap::first-letter {
-    font-size: 2.8em;
+    font-size: 2.2em;
+    margin-inline-end: 0.15rem;
   }
 }

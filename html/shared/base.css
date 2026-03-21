@@ -96,7 +96,7 @@ a {
 
 ul,
 ol {
-  padding-inline-start: 1.2rem;
+  padding-inline-start: var(--space-lg);
 }
 
 h1,

@@ -349,7 +349,7 @@
 
 .resume-stack-group .meta_chip {
   font-size: var(--text-xs);
-  padding: 0.2rem 0.5rem;
+  padding: var(--space-2xs) var(--space-xs);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -594,7 +594,7 @@
   .resume-chip-row .status_chip,
   .resume-chip-row .meta_chip {
     font-size: var(--text-xs);
-    padding: 0.2rem 0.5rem;
+    padding: var(--space-2xs) var(--space-xs);
   }
 
   /* ── Page 1: Positioning ── */
@@ -755,7 +755,7 @@
 
   .resume-stack-group .meta_chip {
     font-size: 0.6rem;
-    padding: 0.1rem 0.3rem;
+    padding: var(--space-2xs) var(--space-2xs);
   }
 
   /* ── Page 1: Sidebar strengths ── */

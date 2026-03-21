@@ -47,7 +47,7 @@ body {
 
 .smoke-checklist li {
   position: relative;
-  padding-left: 1.25rem;
+  padding-left: var(--space-lg);
 }
 
 .smoke-checklist li::before {
