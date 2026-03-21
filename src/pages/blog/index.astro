@@ -1,0 +1,182 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allPosts = await getCollection("blog", ({ data }) => {
+  return import.meta.env.PROD ? data.draft !== true : true;
+});
+
+const posts = allPosts.sort(
+  (a, b) =>
+    b.data.publishedDate.getTime() - a.data.publishedDate.getTime(),
+);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+---
+
+<BaseLayout
+  title="블로그"
+  description="건설CM에서 AI 시스템 아키텍트로의 여정, 기술 인사이트, 프로젝트 회고를 공유합니다."
+>
+  <section class="site-blog">
+    <div class="site-blog__header">
+      <h1 class="site-blog__title">블로그</h1>
+      <p class="site-blog__description">
+        도메인 전환 여정과 기술 인사이트를 기록합니다.
+      </p>
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <ul class="site-blog__list">
+          {posts.map((post) => (
+            <li class="site-blog-card">
+              <a href={`/blog/${post.id}/`} class="site-blog-card__link">
+                <article>
+                  <h2 class="site-blog-card__title">{post.data.title}</h2>
+                  <time
+                    class="site-blog-card__date"
+                    datetime={post.data.publishedDate.toISOString()}
+                  >
+                    {formatDate(post.data.publishedDate)}
+                  </time>
+                  <p class="site-blog-card__description">
+                    {post.data.description}
+                  </p>
+                  {post.data.tags.length > 0 && (
+                    <ul class="site-blog-card__tags">
+                      {post.data.tags.map((tag: string) => (
+                        <li class="site-blog-card__tag">{tag}</li>
+                      ))}
+                    </ul>
+                  )}
+                </article>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="site-blog__empty">아직 작성된 글이 없습니다.</p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .site-blog {
+    max-width: var(--site-content-max-width);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--site-gutter) var(--space-2xl);
+  }
+
+  .site-blog__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .site-blog__title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-xs);
+    color: var(--color-ink);
+  }
+
+  .site-blog__description {
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .site-blog__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .site-blog-card {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .site-blog-card:hover {
+    border-color: var(--color-primary);
+  }
+
+  .site-blog-card__link {
+    display: block;
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .site-blog-card__title {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-xs);
+    color: var(--color-ink);
+    line-height: 1.4;
+  }
+
+  .site-blog-card__date {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .site-blog-card__description {
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-sm);
+    line-height: 1.6;
+  }
+
+  .site-blog-card__tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .site-blog-card__tag {
+    font-size: var(--text-xs);
+    color: var(--color-primary);
+    background: var(--color-bg-surface);
+    padding: 2px var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+
+  .site-blog__empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    padding: var(--space-2xl) 0;
+  }
+
+  @media (min-width: 768px) {
+    .site-blog {
+      padding-top: var(--space-2xl);
+    }
+
+    .site-blog__title {
+      font-size: var(--text-4xl);
+    }
+
+    .site-blog-card__link {
+      padding: var(--space-xl);
+    }
+
+    .site-blog-card__title {
+      font-size: var(--text-2xl);
+    }
+  }
+</style>
