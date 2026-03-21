@@ -1,10 +1,10 @@
 ---
 import { getAbsoluteLocaleUrl } from "astro:i18n";
 import {
-  SUPPORTED_LOCALES,
   DEFAULT_LOCALE,
   getOgLocale,
   getAlternateLocales,
+  getIndexableLocalesForPath,
 } from "../lib/i18n";
 
 interface Props {
@@ -28,35 +28,57 @@ const {
   noindex = false,
 } = Astro.props;
 
-const alternateLocales = getAlternateLocales(currentLocale);
-const hreflangEntries = SUPPORTED_LOCALES.map((locale) => ({
+const indexableLocales = getIndexableLocalesForPath(pathWithoutLocale);
+const alternateLocales = getAlternateLocales(currentLocale).filter((locale) =>
+  indexableLocales.includes(locale),
+);
+const hreflangEntries = indexableLocales.map((locale) => ({
   locale,
   href: getAbsoluteLocaleUrl(locale, pathWithoutLocale),
 }));
+const shouldExposeAlternates = !noindex && indexableLocales.length > 1;
+const rssUrl = Astro.site ? new URL("/rss.xml", Astro.site).href : undefined;
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
+{!noindex && <meta name="robots" content="index,follow,max-image-preview:large" />}
 {
-  hreflangEntries.map(({ locale, href }) => (
-    <link rel="alternate" hreflang={locale} href={href} />
-  ))
+  shouldExposeAlternates &&
+    hreflangEntries.map(({ locale, href }) => (
+      <link rel="alternate" hreflang={locale} href={href} />
+    ))
 }
-<link
-  rel="alternate"
-  hreflang="x-default"
-  href={getAbsoluteLocaleUrl(DEFAULT_LOCALE, pathWithoutLocale)}
-/>
+{
+  shouldExposeAlternates && (
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={getAbsoluteLocaleUrl(DEFAULT_LOCALE, pathWithoutLocale)}
+    />
+  )
+}
+{
+  !noindex && rssUrl && (
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="김성식 블로그 RSS"
+      href={rssUrl}
+    />
+  )
+}
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={ogType} />
 <meta property="og:locale" content={getOgLocale(currentLocale)} />
 {
-  alternateLocales.map((locale) => (
-    <meta property="og:locale:alternate" content={getOgLocale(locale)} />
-  ))
+  shouldExposeAlternates &&
+    alternateLocales.map((locale) => (
+      <meta property="og:locale:alternate" content={getOgLocale(locale)} />
+    ))
 }
 {ogImage && <meta property="og:image" content={ogImage} />}
 {noindex && <meta name="robots" content="noindex,nofollow" />}
