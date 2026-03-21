@@ -7,31 +7,31 @@
   --font-family-mono:
     "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
 
-  --color-ink: #1a1a2e;
+  --color-ink: #0f172a;
   --color-text: var(--color-ink);
-  --color-text-secondary: #374151;
-  --color-text-muted: #6b7280;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
   --color-muted: var(--color-text-muted);
-  --color-primary: #1e3a5f;
-  --color-secondary: #2d6a4f;
-  --color-accent: #e07a5f;
+  --color-primary: #1e3a8a;
+  --color-secondary: #166534;
+  --color-accent: #c2410c;
   --color-paper: #ffffff;
   --color-bg-page: #ffffff;
-  --color-bg-surface: #f5f3ee;
-  --color-bg-subtle: #fafaf5;
+  --color-bg-surface: #f1f5f9;
+  --color-bg-subtle: #f8fafc;
   --color-surface: var(--color-bg-surface);
   --color-subtle: var(--color-bg-subtle);
-  --color-line: #d9d5cb;
-  --color-line-strong: #b9b2a5;
+  --color-line: #cbd5e1;
+  --color-line-strong: #94a3b8;
 
   --line-height-tight: 1.15;
   --line-height-body: 1.6;
   --line-height-relaxed: 1.72;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.25rem;
-  --radius-xl: 1.75rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
   --radius-pill: 999px;
 
   --space-2xs: 0.25rem;
@@ -45,30 +45,30 @@
   --space-4xl: 3.75rem;
   --space-5xl: 5rem;
 
-  --section-gap: var(--space-lg);
-  --stack-gap: var(--space-lg);
+  --section-gap: var(--space-2xl);
+  --stack-gap: var(--space-xl);
   --cluster-gap: var(--space-sm);
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-md: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.5rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
   --text-5xl: 3.75rem;
 
-  --shadow-sm: 0 1px 2px rgba(26, 26, 46, 0.08);
-  --shadow-md: 0 12px 28px rgba(26, 26, 46, 0.08);
-  --shadow-lg: 0 24px 60px rgba(26, 26, 46, 0.12);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.1);
   --shadow-page: var(--shadow-lg);
-  --page-rule: 1px solid rgba(26, 26, 46, 0.08);
+  --page-rule: 1px solid rgba(15, 23, 42, 0.08);
 
   --shell-screen-margin: var(--space-md);
   --shell-screen-gutter: 2rem;
   --page-shell-background: var(--color-bg-page);
-  --page-shell-border-color: rgba(26, 26, 46, 0.08);
+  --page-shell-border-color: rgba(15, 23, 42, 0.08);
   --page-shell-shadow: var(--shadow-lg);
   --page-shell-radius: var(--radius-xl);
   --page-shell-margin: var(--space-4xl);
@@ -80,32 +80,28 @@
   --panel-tint-background: var(--color-bg-surface);
   --panel-shadow: none;
   --rail-panel-accent: var(--color-primary);
-  --rail-panel-background: var(--color-bg-subtle);
+  --rail-panel-background: transparent;
 
   --chip-gap: var(--space-2xs);
   --chip-padding-block: 0.4rem;
   --chip-padding-inline: 0.75rem;
-  --chip-border-color: rgba(30, 58, 95, 0.14);
-  --chip-background: rgba(30, 58, 95, 0.06);
+  --chip-border-color: rgba(30, 58, 138, 0.14);
+  --chip-background: rgba(30, 58, 138, 0.06);
   --chip-color: var(--color-primary);
-  --status-chip-border-color: rgba(224, 122, 95, 0.24);
-  --status-chip-background: rgba(224, 122, 95, 0.12);
-  --status-chip-color: #8e4b36;
+  --status-chip-border-color: rgba(194, 65, 12, 0.24);
+  --status-chip-background: rgba(194, 65, 12, 0.12);
+  --status-chip-color: #9a3412;
 
   --eyebrow-color: var(--color-text-muted);
   --section-title-color: var(--color-text);
   --section-lead-color: var(--color-text-secondary);
-  --accent-rule-width: 4rem;
+  --accent-rule-width: 3rem;
   --accent-rule-height: 0.24rem;
-  --accent-rule-background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-accent)
-  );
+  --accent-rule-background: var(--color-primary);
 
   --opener-band-background: var(--color-bg-subtle);
-  --chapter-divider-color: rgba(26, 26, 46, 0.12);
-  --editorial-break-background: rgba(245, 243, 238, 0.72);
+  --chapter-divider-color: rgba(15, 23, 42, 0.12);
+  --editorial-break-background: rgba(241, 245, 249, 0.72);
   --timeline-rail-line: var(--color-line);
   --timeline-rail-marker: var(--color-primary);
 }

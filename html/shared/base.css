@@ -90,7 +90,7 @@ svg {
 
 a {
   color: var(--link-color, inherit);
-  text-decoration-color: rgba(30, 58, 95, 0.28);
+  text-decoration-color: rgba(30, 58, 138, 0.28);
   text-underline-offset: 0.18em;
 }
 
@@ -161,7 +161,7 @@ blockquote {
   margin: var(--page-shell-margin, var(--space-4xl, var(--space-3xl))) auto;
   padding: var(--page-shell-padding, var(--page-margin, var(--space-3xl)));
   background: var(--page-shell-background, var(--color-paper));
-  border: 1px solid var(--page-shell-border-color, rgba(26, 26, 46, 0.08));
+  border: 1px solid var(--page-shell-border-color, rgba(15, 23, 42, 0.08));
   border-radius: var(--page-shell-radius, var(--radius-xl, var(--radius-lg)));
   box-shadow: var(--page-shell-shadow, var(--shadow-page));
 }
@@ -201,8 +201,6 @@ blockquote {
 }
 
 .surface-card,
-.panel-plain,
-.panel_plain,
 .metric-card {
   padding: var(--panel-padding, var(--space-lg));
   border: 1px solid var(--panel-border-color, var(--color-line));
@@ -211,10 +209,19 @@ blockquote {
   box-shadow: var(--panel-shadow, none);
 }
 
+.panel-plain,
+.panel_plain {
+  padding: var(--panel-padding, var(--space-lg));
+  border: none;
+  border-radius: var(--panel-radius, var(--radius-lg));
+  background: var(--panel-background, var(--color-paper));
+  box-shadow: var(--panel-shadow, none);
+}
+
 .panel-tint,
 .panel_tint {
   padding: var(--panel-padding, var(--space-lg));
-  border: 1px solid var(--panel-border-color, var(--color-line));
+  border: none;
   border-radius: var(--panel-radius, var(--radius-lg));
   background: var(--panel-tint-background, var(--color-surface));
   box-shadow: var(--panel-shadow, none);
@@ -223,20 +230,16 @@ blockquote {
 .rail-panel,
 .rail_panel {
   padding: var(--panel-padding, var(--space-lg));
-  padding-inline-start: calc(var(--panel-padding, var(--space-lg)) - 0.3rem);
-  border: 1px solid var(--panel-border-color, var(--color-line));
-  border-inline-start: 0.3rem solid
+  padding-inline-start: calc(var(--panel-padding, var(--space-lg)) - 0.25rem);
+  border: none;
+  border-inline-start: 0.25rem solid
     var(--rail-panel-accent, var(--color-primary));
   border-radius: var(--panel-radius, var(--radius-lg));
   background: var(
     --rail-panel-background,
-    var(--color-bg-subtle, var(--color-surface))
+    transparent
   );
   box-shadow: var(--panel-shadow, none);
-}
-
-.surface-card {
-  background: var(--panel-background, var(--color-paper));
 }
 
 .eyebrow {
@@ -280,9 +283,9 @@ blockquote {
   align-items: center;
   gap: var(--chip-gap, var(--space-2xs));
   padding: var(--chip-padding-block, 0.4rem) var(--chip-padding-inline, 0.75rem);
-  border: 1px solid var(--chip-border-color, rgba(15, 76, 129, 0.12));
+  border: 1px solid var(--chip-border-color, rgba(30, 58, 138, 0.12));
   border-radius: var(--radius-pill);
-  background: var(--chip-background, rgba(15, 76, 129, 0.05));
+  background: var(--chip-background, rgba(30, 58, 138, 0.05));
   color: var(--chip-color, var(--color-primary));
   font-size: var(--text-sm);
   font-weight: 600;
@@ -334,9 +337,9 @@ blockquote {
   display: grid;
   gap: var(--space-sm);
   padding: var(--space-lg);
-  border: 1px solid var(--panel-border-color, var(--color-line));
-  border-top: 0.35rem solid var(--rail-panel-accent, var(--color-primary));
-  border-radius: var(--radius-lg);
+  border: none;
+  border-top: 0.3125rem solid var(--rail-panel-accent, var(--color-primary));
+  border-radius: var(--panel-radius, var(--radius-lg));
   background: var(--opener-band-background, var(--color-bg-subtle));
 }
 
