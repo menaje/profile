@@ -12,8 +12,9 @@
     "build:statement": "node build.mjs statement",
     "build:slides": "node build.mjs slides",
     "build:all": "node build.mjs all",
-    "site:dev": "astro dev",
-    "site:build": "astro build",
+    "sync:pdfs": "node scripts/sync-pdfs.mjs",
+    "site:dev": "npm run sync:pdfs && astro dev",
+    "site:build": "npm run sync:pdfs && astro build",
     "site:preview": "astro preview",
     "site:check": "astro check",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -39,6 +40,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "decktape": "^3.15.0",
     "live-server": "^1.2.2",
     "prettier": "^3.8.1",

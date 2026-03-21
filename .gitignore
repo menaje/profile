@@ -1,5 +1,6 @@
 .DS_Store
 output/*.pdf
+public/downloads/*.pdf
 typst/**/*.pdf
 node_modules/
 dist/
