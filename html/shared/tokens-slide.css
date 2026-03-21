@@ -2,54 +2,54 @@
   --stage-background:
     radial-gradient(
       circle at top left,
-      rgba(224, 122, 95, 0.14),
+      rgba(194, 65, 12, 0.1),
       transparent 24rem
     ),
-    linear-gradient(180deg, #f2ede3 0%, #faf8f3 100%);
+    linear-gradient(180deg, #e2e8f0 0%, #f8fafc 100%);
   --body-copy-size: var(--text-md);
   --body-copy-line-height: 1.6;
 
   --panel-background: rgba(255, 255, 255, 0.94);
-  --panel-tint-background: rgba(30, 58, 95, 0.08);
-  --panel-shadow: 0 14px 32px rgba(26, 26, 46, 0.08);
+  --panel-tint-background: rgba(30, 58, 138, 0.08);
+  --panel-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
   --rail-panel-background: rgba(255, 255, 255, 0.9);
   --rail-panel-accent: var(--color-accent);
 
-  --chip-background: rgba(30, 58, 95, 0.08);
-  --chip-border-color: rgba(30, 58, 95, 0.16);
+  --chip-background: rgba(30, 58, 138, 0.08);
+  --chip-border-color: rgba(30, 58, 138, 0.16);
   --chip-color: var(--color-primary);
-  --status-chip-border-color: rgba(30, 58, 95, 0.2);
-  --status-chip-background: rgba(30, 58, 95, 0.12);
+  --status-chip-border-color: rgba(30, 58, 138, 0.2);
+  --status-chip-background: rgba(30, 58, 138, 0.12);
   --status-chip-color: var(--color-primary);
 
   --slide-shell-background: linear-gradient(
     145deg,
     rgba(255, 255, 255, 0.96),
-    rgba(245, 243, 238, 0.98)
+    rgba(241, 245, 249, 0.98)
   );
-  --slide-shell-border-color: rgba(26, 26, 46, 0.08);
+  --slide-shell-border-color: rgba(15, 23, 42, 0.08);
   --slide-shell-shadow: var(--shadow-lg);
-  --slide-shell-radius: 1.8rem;
+  --slide-shell-radius: 0.75rem;
   --slide-shell-padding: 3rem;
   --slide-kicker-color: var(--color-secondary);
-  --slide-counter-color: rgba(30, 58, 95, 0.3);
+  --slide-counter-color: rgba(30, 58, 138, 0.3);
   --slide-lead-color: var(--color-text-secondary);
   --slide-footer-color: var(--color-text-muted);
   --slide-card-background: rgba(255, 255, 255, 0.95);
-  --slide-card-border-color: rgba(30, 58, 95, 0.12);
-  --slide-card-shadow: 0 10px 24px rgba(26, 26, 46, 0.08);
-  --slot-chip-background: rgba(224, 122, 95, 0.08);
-  --slot-chip-border-color: rgba(224, 122, 95, 0.4);
-  --slot-chip-color: #8e4b36;
+  --slide-card-border-color: rgba(30, 58, 138, 0.12);
+  --slide-card-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  --slot-chip-background: rgba(194, 65, 12, 0.08);
+  --slot-chip-border-color: rgba(194, 65, 12, 0.4);
+  --slot-chip-color: #9a3412;
   --scene-quote-background: rgba(255, 255, 255, 0.82);
   --scene-quote-border: var(--color-accent);
 
-  --r-background-color: #fafaf5;
+  --r-background-color: #f8fafc;
   --r-main-font: var(--font-family-sans);
   --r-heading-font: var(--font-family-sans);
   --r-main-color: var(--color-text);
   --r-heading-color: var(--color-text);
   --r-link-color: var(--color-primary);
   --r-link-color-hover: var(--color-secondary);
-  --r-selection-background-color: rgba(30, 58, 95, 0.2);
+  --r-selection-background-color: rgba(30, 58, 138, 0.2);
 }
