@@ -235,10 +235,7 @@ blockquote {
   border-inline-start: 0.25rem solid
     var(--rail-panel-accent, var(--color-primary));
   border-radius: var(--panel-radius, var(--radius-lg));
-  background: var(
-    --rail-panel-background,
-    transparent
-  );
+  background: var(--rail-panel-background, transparent);
   box-shadow: var(--panel-shadow, none);
 }
 
