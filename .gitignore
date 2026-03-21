@@ -2,3 +2,4 @@
 output/*.pdf
 typst/**/*.pdf
 node_modules/
+dist/
