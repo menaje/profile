@@ -15,6 +15,11 @@
   --transition-fast: 150ms ease-in-out;
   --transition-base: 250ms ease-in-out;
   --transition-slow: 400ms ease-in-out;
+  --site-reveal-duration: 620ms;
+  --site-reveal-easing: cubic-bezier(0.22, 1, 0.36, 1);
+  --site-reveal-distance-x: 1.5rem;
+  --site-reveal-distance-y: 1.25rem;
+  --site-reveal-stagger-step: 80ms;
 
   /* ── Hover / Focus ── */
   --hover-lift: translateY(-2px);
