@@ -11,6 +11,8 @@ const posts = allPosts.sort(
   (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
     b.data.publishedDate.getTime() - a.data.publishedDate.getTime(),
 );
+const featuredPost = posts[0] ?? null;
+const recentPosts = posts.slice(1);
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("ko-KR", {
@@ -19,124 +21,395 @@ function formatDate(date: Date): string {
     day: "numeric",
   });
 }
+
+function getDateBlockParts(date: Date) {
+  return {
+    month: `${date.getMonth() + 1}`.padStart(2, "0"),
+    day: `${date.getDate()}`.padStart(2, "0"),
+    year: `${date.getFullYear()}`,
+  };
+}
 ---
 
 <BaseLayout
   title="블로그"
   description="건설CM에서 AI 시스템 아키텍트로의 여정, 기술 인사이트, 프로젝트 회고를 공유합니다."
 >
-  <section class="site-blog">
-    <div class="site-blog__header">
-      <h1 class="site-blog__title">블로그</h1>
-      <p class="site-blog__description">
-        도메인 전환 여정과 기술 인사이트를 기록합니다.
+  <section class="site-blog-index">
+    <div class="site-page-hero site-blog-index__hero" data-reveal="slide-up">
+      <p class="site-page-hero__eyebrow">Writing & Notes</p>
+      <h1 class="site-page-hero__title">블로그</h1>
+      <p class="site-page-hero__lead">
+        도메인 전환 과정에서 정리한 문제 해결 방식, 시스템 설계 관점, 그리고
+        현장에서 얻은 인사이트를 기록합니다.
+      </p>
+      <p class="site-page-hero__meta">
+        {posts.length > 0
+          ? `현재 ${posts.length}개의 글이 있으며, 가장 최근 글부터 읽기 좋게 재구성했습니다.`
+          : "첫 글을 준비 중입니다. 구조와 톤을 먼저 정리해 두었습니다."}
       </p>
     </div>
 
     {
       posts.length > 0 ? (
-        <ul class="site-blog__list">
-          {posts.map((post: CollectionEntry<"blog">) => (
-            <li class="site-blog-card">
-              <a href={`/blog/${post.id}/`} class="site-blog-card__link">
-                <article>
-                  <h2 class="site-blog-card__title">{post.data.title}</h2>
-                  <time
-                    class="site-blog-card__date"
-                    datetime={post.data.publishedDate.toISOString()}
+        <div class="site-blog-index__stack">
+          {
+            featuredPost && (
+              <section
+                class="site-blog-index__section"
+                aria-labelledby="blog-featured-heading"
+                data-reveal="slide-up"
+              >
+                <div class="site-section-header site-blog-index__section-header">
+                  <p class="site-section-header__eyebrow">Latest Note</p>
+                  <div class="site-section-header__rule" aria-hidden="true"></div>
+                  <h2
+                    id="blog-featured-heading"
+                    class="site-section-header__title"
                   >
-                    {formatDate(post.data.publishedDate)}
-                  </time>
-                  <p class="site-blog-card__description">
-                    {post.data.description}
+                    최근 글
+                  </h2>
+                  <p class="site-section-header__lead">
+                    가장 최근에 정리한 생각과 기술 기록을 먼저 읽을 수 있게
+                    배치했습니다.
                   </p>
-                  {post.data.tags.length > 0 && (
-                    <ul class="site-blog-card__tags">
-                      {post.data.tags.map((tag: string) => (
-                        <li class="site-blog-card__tag">{tag}</li>
-                      ))}
-                    </ul>
-                  )}
+                </div>
+
+                <article
+                  class="site-blog-card site-blog-card--featured site-card site-card--interactive"
+                >
+                  <a
+                    href={`/blog/${featuredPost.id}/`}
+                    class="site-blog-card__link"
+                    aria-label={`${featuredPost.data.title} 읽기`}
+                  >
+                    <time
+                      class="site-blog-card__date-block"
+                      datetime={featuredPost.data.publishedDate.toISOString()}
+                      aria-label={formatDate(featuredPost.data.publishedDate)}
+                      style={`view-transition-name: blog-post-date-${featuredPost.id}`}
+                    >
+                      <span class="site-blog-card__date-month">
+                        {getDateBlockParts(featuredPost.data.publishedDate).month}
+                      </span>
+                      <strong class="site-blog-card__date-day">
+                        {getDateBlockParts(featuredPost.data.publishedDate).day}
+                      </strong>
+                      <span class="site-blog-card__date-year">
+                        {getDateBlockParts(featuredPost.data.publishedDate).year}
+                      </span>
+                    </time>
+
+                    <div class="site-blog-card__content">
+                      <div class="site-blog-card__meta">
+                        <span class="site-badge site-badge--accent">Latest</span>
+                        <span class="site-blog-card__full-date">
+                          {formatDate(featuredPost.data.publishedDate)}
+                        </span>
+                      </div>
+                      <h3
+                        class="site-blog-card__title"
+                        style={`view-transition-name: blog-post-title-${featuredPost.id}`}
+                      >
+                        {featuredPost.data.title}
+                      </h3>
+                      <p class="site-blog-card__description">
+                        {featuredPost.data.description}
+                      </p>
+                      {
+                        featuredPost.data.tags.length > 0 && (
+                          <ul class="site-blog-card__tags" aria-label="태그">
+                            {featuredPost.data.tags.map((tag: string) => (
+                              <li>
+                                <span class="site-badge site-badge--primary">
+                                  {tag}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )
+                      }
+                      <span class="site-blog-card__cta" aria-hidden="true">
+                        <span>글 읽기</span>
+                        <span class="site-blog-card__cta-icon">→</span>
+                      </span>
+                    </div>
+                  </a>
                 </article>
-              </a>
-            </li>
-          ))}
-        </ul>
+              </section>
+            )
+          }
+
+          {
+            recentPosts.length > 0 && (
+              <section
+                class="site-blog-index__section"
+                aria-labelledby="blog-archive-heading"
+                data-reveal="slide-up"
+              >
+                <div class="site-section-header site-blog-index__section-header">
+                  <p class="site-section-header__eyebrow">Archive</p>
+                  <div class="site-section-header__rule" aria-hidden="true"></div>
+                  <h2
+                    id="blog-archive-heading"
+                    class="site-section-header__title"
+                  >
+                    이전 글
+                  </h2>
+                  <p class="site-section-header__lead">
+                    날짜 블록과 요약을 기준으로 빠르게 훑을 수 있게 정리했습니다.
+                  </p>
+                </div>
+
+                <ul class="site-blog-index__list stagger-children">
+                  {recentPosts.map((post: CollectionEntry<"blog">) => (
+                    <li class="site-blog-index__list-item">
+                      <article class="site-blog-card site-card site-card--interactive">
+                        <a
+                          href={`/blog/${post.id}/`}
+                          class="site-blog-card__link"
+                          aria-label={`${post.data.title} 읽기`}
+                        >
+                          <time
+                            class="site-blog-card__date-block"
+                            datetime={post.data.publishedDate.toISOString()}
+                            aria-label={formatDate(post.data.publishedDate)}
+                            style={`view-transition-name: blog-post-date-${post.id}`}
+                          >
+                            <span class="site-blog-card__date-month">
+                              {getDateBlockParts(post.data.publishedDate).month}
+                            </span>
+                            <strong class="site-blog-card__date-day">
+                              {getDateBlockParts(post.data.publishedDate).day}
+                            </strong>
+                            <span class="site-blog-card__date-year">
+                              {getDateBlockParts(post.data.publishedDate).year}
+                            </span>
+                          </time>
+
+                          <div class="site-blog-card__content">
+                            <div class="site-blog-card__meta">
+                              <span class="site-blog-card__full-date">
+                                {formatDate(post.data.publishedDate)}
+                              </span>
+                            </div>
+                            <h3
+                              class="site-blog-card__title"
+                              style={`view-transition-name: blog-post-title-${post.id}`}
+                            >
+                              {post.data.title}
+                            </h3>
+                            <p class="site-blog-card__description">
+                              {post.data.description}
+                            </p>
+                            {
+                              post.data.tags.length > 0 && (
+                                <ul class="site-blog-card__tags" aria-label="태그">
+                                  {post.data.tags.map((tag: string) => (
+                                    <li>
+                                      <span class="site-badge">{tag}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )
+                            }
+                            <span class="site-blog-card__cta" aria-hidden="true">
+                              <span>더 읽기</span>
+                              <span class="site-blog-card__cta-icon">→</span>
+                            </span>
+                          </div>
+                        </a>
+                      </article>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+        </div>
       ) : (
-        <p class="site-blog__empty">아직 작성된 글이 없습니다.</p>
+        <div class="site-blog-index__empty site-card" data-reveal="fade-in">
+          <span class="site-blog-index__empty-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M14 3h5v5" />
+              <path d="M10 14 19 5" />
+              <path d="M19 14v5h-5" />
+              <path d="M5 10V5h5" />
+              <path d="M5 5l14 14" />
+            </svg>
+          </span>
+          <div class="site-blog-index__empty-copy">
+            <h2 class="site-blog-index__empty-title">첫 글을 준비하고 있습니다</h2>
+            <p class="site-blog-index__empty-text">
+              도메인 전환, 시스템 설계, 프로젝트 회고를 차례로 쌓아갈 예정입니다.
+              준비되는 즉시 가장 최근 글부터 이곳에 정리됩니다.
+            </p>
+          </div>
+        </div>
       )
     }
   </section>
 </BaseLayout>
 
 <style>
-  .site-blog {
+  .site-blog-index {
     max-width: var(--site-content-max-width);
     margin: 0 auto;
-    padding: var(--space-xl) var(--site-gutter) var(--space-2xl);
+    padding: clamp(var(--space-2xl), 6vw, var(--space-4xl)) var(--site-gutter)
+      var(--space-4xl);
   }
 
-  .site-blog__header {
-    margin-bottom: var(--space-xl);
+  .site-blog-index__hero {
+    margin-bottom: clamp(var(--space-2xl), 5vw, var(--space-4xl));
   }
 
-  .site-blog__title {
-    font-size: var(--text-3xl);
-    margin: 0 0 var(--space-xs);
-    color: var(--color-ink);
+  .site-blog-index__stack {
+    display: grid;
+    gap: clamp(var(--space-2xl), 4vw, var(--space-4xl));
   }
 
-  .site-blog__description {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    margin: 0;
+  .site-blog-index__section-header {
+    margin-bottom: var(--space-lg);
   }
 
-  .site-blog__list {
+  .site-blog-index__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--space-md);
   }
 
-  .site-blog-card {
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
-    transition: border-color var(--transition-fast);
+  .site-blog-index__list-item {
+    min-width: 0;
   }
 
-  .site-blog-card:hover {
-    border-color: var(--color-primary);
+  .site-blog-card {
+    position: relative;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        transparent 38%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-blog-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 0.28rem;
+    background: linear-gradient(
+      90deg,
+      var(--color-primary),
+      color-mix(in srgb, var(--color-secondary) 82%, var(--color-primary))
+    );
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  .site-blog-card--featured::before {
+    opacity: 1;
   }
 
   .site-blog-card__link {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(4.75rem, 5rem) minmax(0, 1fr);
+    gap: var(--space-md);
+    align-items: stretch;
+    min-width: 0;
     padding: var(--space-lg);
-    text-decoration: none;
     color: inherit;
+    text-decoration: none;
+  }
+
+  .site-blog-card__date-block {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.12rem;
+    padding: var(--space-md) var(--space-sm);
+    border: 1px solid
+      color-mix(in srgb, var(--color-primary) 16%, var(--site-border-default));
+    border-radius: calc(var(--site-card-radius) - var(--space-2xs));
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-primary) 12%, var(--color-paper)),
+        color-mix(in srgb, var(--color-secondary) 5%, var(--color-paper))
+      );
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-paper) 72%, transparent);
+    color: var(--color-primary);
+    text-align: center;
+  }
+
+  .site-blog-card__date-month,
+  .site-blog-card__date-year {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  .site-blog-card__date-month {
+    opacity: 0.76;
+  }
+
+  .site-blog-card__date-day {
+    font-size: clamp(1.5rem, 1.1rem + 1vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .site-blog-card__date-year {
+    letter-spacing: 0.08em;
+    opacity: 0.72;
+  }
+
+  .site-blog-card__content {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+    min-width: 0;
+  }
+
+  .site-blog-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-sm);
+  }
+
+  .site-blog-card__full-date {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
   .site-blog-card__title {
-    font-size: var(--text-xl);
-    margin: 0 0 var(--space-xs);
+    margin: 0;
+    font-size: clamp(var(--text-xl), 2.4vw, var(--text-2xl));
+    line-height: 1.24;
     color: var(--color-ink);
-    line-height: 1.4;
-  }
-
-  .site-blog-card__date {
-    display: block;
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-sm);
+    text-wrap: balance;
   }
 
   .site-blog-card__description {
+    margin: 0;
     font-size: var(--text-md);
+    line-height: 1.75;
     color: var(--color-text-secondary);
-    margin: 0 0 var(--space-sm);
-    line-height: 1.6;
   }
 
   .site-blog-card__tags {
@@ -148,36 +421,143 @@ function formatDate(date: Date): string {
     gap: var(--space-xs);
   }
 
-  .site-blog-card__tag {
-    font-size: var(--text-xs);
+  .site-blog-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    width: fit-content;
+    margin-top: var(--space-2xs);
+    font-size: var(--text-sm);
+    font-weight: 600;
     color: var(--color-primary);
-    background: var(--color-bg-surface);
-    padding: 2px var(--space-sm);
-    border-radius: var(--radius-sm);
   }
 
-  .site-blog__empty {
-    text-align: center;
+  .site-blog-card__cta-icon {
+    transition:
+      transform var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  :where(.site-blog-card:hover, .site-blog-card:focus-within)::before {
+    opacity: 1;
+  }
+
+  :where(.site-blog-card:hover, .site-blog-card:focus-within)
+    .site-blog-card__date-block {
+    border-color: color-mix(
+      in srgb,
+      var(--color-primary) 28%,
+      var(--site-border-default)
+    );
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-primary) 18%, var(--color-paper)),
+        color-mix(in srgb, var(--color-secondary) 10%, var(--color-paper))
+      );
+  }
+
+  :where(.site-blog-card:hover, .site-blog-card:focus-within)
+    .site-blog-card__cta-icon {
+    transform: translateX(0.18rem);
+  }
+
+  .site-blog-card--featured {
+    background:
+      radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--color-primary) 10%, transparent),
+        transparent 46%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 88%, transparent),
+        transparent 38%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-blog-card--featured .site-blog-card__link {
+    padding-block: clamp(var(--space-lg), 3vw, var(--space-xl));
+  }
+
+  .site-blog-index__empty {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+    padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
+    background:
+      radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--color-primary) 8%, transparent),
+        transparent 48%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-blog-index__empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 999px;
+    border: 1px solid
+      color-mix(in srgb, var(--color-primary) 18%, var(--site-border-default));
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
+    color: var(--color-primary);
+  }
+
+  .site-blog-index__empty-icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .site-blog-index__empty-copy {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .site-blog-index__empty-title {
+    margin: 0;
+    font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+    color: var(--color-ink);
+  }
+
+  .site-blog-index__empty-text {
+    margin: 0;
+    max-width: 54ch;
+    line-height: 1.75;
     color: var(--color-text-muted);
-    font-size: var(--text-lg);
-    padding: var(--space-2xl) 0;
   }
 
   @media (min-width: 768px) {
-    .site-blog {
-      padding-top: var(--space-2xl);
-    }
-
-    .site-blog__title {
-      font-size: var(--text-4xl);
-    }
-
     .site-blog-card__link {
+      grid-template-columns: minmax(5.5rem, 6rem) minmax(0, 1fr);
+      gap: var(--space-lg);
       padding: var(--space-xl);
     }
 
+    .site-blog-card--featured .site-blog-card__link {
+      grid-template-columns: minmax(6.25rem, 6.75rem) minmax(0, 1fr);
+    }
+
+    .site-blog-card__description {
+      max-width: 60ch;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-blog-index__stack {
+      gap: var(--space-4xl);
+    }
+
+    .site-blog-index__section-header {
+      margin-bottom: var(--space-xl);
+    }
+
     .site-blog-card__title {
-      font-size: var(--text-2xl);
+      font-size: clamp(var(--text-2xl), 2vw, var(--text-3xl));
     }
   }
 </style>
