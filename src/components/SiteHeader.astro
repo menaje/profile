@@ -1,0 +1,211 @@
+---
+const navItems = [
+  { label: "소개", href: "/about" },
+  { label: "프로젝트", href: "/projects" },
+  { label: "이력서", href: "/resume" },
+  { label: "블로그", href: "/blog" },
+  { label: "연락처", href: "/contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <nav class="site-nav" aria-label="메인 내비게이션">
+    <a href="/" class="site-nav__logo">김성식</a>
+
+    <button
+      class="site-nav__toggle"
+      aria-expanded="false"
+      aria-controls="site-nav-menu"
+      aria-label="메뉴 열기"
+    >
+      <svg
+        class="site-nav__icon site-nav__icon--open"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg
+        class="site-nav__icon site-nav__icon--close"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <ul id="site-nav-menu" class="site-nav__menu">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="site-nav__link"
+              aria-current={
+                currentPath === item.href ||
+                currentPath.startsWith(item.href + "/")
+                  ? "page"
+                  : undefined
+              }
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
+  const menu = document.getElementById("site-nav-menu");
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!expanded));
+      menu.classList.toggle("site-nav__menu--open");
+      toggle.setAttribute(
+        "aria-label",
+        expanded ? "메뉴 열기" : "메뉴 닫기",
+      );
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg-page);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 0 var(--site-gutter);
+    height: var(--site-nav-height);
+  }
+
+  .site-nav__logo {
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .site-nav__logo:hover {
+    color: var(--color-primary);
+  }
+
+  .site-nav__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs);
+    color: var(--color-ink);
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .site-nav__icon--close {
+    display: none;
+  }
+
+  .site-nav__toggle[aria-expanded="true"] .site-nav__icon--open {
+    display: none;
+  }
+
+  .site-nav__toggle[aria-expanded="true"] .site-nav__icon--close {
+    display: block;
+  }
+
+  .site-nav__menu {
+    display: none;
+    position: absolute;
+    top: var(--site-nav-height);
+    left: 0;
+    right: 0;
+    background: var(--color-bg-page);
+    border-bottom: 1px solid var(--color-line);
+    list-style: none;
+    margin: 0;
+    padding: var(--space-sm) 0;
+    box-shadow: var(--shadow-md);
+  }
+
+  .site-nav__menu--open {
+    display: block;
+  }
+
+  .site-nav__link {
+    display: block;
+    padding: var(--space-sm) var(--site-gutter);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--text-md);
+    transition: color var(--transition-fast);
+  }
+
+  .site-nav__link:hover {
+    color: var(--color-primary);
+  }
+
+  .site-nav__link[aria-current="page"] {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  @media (min-width: 768px) {
+    .site-nav__toggle {
+      display: none;
+    }
+
+    .site-nav__menu {
+      display: flex;
+      position: static;
+      background: none;
+      border-bottom: none;
+      box-shadow: none;
+      padding: 0;
+      gap: var(--space-xs);
+    }
+
+    .site-nav__link {
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+    }
+
+    .site-nav__link:hover {
+      background: var(--color-bg-surface);
+    }
+  }
+</style>

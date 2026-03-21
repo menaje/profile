@@ -2,6 +2,35 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Site">
-  <h1>Hello, Astro</h1>
+<BaseLayout
+  title="김성식 — AI 네이티브 시스템 아키텍트"
+  description="건설CM 9년 + AI/IT 경력을 바탕으로 도메인 문제를 AI 협업 시스템으로 번역하는 시스템 아키텍트입니다."
+>
+  <section class="site-placeholder">
+    <h1>김성식</h1>
+    <p>AI 네이티브 시스템 아키텍트</p>
+  </section>
 </BaseLayout>
+
+<style>
+  .site-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+    padding: var(--space-2xl) var(--site-gutter);
+  }
+
+  .site-placeholder h1 {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .site-placeholder p {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+</style>
