@@ -20,6 +20,13 @@
     var(--color-line)
   );
 
+  /* Modern design tokens — document-local overrides */
+  --technical-radius-card: 1rem;
+  --technical-radius-section: 0.75rem;
+  --technical-shadow-card: 0 2px 8px rgba(15, 23, 42, 0.06),
+    0 8px 24px rgba(15, 23, 42, 0.04);
+  --technical-shadow-section: 0 1px 4px rgba(15, 23, 42, 0.04);
+
   --technical-problem: #b85c58;
   --technical-problem-soft: color-mix(
     in srgb,
@@ -150,8 +157,9 @@
   gap: var(--space-xl);
   padding: var(--space-xl);
   border-top: 0.3125rem solid var(--technical-accent);
-  border-radius: var(--radius-lg);
+  border-radius: var(--technical-radius-card);
   background: var(--color-bg-subtle);
+  box-shadow: var(--technical-shadow-card);
   break-inside: avoid;
 }
 
@@ -260,8 +268,9 @@
   gap: var(--space-sm);
   padding: var(--space-md) var(--space-lg);
   border-inline-start: 0.25rem solid var(--technical-accent);
-  border-radius: var(--radius-sm);
+  border-radius: var(--technical-radius-section);
   background: var(--technical-accent-soft);
+  box-shadow: var(--technical-shadow-section);
   break-inside: avoid;
 }
 
@@ -297,8 +306,9 @@
   gap: var(--space-md);
   padding: var(--space-xl);
   border-top: 0.3125rem solid var(--technical-accent);
-  border-radius: var(--radius-lg);
+  border-radius: var(--technical-radius-card);
   background: var(--color-bg-subtle);
+  box-shadow: var(--technical-shadow-card);
   break-inside: avoid;
 }
 
@@ -397,16 +407,17 @@
   gap: var(--space-sm) var(--space-md);
   padding: var(--space-md) var(--space-lg);
   border-inline-start: 0.25rem solid currentcolor;
-  border-radius: var(--radius-sm);
+  border-radius: var(--technical-radius-section);
+  box-shadow: var(--technical-shadow-section);
   break-inside: avoid;
 }
 
 .technical-prso-label {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding-top: 0.15em;
+  padding-top: 0.1em;
 }
 
 .technical-prso-body {
@@ -461,8 +472,9 @@
   gap: var(--space-sm) var(--space-md);
   padding: var(--space-lg) var(--space-xl);
   border-inline-start: 0.375rem solid var(--technical-outcome);
-  border-radius: var(--radius-md);
+  border-radius: var(--technical-radius-card);
   background: var(--technical-outcome-soft);
+  box-shadow: var(--technical-shadow-card);
   break-inside: avoid;
 }
 
@@ -503,8 +515,9 @@
   display: grid;
   gap: var(--space-md);
   padding: var(--space-lg);
-  border-radius: var(--radius-lg);
+  border-radius: var(--technical-radius-card);
   background: var(--color-bg-subtle);
+  box-shadow: var(--technical-shadow-card);
 }
 
 .technical-appendix-case-header {
@@ -532,7 +545,7 @@
   padding-inline-start: calc(var(--space-md) - 0.25rem);
   border: none;
   border-inline-start: 0.25rem solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: var(--technical-radius-section);
   background: rgb(255 255 255 / 78%);
 }
 
@@ -687,6 +700,11 @@
    =================================================================== */
 
 @media print {
+  .technical-career-document {
+    --technical-shadow-card: none;
+    --technical-shadow-section: none;
+  }
+
   .technical-page {
     --panel-padding: var(--space-2xs);
 
