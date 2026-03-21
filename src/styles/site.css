@@ -52,9 +52,60 @@
   --font-family-sans:
     "Pretendard Site", "Noto Sans CJK KR Site", "Apple SD Gothic Neo",
     "Malgun Gothic", "Segoe UI", sans-serif;
+  --site-surface-default: color-mix(
+    in srgb,
+    var(--color-paper) 96%,
+    var(--color-primary) 4%
+  );
+  --site-surface-elevated: color-mix(
+    in srgb,
+    var(--color-paper) 72%,
+    var(--color-bg-surface)
+  );
+  --site-surface-muted: color-mix(
+    in srgb,
+    var(--color-bg-subtle) 88%,
+    var(--color-secondary) 12%
+  );
+  --site-border-default: color-mix(
+    in srgb,
+    var(--color-line) 82%,
+    var(--color-primary) 18%
+  );
+  --site-border-strong: color-mix(
+    in srgb,
+    var(--color-line-strong) 70%,
+    var(--color-primary) 30%
+  );
+  --site-border-accent: color-mix(
+    in srgb,
+    var(--color-secondary) 34%,
+    var(--color-line)
+  );
+  --site-glow-primary: color-mix(
+    in srgb,
+    var(--color-primary) 22%,
+    transparent
+  );
+  --site-glow-secondary: color-mix(
+    in srgb,
+    var(--color-secondary) 20%,
+    transparent
+  );
+  --site-glow-accent: color-mix(in srgb, var(--color-accent) 20%, transparent);
   --site-nav-height: 3.5rem;
   --site-content-max-width: var(--site-max-width);
-  --site-footer-bg: var(--color-bg-surface);
+  --site-footer-bg: var(--site-surface-elevated);
+  --stage-background: var(--site-surface-default);
+  --focus-ring-color: var(--site-glow-primary);
+}
+
+body {
+  font-weight: var(--font-weight-body);
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-weight: var(--font-weight-heading);
 }
 
 :where(a[href], button, input, textarea, select, summary):focus-visible {
@@ -64,6 +115,87 @@
 
 :where(main a[href]) {
   text-underline-offset: 0.16em;
+}
+
+:where([data-reveal], .fade-in, .slide-up, .slide-in-left, .stagger-children) {
+  --site-reveal-translate-x: 0;
+  --site-reveal-translate-y: 0;
+  --site-reveal-delay: 0ms;
+}
+
+:where([data-reveal="slide-up"], .slide-up) {
+  --site-reveal-translate-y: var(--site-reveal-distance-y);
+}
+
+:where([data-reveal="slide-in-left"], .slide-in-left) {
+  --site-reveal-translate-x: calc(var(--site-reveal-distance-x) * -1);
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal], .fade-in, .slide-up, .slide-in-left):not(
+    :where([data-reveal="stagger-children"], .stagger-children)
+  ) {
+  transition:
+    opacity var(--site-reveal-duration) var(--site-reveal-easing)
+      var(--site-reveal-delay),
+    transform var(--site-reveal-duration) var(--site-reveal-easing)
+      var(--site-reveal-delay);
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal], .fade-in, .slide-up, .slide-in-left):not(
+    :where([data-reveal="stagger-children"], .stagger-children)
+  )[data-reveal-state="pending"] {
+  opacity: 0;
+  transform: translate3d(
+    var(--site-reveal-translate-x),
+    var(--site-reveal-translate-y),
+    0
+  );
+  will-change: opacity, transform;
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal], .fade-in, .slide-up, .slide-in-left):not(
+    :where([data-reveal="stagger-children"], .stagger-children)
+  )[data-reveal-state="revealed"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal="stagger-children"], .stagger-children)
+  > * {
+  --site-reveal-child-delay: 0ms;
+  transition:
+    opacity var(--site-reveal-duration) var(--site-reveal-easing)
+      var(--site-reveal-child-delay),
+    transform var(--site-reveal-duration) var(--site-reveal-easing)
+      var(--site-reveal-child-delay);
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal="stagger-children"], .stagger-children)[data-reveal-state="pending"]
+  > * {
+  opacity: 0;
+  transform: translate3d(0, var(--site-reveal-distance-y), 0);
+  will-change: opacity, transform;
+}
+
+html[data-reveal-ready="true"]
+  :where([data-reveal="stagger-children"], .stagger-children)[data-reveal-state="revealed"]
+  > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+html[data-reveal-reduced="true"] :where([data-reveal], .fade-in, .slide-up, .slide-in-left, .stagger-children),
+html[data-reveal-reduced="true"]
+  :where([data-reveal="stagger-children"], .stagger-children)
+  > * {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -78,5 +210,14 @@
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+
+  html[data-reveal-ready="true"]
+    :where([data-reveal], .fade-in, .slide-up, .slide-in-left, .stagger-children),
+  html[data-reveal-ready="true"]
+    :where([data-reveal="stagger-children"], .stagger-children)
+    > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

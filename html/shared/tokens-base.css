@@ -23,7 +23,33 @@
   --color-subtle: var(--color-bg-subtle);
   --color-line: #d4cfc7;
   --color-line-strong: #a39e94;
+  --site-surface-default: var(--color-bg-page);
+  --site-surface-elevated: var(--color-bg-surface);
+  --site-surface-muted: var(--color-bg-subtle);
+  --site-on-default: var(--color-text);
+  --site-on-muted: var(--color-text-secondary);
+  --site-on-inverse: var(--color-paper);
+  --site-border-default: var(--color-line);
+  --site-border-strong: var(--color-line-strong);
+  --site-border-accent: color-mix(
+    in srgb,
+    var(--color-primary) 28%,
+    var(--color-line)
+  );
+  --site-glow-primary: color-mix(
+    in srgb,
+    var(--color-primary) 18%,
+    transparent
+  );
+  --site-glow-secondary: color-mix(
+    in srgb,
+    var(--color-secondary) 18%,
+    transparent
+  );
+  --site-glow-accent: color-mix(in srgb, var(--color-accent) 18%, transparent);
 
+  --font-weight-body: 400;
+  --font-weight-heading: 700;
   --line-height-tight: 1.15;
   --line-height-body: 1.6;
   --line-height-relaxed: 1.72;
@@ -58,6 +84,8 @@
   --text-3xl: 2.25rem;
   --text-4xl: 3rem;
   --text-5xl: 3.75rem;
+  --text-6xl: clamp(3.6rem, 2.8rem + 2.3vw, 4.5rem);
+  --text-7xl: clamp(4.25rem, 3rem + 4vw, 6rem);
 
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
