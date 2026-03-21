@@ -12,6 +12,11 @@
     "build:statement": "node build.mjs statement",
     "build:slides": "node build.mjs slides",
     "build:all": "node build.mjs all",
+    "sync:pdfs": "node scripts/sync-pdfs.mjs",
+    "site:dev": "npm run sync:pdfs && astro dev",
+    "site:build": "npm run sync:pdfs && astro build",
+    "site:preview": "astro preview",
+    "site:check": "astro check",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,9 +32,23 @@
   },
   "homepage": "https://github.com/menaje/coni-example#readme",
   "dependencies": {
-    "reveal.js": "^6.0.0"
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/markdoc": "^1.0.2",
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/react": "^5.0.1",
+    "@astrojs/rss": "^4.0.17",
+    "@astrojs/sitemap": "^3.7.1",
+    "@keystatic/astro": "^5.0.6",
+    "@keystatic/core": "^0.5.48",
+    "astro": "^6.0.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "reveal.js": "^6.0.0",
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
     "decktape": "^3.15.0",
     "live-server": "^1.2.2",
     "prettier": "^3.8.1",

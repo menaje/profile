@@ -1,0 +1,140 @@
+---
+import type {
+  PublicEmployment,
+  PublicOrganization,
+} from "../lib/public-profile";
+
+interface Props {
+  employmentTimeline: PublicEmployment[];
+  organizations: PublicOrganization[];
+}
+
+const { employmentTimeline, organizations } = Astro.props;
+
+function getOrgName(orgId: string): string {
+  const org = organizations.find((o) => o.id === orgId);
+  return org?.displayName ?? "—";
+}
+
+function domainLabel(domain: string): string {
+  switch (domain) {
+    case "construction-cm":
+      return "건설 CM";
+    case "ai-it":
+      return "AI / IT";
+    default:
+      return domain;
+  }
+}
+
+const sortedTimeline = [...employmentTimeline].sort((a, b) => {
+  const aStart = a.period.start?.value ?? "";
+  const bStart = b.period.start?.value ?? "";
+  return aStart.localeCompare(bStart);
+});
+---
+
+<section class="site-timeline" aria-labelledby="timeline-heading">
+  <div class="site-timeline__inner">
+    <div class="site-timeline__header">
+      <div class="accent-rule"></div>
+      <h2 id="timeline-heading" class="site-timeline__title">경력 여정</h2>
+      <p class="site-timeline__lead">
+        건설 사업관리에서 AI 서비스 개발로, 도메인을 넘나드는 여정입니다.
+      </p>
+    </div>
+
+    <ol class="site-timeline__rail timeline-rail" role="list">
+      {
+        sortedTimeline.map((emp) => (
+          <li class="site-timeline__entry">
+            <span class="pill site-timeline__domain">
+              {domainLabel(emp.domain)}
+            </span>
+            <h3 class="site-timeline__role">{emp.roleTitle}</h3>
+            <p class="site-timeline__org">{getOrgName(emp.organizationId)}</p>
+            <p class="site-timeline__period">{emp.period.display}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .site-timeline {
+    padding: var(--space-5xl) var(--site-gutter);
+    background: var(--color-bg-subtle);
+  }
+
+  .site-timeline__inner {
+    max-width: var(--site-content-max-width);
+    margin: 0 auto;
+  }
+
+  .site-timeline__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .site-timeline__title {
+    font-size: var(--text-2xl);
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .site-timeline__lead {
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+    max-width: 48ch;
+    margin: 0;
+  }
+
+  .site-timeline__rail {
+    list-style: none;
+    margin: 0;
+    padding-left: var(--space-xl);
+  }
+
+  .site-timeline__entry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-bottom: var(--space-lg);
+  }
+
+  .site-timeline__domain {
+    align-self: flex-start;
+  }
+
+  .site-timeline__role {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .site-timeline__org {
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .site-timeline__period {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .site-timeline__title {
+      font-size: var(--text-3xl);
+    }
+
+    .site-timeline__rail {
+      padding-left: var(--space-3xl);
+    }
+  }
+</style>

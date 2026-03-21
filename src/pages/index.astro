@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroSection from "../components/HeroSection.astro";
+import ProofStrip from "../components/ProofStrip.astro";
+import SelectedWork from "../components/SelectedWork.astro";
+import CareerTimeline from "../components/CareerTimeline.astro";
+import CtaSection from "../components/CtaSection.astro";
+import { getPublicProfile } from "../lib/public-profile";
+
+const data = getPublicProfile();
+---
+
+<BaseLayout
+  title="김성식 — AI 네이티브 시스템 아키텍트"
+  description="건설CM 9년 + AI/IT 경력을 바탕으로 도메인 문제를 AI 협업 시스템으로 번역하는 시스템 아키텍트입니다."
+>
+  <HeroSection profile={data.profile} currentStatus={data.currentStatus} />
+  <ProofStrip careerSummary={data.careerSummary} />
+  <SelectedWork
+    projects={data.projects.core}
+    organizations={data.organizations}
+  />
+  <CareerTimeline
+    employmentTimeline={data.employmentTimeline}
+    organizations={data.organizations}
+  />
+  <CtaSection profile={data.profile} currentStatus={data.currentStatus} />
+</BaseLayout>
