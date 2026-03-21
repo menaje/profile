@@ -11,21 +11,48 @@ function orgName(orgId: string | null): string {
   return org ? org.displayName : orgId;
 }
 
+function toneForDomain(domain: string): "construction-cm" | "ai-it" {
+  if (
+    domain === "건설사업관리(CM)" ||
+    domain.toLowerCase().includes("construction")
+  ) {
+    return "construction-cm";
+  }
+
+  return "ai-it";
+}
+
+function domainDisplay(domain: string): string {
+  return toneForDomain(domain) === "construction-cm" ? "건설 CM" : "AI / IT";
+}
+
+function domainBadgeClass(domain: string): string {
+  return toneForDomain(domain) === "construction-cm"
+    ? "site-badge site-badge--secondary"
+    : "site-badge site-badge--primary";
+}
+
 const timelineItems = [
-  ...employmentTimeline.map((emp) => ({
-    period: emp.period.display ?? "",
-    role: emp.roleTitle,
-    org: orgName(emp.organizationId),
-    domain: emp.domain,
-    label:
-      emp.domain === "건설사업관리(CM)"
-        ? careerSummary.constructionCm.label
-        : careerSummary.aiIt.label,
-    coreProjects: projects.core.filter(
-      (p) => p.organizationId === emp.organizationId,
-    ),
-    isCurrent: emp.statusAtBasisDate === "ongoing",
-  })),
+  ...employmentTimeline.map((emp) => {
+    const domainTone = toneForDomain(emp.domain);
+
+    return {
+      period: emp.period.display ?? "",
+      role: emp.roleTitle,
+      org: orgName(emp.organizationId),
+      domainTone,
+      domainDisplay: domainDisplay(emp.domain),
+      domainBadgeClass: domainBadgeClass(emp.domain),
+      label:
+        domainTone === "construction-cm"
+          ? careerSummary.constructionCm.label
+          : careerSummary.aiIt.label,
+      coreProjects: projects.core.filter(
+        (p) => p.organizationId === emp.organizationId,
+      ),
+      isCurrent: emp.statusAtBasisDate === "ongoing",
+    };
+  }),
 ];
 
 const personalProjects = projects.core.filter((p) => !p.organizationId);
@@ -37,7 +64,9 @@ if (personalProjects.length > 0) {
       .join(", "),
     role: "개인 프로젝트",
     org: "",
-    domain: "AI/IT",
+    domainTone: "ai-it",
+    domainDisplay: "AI / IT",
+    domainBadgeClass: "site-badge site-badge--primary",
     label: "",
     coreProjects: personalProjects,
     isCurrent: personalProjects.some(
@@ -52,98 +81,142 @@ if (personalProjects.length > 0) {
   description="건설CM 9년의 문제의식에서 AI 시스템 아키텍트로. 도메인 전환 서사와 경력 타임라인."
 >
   <div class="site-about">
-    <!-- Hero -->
-    <section class="site-about-hero" aria-labelledby="about-heading">
-      <p class="site-about-hero__eyebrow">About</p>
-      <h1 id="about-heading" class="site-about-hero__title">
+    <section
+      class="site-about-hero site-page-hero"
+      aria-labelledby="about-heading"
+      data-reveal="slide-up"
+    >
+      <p class="site-page-hero__eyebrow">About</p>
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h1 id="about-heading" class="site-page-hero__title site-about-hero__title">
         9년의 질문에<br />AI로 답을 찾아가는 아키텍트
       </h1>
-      <p class="site-about-hero__lead">
+      <p class="site-page-hero__lead site-about-hero__lead">
         {careerSummary.constructionCm.period.display}에는 건설사업관리 현장을,
         {careerSummary.aiIt.period.display}에는 AI 서비스 기획·개발을
         경험했습니다. 직무와 산업은 달라졌지만, 제 커리어를 한 줄로 묶는 질문은
         변하지 않았습니다.
       </p>
+      <ul class="site-about-hero__metrics" role="list" aria-label="경력 요약">
+        <li>
+          <span class="site-badge site-badge--accent">
+            총 경력 {careerSummary.totalCareer.label}
+          </span>
+        </li>
+        <li>
+          <span class="site-badge site-badge--secondary">
+            건설 CM {careerSummary.constructionCm.label}
+          </span>
+        </li>
+        <li>
+          <span class="site-badge site-badge--primary">
+            AI / IT {careerSummary.aiIt.label}
+          </span>
+        </li>
+      </ul>
     </section>
 
-    <!-- 서사 블록 01: 문제의식 -->
     <section
-      class="site-about-block"
+      class="site-about-block site-card"
       aria-labelledby="narrative-01"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 60ms;"
     >
-      <p class="site-about-block__eyebrow">
-        <span class="site-about-block__number">01</span>
-        문제의식
-      </p>
-      <h2 id="narrative-01" class="site-about-block__title">
-        현장에서 반복된 손실을 기술의 질문으로 바꿨습니다
-      </h2>
-      <div class="site-about-block__body">
-        <p>
-          기술로 방향을 틀게 된 출발점은 새로운 유행이 아니라
-          <strong>현장의 반복 손실</strong>이었습니다. 건설사업관리 현장에서는
-          수많은 문서와 회의가 쌓이지만 정작 중요한 순간에는 필요한 맥락이
-          이어지지 않았습니다.
-        </p>
-        <p>
-          <strong>{careerSummary.constructionCm.label}</strong> 동안 현장에서
-          일하며, 이 문제가 단순한 비효율이 아니라 지식 노동 전체를 느리게 만드는
-          구조라고 확신하게 됐습니다. 기술은 화려한 기능의 이름이 아니라, 흩어진
-          정보와 암묵지를 다시 연결해 실제 업무 흐름을 바꾸는 방법이었습니다.
-        </p>
+      <span class="site-about-block__number" aria-hidden="true">01</span>
+      <div class="site-about-block__content">
+        <p class="site-about-block__eyebrow">문제의식</p>
+        <h2 id="narrative-01" class="site-about-block__title">
+          현장에서 반복된 손실을 기술의 질문으로 바꿨습니다
+        </h2>
+        <div class="site-about-block__body">
+          <p>
+            기술로 방향을 틀게 된 출발점은 새로운 유행이 아니라
+            <strong>현장의 반복 손실</strong>이었습니다. 건설사업관리 현장에서는
+            수많은 문서와 회의가 쌓이지만 정작 중요한 순간에는 필요한 맥락이
+            이어지지 않았습니다.
+          </p>
+          <p>
+            <strong>{careerSummary.constructionCm.label}</strong> 동안 현장에서
+            일하며, 이 문제가 단순한 비효율이 아니라 지식 노동 전체를 느리게
+            만드는 구조라고 확신하게 됐습니다. 기술은 화려한 기능의 이름이
+            아니라, 흩어진 정보와 암묵지를 다시 연결해 실제 업무 흐름을 바꾸는
+            방법이었습니다.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- Pull Quote -->
-    <blockquote class="site-about-quote">
-      <p>
-        왜 데이터는 쌓이는데 판단은 축적되지 않는가,<br />왜 프로젝트는
-        반복되는데 경험은 다음 사람에게 이어지지 않는가
-      </p>
+    <blockquote
+      class="site-about-quote"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 120ms;"
+    >
+      <div class="site-about-quote__inner">
+        <span class="site-about-quote__mark" aria-hidden="true">“</span>
+        <p>
+          왜 데이터는 쌓이는데 판단은 축적되지 않는가,<br />왜 프로젝트는
+          반복되는데 경험은 다음 사람에게 이어지지 않는가
+        </p>
+      </div>
     </blockquote>
 
-    <!-- 서사 블록 02: 커리어전환 -->
     <section
-      class="site-about-block"
+      class="site-about-block site-card"
       aria-labelledby="narrative-02"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 60ms;"
     >
-      <p class="site-about-block__eyebrow">
-        <span class="site-about-block__number">02</span>
-        커리어전환
-      </p>
-      <h2 id="narrative-02" class="site-about-block__title">
-        문제가 기술을 이끌었고, 자동화가 전환의 기준이 됐습니다
-      </h2>
-      <div class="site-about-block__body">
-        <p>
-          전환은 갑작스러운 이직이 아니라, 현장의 작은 자동화의 연속이었습니다.
-          VE 업무를 정리하며 정성적 판단을 구조화하면 보고서의 품질과 속도를 함께
-          바꿀 수 있다는 가능성을 확인했고,
-          <strong>5개 현장을 아우르는 문서관리 체계</strong>를 설계하면서 문서
-          등록·요약·월간보고가 하나의 흐름으로 이어질 수 있다는 점을
-          경험했습니다.
-        </p>
-        <p>
-          비IT 배경에서 개발을 익히는 과정은 쉽지 않았지만, 가장 빠르게 성장하게
-          만든 것은 언어나 도구보다 <strong>문제를 정의하는 태도</strong
-          >였습니다. 어떤 정보를 먼저 구조화해야 하는지, 사용자가 어디에서
-          막히는지, 시스템이 어느 지점에서 맥락을 잃는지를 집요하게 따지는 습관이
-          커리어전환의 핵심 동력이었습니다.
-        </p>
+      <span class="site-about-block__number" aria-hidden="true">02</span>
+      <div class="site-about-block__content">
+        <p class="site-about-block__eyebrow">커리어 전환</p>
+        <h2 id="narrative-02" class="site-about-block__title">
+          문제가 기술을 이끌었고, 자동화가 전환의 기준이 됐습니다
+        </h2>
+        <div class="site-about-block__body">
+          <p>
+            전환은 갑작스러운 이직이 아니라, 현장의 작은 자동화의
+            연속이었습니다. VE 업무를 정리하며 정성적 판단을 구조화하면
+            보고서의 품질과 속도를 함께 바꿀 수 있다는 가능성을 확인했고,
+            <strong>5개 현장을 아우르는 문서관리 체계</strong>를 설계하면서
+            문서 등록·요약·월간보고가 하나의 흐름으로 이어질 수 있다는 점을
+            경험했습니다.
+          </p>
+          <p>
+            비IT 배경에서 개발을 익히는 과정은 쉽지 않았지만, 가장 빠르게
+            성장하게 만든 것은 언어나 도구보다 <strong>문제를 정의하는
+            태도</strong>였습니다. 어떤 정보를 먼저 구조화해야 하는지, 사용자가
+            어디에서 막히는지, 시스템이 어느 지점에서 맥락을 잃는지를 집요하게
+            따지는 습관이 커리어전환의 핵심 동력이었습니다.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- 경력 타임라인 -->
     <section class="site-about-timeline" aria-labelledby="timeline-heading">
-      <h2 id="timeline-heading" class="site-about-timeline__heading">
-        경력 타임라인
-      </h2>
-      <p class="site-about-timeline__summary">
-        총 경력 {careerSummary.totalCareer.label} · 건설CM {
-          careerSummary.constructionCm.label
-        } · AI/IT {careerSummary.aiIt.label}
-      </p>
-      <ol class="timeline-rail site-about-timeline__rail" role="list">
+      <div
+        class="site-about-timeline__header site-section-header"
+        data-reveal="slide-up"
+      >
+        <p class="site-section-header__eyebrow">Journey</p>
+        <div class="site-section-header__rule" aria-hidden="true"></div>
+        <h2
+          id="timeline-heading"
+          class="site-about-timeline__heading site-section-header__title"
+        >
+          경력 타임라인
+        </h2>
+        <p class="site-about-timeline__summary site-section-header__lead">
+          총 경력 {careerSummary.totalCareer.label} · 건설 CM {
+            careerSummary.constructionCm.label
+          } · AI / IT {careerSummary.aiIt.label}
+        </p>
+        <p class="site-about-timeline__meta site-section-header__meta">
+          건설 현장에서 AI 시스템 설계로 넘어온 전환 포인트를 도메인 컬러로
+          정리했습니다.
+        </p>
+      </div>
+
+      <ol class="site-about-timeline__rail" role="list" data-reveal="stagger-children">
         {
           timelineItems.map((item) => (
             <li
@@ -151,213 +224,301 @@ if (personalProjects.length > 0) {
                 "site-about-timeline__item",
                 { "site-about-timeline__item--current": item.isCurrent },
               ]}
+              data-domain-tone={item.domainTone}
             >
-              <p class="site-about-timeline__period">{item.period}</p>
-              <p class="site-about-timeline__role">
-                {item.role}
-                {item.org && (
-                  <span class="site-about-timeline__org">— {item.org}</span>
+              <span class="site-about-timeline__marker" aria-hidden="true"></span>
+
+              <article class="site-about-timeline__card site-card">
+                <div class="site-about-timeline__topline">
+                  <p class="site-about-timeline__period">{item.period}</p>
+                  <div class="site-about-timeline__badges">
+                    <span
+                      class:list={[
+                        item.domainBadgeClass,
+                        "site-about-timeline__badge",
+                      ]}
+                    >
+                      {item.domainDisplay}
+                    </span>
+                    {item.isCurrent && (
+                      <span class="site-badge site-badge--accent site-about-timeline__badge">
+                        현재
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div class="site-about-timeline__summary-group">
+                  <p class="site-about-timeline__role">
+                    {item.role}
+                    {item.org && (
+                      <span class="site-about-timeline__org">— {item.org}</span>
+                    )}
+                  </p>
+                  {item.label && (
+                    <p class="site-about-timeline__domain">{item.label}</p>
+                  )}
+                </div>
+
+                {item.coreProjects.length > 0 && (
+                  <ul class="site-about-timeline__projects" role="list">
+                    {item.coreProjects.map((proj) => (
+                      <li>{proj.canonicalName}</li>
+                    ))}
+                  </ul>
                 )}
-              </p>
-              {item.domain && item.label && (
-                <p class="site-about-timeline__domain">
-                  {item.domain} · {item.label}
-                </p>
-              )}
-              {item.coreProjects.length > 0 && (
-                <ul class="site-about-timeline__projects">
-                  {item.coreProjects.map((proj) => (
-                    <li>{proj.canonicalName}</li>
-                  ))}
-                </ul>
-              )}
+              </article>
             </li>
           ))
         }
       </ol>
     </section>
 
-    <!-- 서사 블록 03: 제안서 에이전트 -->
     <section
-      class="site-about-block"
+      class="site-about-block site-card"
       aria-labelledby="narrative-03"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 60ms;"
     >
-      <p class="site-about-block__eyebrow">
-        <span class="site-about-block__number">03</span>
-        도전사례
-      </p>
-      <h2 id="narrative-03" class="site-about-block__title">
-        제안서 에이전트로 여러 산출물을 하나의 흐름으로 묶었습니다
-      </h2>
-      <p class="site-about-block__meta">
-        2024.05 ~ 2025.11 · 20여 종 산출물 흐름 설계
-      </p>
-      <div class="site-about-block__body">
-        <p>
-          과제의 본질은 문서를 빠르게 만드는 데 있지 않았습니다. 여러 보고서와
-          슬라이드가 동시에 만들어지는 상황에서도
-          <strong>앞부분의 약속과 뒷부분의 설명이 충돌하지 않도록</strong>, 전체
-          산출물이 하나의 흐름으로 읽히게 만드는 일이 더 어려웠습니다.
+      <span class="site-about-block__number" aria-hidden="true">03</span>
+      <div class="site-about-block__content">
+        <p class="site-about-block__eyebrow">도전 사례</p>
+        <h2 id="narrative-03" class="site-about-block__title">
+          제안서 에이전트로 여러 산출물을 하나의 흐름으로 묶었습니다
+        </h2>
+        <p class="site-about-block__meta">
+          2024.05 ~ 2025.11 · 20여 종 산출물 흐름 설계
         </p>
-        <p>
-          작업을 단계별로 나누고, 앞 단계의 판단이 다음 단계로 자연스럽게
-          이어지도록 설계한 결과, <strong>한 번의 실행으로 20여 종</strong>의
-          보고서와 슬라이드가 연결된 흐름 안에서 생성되는 체계를 만들 수
-          있었습니다.
-        </p>
+        <div class="site-about-block__body">
+          <p>
+            과제의 본질은 문서를 빠르게 만드는 데 있지 않았습니다. 여러
+            보고서와 슬라이드가 동시에 만들어지는 상황에서도
+            <strong>앞부분의 약속과 뒷부분의 설명이 충돌하지 않도록</strong>,
+            전체 산출물이 하나의 흐름으로 읽히게 만드는 일이 더 어려웠습니다.
+          </p>
+          <p>
+            작업을 단계별로 나누고, 앞 단계의 판단이 다음 단계로 자연스럽게
+            이어지도록 설계한 결과, <strong>한 번의 실행으로 20여 종</strong>의
+            보고서와 슬라이드가 연결된 흐름 안에서 생성되는 체계를 만들 수
+            있었습니다.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- 서사 블록 04: CONI -->
     <section
-      class="site-about-block"
+      class="site-about-block site-card"
       aria-labelledby="narrative-04"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 60ms;"
     >
-      <p class="site-about-block__eyebrow">
-        <span class="site-about-block__number">04</span>
-        도전사례
-      </p>
-      <h2 id="narrative-04" class="site-about-block__title">
-        CONI로 끊기지 않는 협업의 연속성을 설계했습니다
-      </h2>
-      <p class="site-about-block__meta">
-        2025.11 ~ 진행 중 · 개인 프로젝트 · 작업계획 · 상태 · 이력 연결
-      </p>
-      <div class="site-about-block__body">
-        <p>
-          제안서 에이전트를 만들며 또 다른 질문이 생겼습니다.
-          <strong>왜 AI와의 협업은 대화가 끊기는 순간 처음부터 다시 시작해야 하는가.</strong>
-          어제의 판단과 오늘의 실행이 이어지지 않는다면, 아무리 좋은 모델이 있어도
-          팀의 생산성을 안정적으로 높이기 어렵다고 느꼈습니다.
+      <span class="site-about-block__number" aria-hidden="true">04</span>
+      <div class="site-about-block__content">
+        <p class="site-about-block__eyebrow">도전 사례</p>
+        <h2 id="narrative-04" class="site-about-block__title">
+          CONI로 끊기지 않는 협업의 연속성을 설계했습니다
+        </h2>
+        <p class="site-about-block__meta">
+          2025.11 ~ 진행 중 · 개인 프로젝트 · 작업계획 · 상태 · 이력 연결
         </p>
-        <p>
-          세션이 바뀌어도 이전 결정과 작업 맥락을 이어갈 수 있는 구조를 직접
-          설계했습니다. 새로운 도구를 하나 더 만들었다는 의미보다,
-          <strong>협업의 연속성을 시스템으로 바꾸는 일</strong>이 무엇인지 끝까지
-          밀어붙여 본 경험이라는 점에서 더 중요합니다.
-        </p>
+        <div class="site-about-block__body">
+          <p>
+            제안서 에이전트를 만들며 또 다른 질문이 생겼습니다.
+            <strong>왜 AI와의 협업은 대화가 끊기는 순간 처음부터 다시 시작해야
+            하는가.</strong> 어제의 판단과 오늘의 실행이 이어지지 않는다면,
+            아무리 좋은 모델이 있어도 팀의 생산성을 안정적으로 높이기 어렵다고
+            느꼈습니다.
+          </p>
+          <p>
+            세션이 바뀌어도 이전 결정과 작업 맥락을 이어갈 수 있는 구조를 직접
+            설계했습니다. 새로운 도구를 하나 더 만들었다는 의미보다,
+            <strong>협업의 연속성을 시스템으로 바꾸는 일</strong>이 무엇인지
+            끝까지 밀어붙여 본 경험이라는 점에서 더 중요합니다.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- Pull Quote 2 -->
-    <blockquote class="site-about-quote">
-      <p>
-        협업의 연속성을 시스템으로 바꾸는 일이 무엇인지<br />끝까지 밀어붙여 본
-        경험
-      </p>
+    <blockquote
+      class="site-about-quote"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 120ms;"
+    >
+      <div class="site-about-quote__inner">
+        <span class="site-about-quote__mark" aria-hidden="true">“</span>
+        <p>
+          협업의 연속성을 시스템으로 바꾸는 일이 무엇인지<br />끝까지 밀어붙여
+          본 경험
+        </p>
+      </div>
     </blockquote>
 
-    <!-- 서사 블록 05: 미래비전 -->
     <section
-      class="site-about-block"
+      class="site-about-block site-card"
       aria-labelledby="narrative-05"
+      data-reveal="slide-up"
+      style="--site-reveal-delay: 60ms;"
     >
-      <p class="site-about-block__eyebrow">
-        <span class="site-about-block__number">05</span>
-        미래비전
-      </p>
-      <h2 id="narrative-05" class="site-about-block__title">
-        도메인 지식과 데이터의 복잡성을 실전형 AI 시스템으로 풀고 싶습니다
-      </h2>
-      <div class="site-about-block__body">
-        <p>
-          현장에서는 늘 정보가 흩어지고, 판단의 근거는 사람마다 다르게 축적되며,
-          중요한 결정일수록 맥락을 설명하는 데 많은 시간이 듭니다. 이런 문제를
-          단순 자동화가 아니라 <strong>맥락을 기억하고, 판단의 근거를 이어 주며,
-          사용자가 실제로 신뢰할 수 있는 시스템</strong>으로 바꾸는 일을 하고
-          싶습니다.
-        </p>
-        <p>
-          현장을 이해하는 사람의 문제의식과 개발자의 구현 능력이 한 방향을 볼 때,
-          AI는 보여주기용 기능이 아니라 조직의 실제 생산성을 바꾸는 기반이 될 수
-          있다고 믿습니다.
-        </p>
+      <span class="site-about-block__number" aria-hidden="true">05</span>
+      <div class="site-about-block__content">
+        <p class="site-about-block__eyebrow">미래 비전</p>
+        <h2 id="narrative-05" class="site-about-block__title">
+          도메인 지식과 데이터의 복잡성을 실전형 AI 시스템으로 풀고 싶습니다
+        </h2>
+        <div class="site-about-block__body">
+          <p>
+            현장에서는 늘 정보가 흩어지고, 판단의 근거는 사람마다 다르게
+            축적되며, 중요한 결정일수록 맥락을 설명하는 데 많은 시간이 듭니다.
+            이런 문제를 단순 자동화가 아니라 <strong>맥락을 기억하고, 판단의
+            근거를 이어 주며, 사용자가 실제로 신뢰할 수 있는 시스템</strong>으로
+            바꾸는 일을 하고 싶습니다.
+          </p>
+          <p>
+            현장을 이해하는 사람의 문제의식과 개발자의 구현 능력이 한 방향을 볼
+            때, AI는 보여주기용 기능이 아니라 조직의 실제 생산성을 바꾸는 기반이
+            될 수 있다고 믿습니다.
+          </p>
+        </div>
       </div>
     </section>
   </div>
 </BaseLayout>
 
 <style>
-  /* ── Layout ── */
   .site-about {
-    max-width: 42rem;
+    --site-about-copy-width: 42rem;
+    max-width: var(--site-about-copy-width);
     margin: 0 auto;
-    padding: var(--space-2xl) var(--site-gutter) var(--space-4xl);
+    padding:
+      clamp(var(--space-3xl), 8vw, var(--space-5xl)) var(--site-gutter)
+      clamp(var(--space-4xl), 10vw, 6rem);
+    display: grid;
+    gap: clamp(var(--space-2xl), 6vw, 4.5rem);
   }
 
-  /* ── Hero ── */
-  .site-about-hero {
-    margin-bottom: var(--space-3xl);
-  }
-
-  .site-about-hero__eyebrow {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-    margin: 0 0 var(--space-sm);
-  }
-
-  .site-about-hero__title {
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    line-height: var(--line-height-tight);
-    color: var(--color-ink);
-    margin: 0 0 var(--space-lg);
-  }
-
-  .site-about-hero__lead {
-    font-size: var(--text-md);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-text-secondary);
+  .site-about :where(section, blockquote) {
     margin: 0;
   }
 
-  /* ── Narrative Block ── */
-  .site-about-block {
-    margin-bottom: var(--space-3xl);
+  .site-about-hero {
+    margin-bottom: 0;
+    gap: var(--space-md);
   }
 
-  .site-about-block__eyebrow {
+  .site-about-hero .site-section-header__rule {
+    margin: 0;
+  }
+
+  .site-about-hero__title {
+    max-width: 12ch;
+    font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+  }
+
+  .site-about-hero__lead {
+    max-width: 37rem;
+  }
+
+  .site-about-hero__metrics {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: var(--space-xs);
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin: 0 0 var(--space-xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .site-about-block {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 72%,
+      var(--color-primary) 28%
+    );
+    background:
+      radial-gradient(
+        circle at top right,
+        color-mix(in srgb, var(--color-primary) 10%, transparent),
+        transparent 32%
+      ),
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-paper) 94%, var(--color-primary) 6%),
+        var(--site-surface-elevated)
+      );
+  }
+
+  .site-about-block::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 6.5rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-primary), transparent);
+    opacity: 0.9;
   }
 
   .site-about-block__number {
+    position: absolute;
+    inset:
+      clamp(var(--space-sm), 2vw, var(--space-lg))
+      clamp(var(--space-lg), 4vw, var(--space-2xl))
+      auto
+      auto;
+    font-size: clamp(var(--text-5xl), 12vw, var(--text-6xl));
     font-weight: 700;
-    color: var(--color-primary);
+    line-height: 0.82;
+    letter-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
+    color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .site-about-block__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .site-about-block__eyebrow {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .site-about-block__title {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    line-height: var(--line-height-tight);
-    color: var(--color-ink);
-    margin: 0 0 var(--space-md);
+    max-width: 20ch;
+    margin: 0;
+    font-size: clamp(var(--text-xl), 2vw + 1rem, var(--text-3xl));
+    line-height: 1.08;
+    letter-spacing: -0.03em;
   }
 
   .site-about-block__meta {
+    margin: 0;
     font-size: var(--text-sm);
     color: var(--color-text-muted);
-    margin: 0 0 var(--space-md);
   }
 
   .site-about-block__body {
     display: grid;
     gap: var(--space-md);
+    max-width: 38rem;
   }
 
   .site-about-block__body p {
+    margin: 0;
     font-size: var(--text-md);
     line-height: var(--line-height-body);
     color: var(--color-text);
-    margin: 0;
   }
 
   .site-about-block__body strong {
@@ -365,66 +526,253 @@ if (personalProjects.length > 0) {
     font-weight: 600;
   }
 
-  /* ── Pull Quote ── */
   .site-about-quote {
-    margin: var(--space-2xl) 0 var(--space-3xl);
-    padding: var(--space-lg) var(--space-xl);
-    border-top: 3px solid var(--color-primary);
-    border-bottom: 1px solid var(--color-line);
-    background: var(--color-bg-subtle);
+    position: relative;
+    padding: clamp(var(--space-2xl), 7vw, 5rem) 0;
+  }
+
+  .site-about-quote::before,
+  .site-about-quote::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .site-about-quote::before {
+    inset: 0 auto 0 50%;
+    border-block: 1px solid
+      color-mix(in srgb, var(--site-border-default) 76%, var(--color-primary));
+    background:
+      radial-gradient(
+        circle at 12% 0%,
+        var(--site-glow-secondary),
+        transparent 28%
+      ),
+      linear-gradient(
+        120deg,
+        color-mix(in srgb, var(--color-paper) 92%, var(--color-primary) 8%),
+        color-mix(
+          in srgb,
+          var(--site-surface-muted) 82%,
+          var(--color-secondary) 18%
+        )
+      );
+    z-index: 0;
+  }
+
+  .site-about-quote::after {
+    inset: 0 auto 0 50%;
+    background:
+      radial-gradient(
+        circle at 88% 76%,
+        color-mix(in srgb, var(--color-primary) 10%, transparent),
+        transparent 28%
+      );
+    opacity: 0.9;
+    z-index: 0;
+  }
+
+  .site-about-quote__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--site-about-copy-width);
+    margin: 0 auto;
+    padding-inline-start: clamp(var(--space-xl), 8vw, 5rem);
+  }
+
+  .site-about-quote__inner::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      180deg,
+      var(--color-secondary),
+      var(--color-primary)
+    );
+  }
+
+  .site-about-quote__mark {
+    position: absolute;
+    inset: calc(-1 * var(--space-xl)) auto auto var(--space-lg);
+    font-size: clamp(var(--text-6xl), 11vw, 7rem);
+    line-height: 1;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    pointer-events: none;
+    user-select: none;
   }
 
   .site-about-quote p {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    line-height: var(--line-height-body);
-    color: var(--color-ink);
+    position: relative;
+    z-index: 1;
+    max-width: 32rem;
     margin: 0;
-  }
-
-  /* ── Timeline ── */
-  .site-about-timeline {
-    margin-bottom: var(--space-3xl);
-    padding: var(--space-xl);
-    background: var(--color-bg-subtle);
-    border-radius: var(--radius-lg);
-  }
-
-  .site-about-timeline__heading {
-    font-size: var(--text-xl);
+    font-size: clamp(var(--text-xl), 1rem + 2vw, var(--text-3xl));
     font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
     color: var(--color-ink);
-    margin: 0 0 var(--space-xs);
+  }
+
+  .site-about-timeline {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .site-about-timeline__header {
+    margin-bottom: 0;
   }
 
   .site-about-timeline__summary {
-    font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin: 0 0 var(--space-xl);
+    margin: 0;
+  }
+
+  .site-about-timeline__meta {
+    margin: 0;
   }
 
   .site-about-timeline__rail {
+    position: relative;
     list-style: none;
-    padding-left: 0;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .site-about-timeline__rail::before {
+    content: "";
+    position: absolute;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    left: 0.625rem;
+    width: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      180deg,
+      color-mix(
+        in srgb,
+        var(--color-secondary) 28%,
+        var(--site-border-default)
+      ),
+      color-mix(
+        in srgb,
+        var(--color-primary) 28%,
+        var(--site-border-default)
+      )
+    );
   }
 
   .site-about-timeline__item {
-    padding-bottom: var(--space-sm);
+    --site-about-timeline-accent: var(--color-primary);
+    --site-about-timeline-glow: var(--site-glow-primary);
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    gap: var(--space-md);
+    align-items: start;
+  }
+
+  .site-about-timeline__item[data-domain-tone="construction-cm"] {
+    --site-about-timeline-accent: var(--color-secondary);
+    --site-about-timeline-glow: var(--site-glow-secondary);
+  }
+
+  .site-about-timeline__marker {
+    position: relative;
+    z-index: 1;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: var(--space-lg);
+    border-radius: 999px;
+    background: color-mix(
+      in srgb,
+      var(--site-about-timeline-accent) 18%,
+      var(--color-paper)
+    );
+    box-shadow: 0 0 0 6px var(--stage-background);
+  }
+
+  .site-about-timeline__marker::after {
+    content: "";
+    position: absolute;
+    inset: 0.3125rem;
+    border-radius: 999px;
+    background: var(--site-about-timeline-accent);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  .site-about-timeline__item--current .site-about-timeline__marker::after {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px
+      color-mix(in srgb, var(--site-about-timeline-accent) 18%, transparent);
+  }
+
+  .site-about-timeline__card {
+    min-width: 0;
+    gap: var(--space-md);
+    border-color: color-mix(
+      in srgb,
+      var(--site-about-timeline-accent) 22%,
+      var(--site-border-default)
+    );
+    background: linear-gradient(
+      160deg,
+      color-mix(
+        in srgb,
+        var(--color-paper) 95%,
+        var(--site-about-timeline-accent) 5%
+      ),
+      var(--site-surface-elevated)
+    );
+  }
+
+  .site-about-timeline__item--current .site-about-timeline__card {
+    box-shadow:
+      0 0 0 1px
+        color-mix(in srgb, var(--site-about-timeline-accent) 16%, transparent),
+      0 20px 42px var(--site-about-timeline-glow);
+  }
+
+  .site-about-timeline__topline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
   }
 
   .site-about-timeline__period {
+    margin: 0;
     font-size: var(--text-sm);
     font-weight: 600;
     font-variant-numeric: tabular-nums;
-    color: var(--color-primary);
-    margin: 0 0 var(--space-2xs);
+    color: var(--site-about-timeline-accent);
+  }
+
+  .site-about-timeline__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .site-about-timeline__summary-group {
+    display: grid;
+    gap: var(--space-2xs);
   }
 
   .site-about-timeline__role {
-    font-size: var(--text-md);
-    font-weight: 600;
+    margin: 0;
+    font-size: clamp(var(--text-lg), 1rem + 0.8vw, var(--text-xl));
+    font-weight: 700;
     color: var(--color-ink);
-    margin: 0 0 var(--space-2xs);
   }
 
   .site-about-timeline__org {
@@ -433,63 +781,72 @@ if (personalProjects.length > 0) {
   }
 
   .site-about-timeline__domain {
+    margin: 0;
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
-    margin: 0 0 var(--space-xs);
+    color: var(--color-text-secondary);
   }
 
   .site-about-timeline__projects {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-xs) 0 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2xs);
+    gap: var(--space-xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   .site-about-timeline__projects li {
+    margin: 0;
     font-size: var(--text-xs);
     padding: var(--chip-padding-block) var(--chip-padding-inline);
-    background: var(--chip-background);
-    border: 1px solid var(--chip-border-color);
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--site-about-timeline-accent) 20%,
+        var(--site-border-default)
+      );
     border-radius: var(--radius-pill);
-    color: var(--chip-color);
+    background: color-mix(
+      in srgb,
+      var(--site-about-timeline-accent) 9%,
+      var(--site-surface-muted)
+    );
+    color: color-mix(
+      in srgb,
+      var(--site-about-timeline-accent) 72%,
+      var(--color-ink)
+    );
   }
 
-  .site-about-timeline__item--current::before {
-    background: var(--color-accent);
-  }
-
-  /* ── Responsive ── */
   @media (min-width: 768px) {
     .site-about {
-      padding-top: var(--space-4xl);
-      padding-bottom: var(--space-5xl);
+      gap: clamp(var(--space-3xl), 5vw, 5rem);
     }
 
     .site-about-hero__title {
-      font-size: var(--text-3xl);
+      max-width: 10ch;
     }
 
-    .site-about-hero__lead {
-      font-size: var(--text-lg);
+    .site-about-block {
+      padding: clamp(var(--space-xl), 5vw, 2.75rem);
     }
 
-    .site-about-block__title {
-      font-size: var(--text-2xl);
-    }
-
-    .site-about-quote {
-      margin-inline: calc(-1 * var(--space-lg));
-      padding: var(--space-xl) var(--space-2xl);
+    .site-about-quote__inner {
+      padding-inline-start: clamp(4.5rem, 8vw, 6rem);
     }
 
     .site-about-quote p {
-      font-size: var(--text-xl);
+      max-width: 34rem;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .site-about-quote__inner {
+      padding-inline-start: calc(var(--space-xl) + var(--space-sm));
     }
 
-    .site-about-timeline {
-      padding: var(--space-2xl);
+    .site-about-quote__mark {
+      inset-inline-start: var(--space-md);
     }
   }
 </style>
