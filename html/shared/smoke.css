@@ -88,11 +88,11 @@ body {
 }
 
 .swatch-surface {
-  background: #cdc5b6;
+  background: #94a3b8;
 }
 
 .swatch-line {
-  background: #918873;
+  background: #64748b;
 }
 
 .demo-break {
@@ -102,9 +102,9 @@ body {
 
 .demo-block {
   padding: var(--space-lg);
-  border: 1px dashed rgba(30, 58, 95, 0.2);
+  border: 1px dashed rgba(30, 58, 138, 0.2);
   border-radius: var(--radius-md);
-  background: rgba(250, 250, 245, 0.72);
+  background: rgba(248, 250, 252, 0.72);
 }
 
 .demo-block--plain {
@@ -112,7 +112,7 @@ body {
 }
 
 .demo-block--tint {
-  background: rgba(245, 243, 238, 0.88);
+  background: rgba(241, 245, 249, 0.88);
 }
 
 .demo-block h3 {
