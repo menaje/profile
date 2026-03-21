@@ -32,14 +32,25 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
   const bStart = b.period.start?.value ?? "";
   return aStart.localeCompare(bStart);
 });
+
+function domainBadgeClass(domain: string): string {
+  return domain === "construction-cm"
+    ? "site-badge site-badge--secondary"
+    : "site-badge site-badge--primary";
+}
 ---
 
 <section class="site-timeline" aria-labelledby="timeline-heading">
   <div class="site-timeline__inner">
-    <div class="site-timeline__header">
-      <div class="accent-rule"></div>
-      <h2 id="timeline-heading" class="site-timeline__title">경력 여정</h2>
-      <p class="site-timeline__lead">
+    <div class="site-timeline__header site-section-header">
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h2
+        id="timeline-heading"
+        class="site-timeline__title site-section-header__title"
+      >
+        경력 여정
+      </h2>
+      <p class="site-timeline__lead site-section-header__lead">
         건설 사업관리에서 AI 서비스 개발로, 도메인을 넘나드는 여정입니다.
       </p>
     </div>
@@ -48,7 +59,7 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
       {
         sortedTimeline.map((emp) => (
           <li class="site-timeline__entry">
-            <span class="pill site-timeline__domain">
+            <span class:list={[domainBadgeClass(emp.domain), "site-timeline__domain"]}>
               {domainLabel(emp.domain)}
             </span>
             <h3 class="site-timeline__role">{emp.roleTitle}</h3>
@@ -70,26 +81,6 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
   .site-timeline__inner {
     max-width: var(--site-content-max-width);
     margin: 0 auto;
-  }
-
-  .site-timeline__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-3xl);
-  }
-
-  .site-timeline__title {
-    font-size: var(--text-2xl);
-    color: var(--color-ink);
-    margin: 0;
-  }
-
-  .site-timeline__lead {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    max-width: 48ch;
-    margin: 0;
   }
 
   .site-timeline__rail {
@@ -129,10 +120,6 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
   }
 
   @media (min-width: 768px) {
-    .site-timeline__title {
-      font-size: var(--text-3xl);
-    }
-
     .site-timeline__rail {
       padding-left: var(--space-3xl);
     }

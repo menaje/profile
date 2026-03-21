@@ -12,11 +12,14 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
   description="김성식에게 연락하기. 문의 폼 또는 GitHub, LinkedIn을 통해 연결하세요."
 >
   <section class="site-contact">
-    <h1 class="site-contact__title">연락처</h1>
-    <p class="site-contact__intro">
-      프로젝트 협업, 채용 문의, 또는 궁금한 점이 있으시면 아래 폼으로 메시지를
-      보내주세요.
-    </p>
+    <header class="site-contact__hero site-page-hero">
+      <p class="site-page-hero__eyebrow">Contact</p>
+      <h1 class="site-contact__title site-page-hero__title">연락처</h1>
+      <p class="site-contact__intro site-page-hero__lead">
+        프로젝트 협업, 채용 문의, 또는 궁금한 점이 있으시면 아래 폼으로 메시지를
+        보내주세요.
+      </p>
+    </header>
 
     <div class="site-contact__grid">
       <div class="site-contact__info">
@@ -26,7 +29,7 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
             href={github.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="site-contact__link"
+            class="site-contact__link site-button site-button--ghost site-button--quiet"
           >
             <svg
               width="20"
@@ -50,7 +53,7 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
             href={linkedin.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="site-contact__link"
+            class="site-contact__link site-button site-button--ghost site-button--quiet"
           >
             <svg
               width="20"
@@ -82,9 +85,10 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
           data-configured={formspreeId ? "true" : "false"}
           method="POST"
         >
-          <div class="site-contact__field">
-            <label for="contact-name">이름</label>
+          <div class="site-contact__field site-form-field">
+            <label for="contact-name" class="site-form-field__label">이름</label>
             <input
+              class="site-form-field__control"
               type="text"
               id="contact-name"
               name="name"
@@ -93,9 +97,12 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
             />
           </div>
 
-          <div class="site-contact__field">
-            <label for="contact-email">이메일</label>
+          <div class="site-contact__field site-form-field">
+            <label for="contact-email" class="site-form-field__label">
+              이메일
+            </label>
             <input
+              class="site-form-field__control"
               type="email"
               id="contact-email"
               name="email"
@@ -104,9 +111,12 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
             />
           </div>
 
-          <div class="site-contact__field">
-            <label for="contact-message">메시지</label>
+          <div class="site-contact__field site-form-field">
+            <label for="contact-message" class="site-form-field__label">
+              메시지
+            </label>
             <textarea
+              class="site-form-field__control"
               id="contact-message"
               name="message"
               rows="6"
@@ -122,7 +132,10 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
             autocomplete="off"
           />
 
-          <button type="submit" class="site-contact__submit">
+          <button
+            type="submit"
+            class="site-contact__submit site-button site-button--primary"
+          >
             메시지 보내기
           </button>
         </form>
@@ -206,18 +219,6 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
     padding: var(--space-2xl) var(--site-gutter);
   }
 
-  .site-contact__title {
-    font-size: var(--text-3xl);
-    margin: 0 0 var(--space-sm);
-  }
-
-  .site-contact__intro {
-    color: var(--color-text-secondary);
-    font-size: var(--text-lg);
-    margin: 0 0 var(--space-2xl);
-    max-width: 40rem;
-  }
-
   .site-contact__grid {
     display: flex;
     flex-direction: column;
@@ -236,27 +237,9 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
   }
 
   .site-contact__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: var(--text-base);
-    padding: var(--space-xs) var(--space-sm);
-    border-radius: var(--radius-md);
-    transition:
-      color var(--transition-fast),
-      background-color var(--transition-fast);
-  }
-
-  .site-contact__link:hover {
-    color: var(--color-primary);
-    background-color: var(--color-bg-surface);
-  }
-
-  .site-contact__link:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
+    font-size: var(--text-sm);
+    justify-content: flex-start;
+    width: fit-content;
   }
 
   .site-contact__form {
@@ -265,73 +248,8 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
     gap: var(--space-lg);
   }
 
-  .site-contact__field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2xs);
-  }
-
-  .site-contact__field label {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .site-contact__field input,
-  .site-contact__field textarea {
-    width: 100%;
-    padding: var(--space-sm);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: var(--text-base);
-    color: var(--color-text);
-    background: var(--color-paper);
-    transition: border-color var(--transition-fast);
-  }
-
-  .site-contact__field input:focus,
-  .site-contact__field textarea:focus {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
-    border-color: var(--color-primary);
-  }
-
-  .site-contact__field textarea {
-    resize: vertical;
-    min-height: 8rem;
-  }
-
   .site-contact__submit {
     align-self: flex-start;
-    padding: var(--space-sm) var(--space-xl);
-    background: var(--color-primary);
-    color: var(--color-paper);
-    border: none;
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: var(--text-base);
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      opacity var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .site-contact__submit:hover {
-    opacity: 0.9;
-    transform: var(--hover-lift);
-  }
-
-  .site-contact__submit:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
-  }
-
-  .site-contact__submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
   }
 
   .site-contact__feedback {
@@ -364,25 +282,6 @@ const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
     .site-contact__social {
       position: sticky;
       top: calc(var(--site-nav-height) + var(--space-lg));
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .site-contact__submit {
-      transition: none;
-    }
-
-    .site-contact__submit:hover {
-      transform: none;
-    }
-
-    .site-contact__link {
-      transition: none;
-    }
-
-    .site-contact__field input,
-    .site-contact__field textarea {
-      transition: none;
     }
   }
 </style>

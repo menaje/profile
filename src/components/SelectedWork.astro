@@ -30,10 +30,12 @@ function classificationLabel(classification: string): string {
 
 <section class="site-work" aria-labelledby="work-heading">
   <div class="site-work__inner">
-    <div class="site-work__header">
-      <div class="accent-rule"></div>
-      <h2 id="work-heading" class="site-work__title">대표 프로젝트</h2>
-      <p class="site-work__lead">
+    <div class="site-work__header site-section-header">
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h2 id="work-heading" class="site-work__title site-section-header__title">
+        대표 프로젝트
+      </h2>
+      <p class="site-work__lead site-section-header__lead">
         건설 현장과 AI 기술을 잇는 시스템을 기획하고 만들었습니다.
       </p>
     </div>
@@ -41,11 +43,13 @@ function classificationLabel(classification: string): string {
     <div class="site-work__grid">
       {
         projects.map((project) => (
-          <article class="site-work__card surface-card">
+          <article class="site-work__card site-card site-card--interactive">
             <div class="site-work__card-head">
-              <span class="pill">{classificationLabel(project.classification)}</span>
+              <span class="site-badge site-badge--primary">
+                {classificationLabel(project.classification)}
+              </span>
               {project.statusAtBasisDate === "ongoing" && (
-                <span class="status-chip">진행 중</span>
+                <span class="site-badge site-badge--accent">진행 중</span>
               )}
             </div>
             <h3 class="site-work__card-name">{project.canonicalName}</h3>
@@ -75,26 +79,6 @@ function classificationLabel(classification: string): string {
     margin: 0 auto;
   }
 
-  .site-work__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-3xl);
-  }
-
-  .site-work__title {
-    font-size: var(--text-2xl);
-    color: var(--color-ink);
-    margin: 0;
-  }
-
-  .site-work__lead {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    max-width: 48ch;
-    margin: 0;
-  }
-
   .site-work__grid {
     display: grid;
     gap: var(--space-xl);
@@ -102,17 +86,7 @@ function classificationLabel(classification: string): string {
   }
 
   .site-work__card {
-    display: flex;
-    flex-direction: column;
     gap: var(--space-sm);
-    transition:
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast);
-  }
-
-  .site-work__card:hover {
-    transform: var(--hover-lift);
-    box-shadow: var(--hover-shadow);
   }
 
   .site-work__card-head {
@@ -154,10 +128,6 @@ function classificationLabel(classification: string): string {
   @media (min-width: 768px) {
     .site-work__grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-
-    .site-work__title {
-      font-size: var(--text-3xl);
     }
   }
 

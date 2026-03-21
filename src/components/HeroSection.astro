@@ -25,8 +25,12 @@ const { profile, currentStatus } = Astro.props;
       )
     }
     <div class="site-hero__actions">
-      <a href="/contact" class="site-hero__cta">연락하기</a>
-      <a href="/projects" class="site-hero__link">프로젝트 보기</a>
+      <a href="/contact" class="site-hero__cta site-button site-button--primary">
+        연락하기
+      </a>
+      <a href="/projects" class="site-hero__link site-button site-button--ghost">
+        프로젝트 보기
+      </a>
     </div>
   </div>
 </section>
@@ -70,48 +74,6 @@ const { profile, currentStatus } = Astro.props;
     align-items: center;
     gap: var(--space-md);
     margin-top: var(--space-md);
-  }
-
-  .site-hero__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: var(--space-sm) var(--space-xl);
-    background: var(--color-primary);
-    color: var(--color-paper);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: var(--text-md);
-    border-radius: var(--radius-md);
-    transition:
-      background var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .site-hero__cta:hover {
-    background: var(--color-ink);
-    transform: var(--hover-lift);
-  }
-
-  .site-hero__link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-md);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: var(--text-md);
-    font-weight: 500;
-    transition:
-      color var(--transition-fast),
-      background var(--transition-fast);
-  }
-
-  .site-hero__link:hover {
-    color: var(--color-primary);
-    background: var(--color-bg-surface);
   }
 
   @media (min-width: 768px) {

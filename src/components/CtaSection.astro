@@ -21,13 +21,15 @@ const { github, linkedin } = profile.contacts;
       }
     </p>
     <div class="site-cta__actions">
-      <a href="/contact" class="site-cta__button">연락하기</a>
+      <a href="/contact" class="site-cta__button site-button site-button--primary">
+        연락하기
+      </a>
       <div class="site-cta__links">
         <a
           href={github.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="site-cta__link"
+          class="site-cta__link site-button site-button--ghost site-button--quiet"
         >
           <svg
             width="20"
@@ -51,7 +53,7 @@ const { github, linkedin } = profile.contacts;
           href={linkedin.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="site-cta__link"
+          class="site-cta__link site-button site-button--ghost site-button--quiet"
         >
           <svg
             width="20"
@@ -113,48 +115,16 @@ const { github, linkedin } = profile.contacts;
     margin-top: var(--space-md);
   }
 
-  .site-cta__button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: var(--space-sm) var(--space-2xl);
-    background: var(--color-primary);
-    color: var(--color-paper);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: var(--text-md);
-    border-radius: var(--radius-md);
-    transition:
-      background var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .site-cta__button:hover {
-    background: var(--color-ink);
-    transform: var(--hover-lift);
-  }
-
   .site-cta__links {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-lg);
+    justify-content: center;
+    gap: var(--space-sm);
   }
 
   .site-cta__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    min-height: 44px;
-    padding: 0 var(--space-2xs);
-    color: var(--color-text-secondary);
-    text-decoration: none;
     font-size: var(--text-sm);
-    transition: color var(--transition-fast);
-  }
-
-  .site-cta__link:hover {
-    color: var(--color-primary);
   }
 
   @media (min-width: 768px) {
