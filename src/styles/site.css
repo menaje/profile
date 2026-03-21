@@ -1,0 +1,15 @@
+/* ──────────────────────────────────────────────────
+   site.css  ·  Astro 웹사이트 글로벌 스타일 엔트리
+   Import chain: tokens-base → tokens-screen → base
+   ────────────────────────────────────────────────── */
+
+@import "@shared/tokens-base.css";
+@import "@shared/tokens-screen.css";
+@import "@shared/base.css";
+
+/* ── Site-specific component tokens ── */
+:root {
+  --site-nav-height: 3.5rem;
+  --site-content-max-width: var(--site-max-width);
+  --site-footer-bg: var(--color-bg-surface);
+}

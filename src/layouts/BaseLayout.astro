@@ -1,0 +1,44 @@
+---
+import "../styles/site.css";
+
+interface Props {
+  lang?: string;
+  title?: string;
+}
+
+const {
+  lang = "ko",
+  title = "Site",
+} = Astro.props;
+
+const preloadFonts = [
+  "/fonts/pretendard-regular-subset.woff2",
+  "/fonts/pretendard-semibold-subset.woff2",
+  "/fonts/pretendard-bold-subset.woff2",
+  "/fonts/noto-sans-cjk-kr-regular-subset.woff2",
+  "/fonts/noto-sans-cjk-kr-bold-subset.woff2",
+];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {
+      preloadFonts.map((href) => (
+        <link
+          rel="preload"
+          href={href}
+          as="font"
+          type="font/woff2"
+          crossorigin
+        />
+      ))
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
