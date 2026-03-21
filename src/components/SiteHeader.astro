@@ -15,6 +15,7 @@ const currentPath = Astro.url.pathname;
     <a href="/" class="site-nav__logo">김성식</a>
 
     <button
+      type="button"
       class="site-nav__toggle"
       aria-expanded="false"
       aria-controls="site-nav-menu"
@@ -80,7 +81,13 @@ const currentPath = Astro.url.pathname;
   const toggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
   const menu = document.getElementById("site-nav-menu");
 
-  if (toggle && menu) {
+  if (toggle && menu instanceof HTMLElement) {
+    const closeMenu = () => {
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "메뉴 열기");
+      menu.classList.remove("site-nav__menu--open");
+    };
+
     toggle.addEventListener("click", () => {
       const expanded = toggle.getAttribute("aria-expanded") === "true";
       toggle.setAttribute("aria-expanded", String(!expanded));
@@ -89,6 +96,22 @@ const currentPath = Astro.url.pathname;
         "aria-label",
         expanded ? "메뉴 열기" : "메뉴 닫기",
       );
+    });
+
+    menu.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        closeMenu();
+      }
     });
   }
 </script>
@@ -113,6 +136,9 @@ const currentPath = Astro.url.pathname;
   }
 
   .site-nav__logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-weight: 700;
     font-size: var(--text-lg);
     color: var(--color-ink);
@@ -167,12 +193,16 @@ const currentPath = Astro.url.pathname;
   }
 
   .site-nav__link {
-    display: block;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     padding: var(--space-sm) var(--site-gutter);
     color: var(--color-text-secondary);
     text-decoration: none;
     font-size: var(--text-md);
-    transition: color var(--transition-fast);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast);
   }
 
   .site-nav__link:hover {

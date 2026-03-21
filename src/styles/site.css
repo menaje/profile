@@ -7,9 +7,68 @@
 @import "@shared/tokens-screen.css";
 @import "@shared/base.css";
 
+@font-face {
+  font-family: "Pretendard Site";
+  src: url("/fonts/pretendard-regular-subset.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pretendard Site";
+  src: url("/fonts/pretendard-semibold-subset.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans CJK KR Site";
+  src: url("/fonts/noto-sans-cjk-kr-regular-subset.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans CJK KR Site";
+  src: url("/fonts/noto-sans-cjk-kr-bold-subset.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+}
+
 /* ── Site-specific component tokens ── */
 :root {
+  --font-family-sans:
+    "Pretendard Site", "Noto Sans CJK KR Site", "Apple SD Gothic Neo",
+    "Malgun Gothic", "Segoe UI", sans-serif;
   --site-nav-height: 3.5rem;
   --site-content-max-width: var(--site-max-width);
   --site-footer-bg: var(--color-bg-surface);
+}
+
+:where(a[href], button, input, textarea, select, summary):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+:where(main a[href]) {
+  text-underline-offset: 0.16em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
 }

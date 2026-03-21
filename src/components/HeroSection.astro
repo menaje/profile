@@ -75,6 +75,8 @@ const { profile, currentStatus } = Astro.props;
   .site-hero__cta {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-height: 44px;
     padding: var(--space-sm) var(--space-xl);
     background: var(--color-primary);
     color: var(--color-paper);
@@ -93,15 +95,23 @@ const { profile, currentStatus } = Astro.props;
   }
 
   .site-hero__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
     color: var(--color-text-secondary);
     text-decoration: none;
     font-size: var(--text-md);
     font-weight: 500;
-    transition: color var(--transition-fast);
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast);
   }
 
   .site-hero__link:hover {
     color: var(--color-primary);
+    background: var(--color-bg-surface);
   }
 
   @media (min-width: 768px) {
