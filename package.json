@@ -33,8 +33,14 @@
   "homepage": "https://github.com/menaje/coni-example#readme",
   "dependencies": {
     "@astrojs/check": "^0.9.8",
+    "@astrojs/markdoc": "^1.0.2",
     "@astrojs/mdx": "^5.0.2",
+    "@astrojs/react": "^5.0.1",
+    "@keystatic/astro": "^5.0.6",
+    "@keystatic/core": "^0.5.48",
     "astro": "^6.0.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "reveal.js": "^6.0.0",
     "typescript": "^5.9.3",
     "zod": "^4.3.6"
