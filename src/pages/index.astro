@@ -1,14 +1,7 @@
 ---
-// WP-46: 최소 scaffolding — 후속 WP에서 BaseLayout 및 실제 콘텐츠로 교체
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Site</title>
-  </head>
-  <body>
-    <h1>Hello, Astro</h1>
-  </body>
-</html>
+<BaseLayout title="Site">
+  <h1>Hello, Astro</h1>
+</BaseLayout>
