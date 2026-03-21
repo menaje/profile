@@ -24,6 +24,14 @@
 }
 
 @font-face {
+  font-family: "Pretendard Site";
+  src: url("/fonts/pretendard-bold-subset.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Noto Sans CJK KR Site";
   src: url("/fonts/noto-sans-cjk-kr-regular-subset.woff2") format("woff2");
   font-style: normal;
