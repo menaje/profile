@@ -34,7 +34,8 @@
     "@astrojs/check": "^0.9.8",
     "astro": "^6.0.8",
     "reveal.js": "^6.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "decktape": "^3.15.0",
