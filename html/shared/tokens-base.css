@@ -9,20 +9,20 @@
 
   --color-ink: #0f172a;
   --color-text: var(--color-ink);
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
+  --color-text-secondary: #4a4a5a;
+  --color-text-muted: #667085;
   --color-muted: var(--color-text-muted);
-  --color-primary: #1e3a8a;
-  --color-secondary: #166534;
-  --color-accent: #c2410c;
+  --color-primary: #0f4c81;
+  --color-secondary: #1d7874;
+  --color-accent: #c66b3d;
   --color-paper: #ffffff;
   --color-bg-page: #ffffff;
-  --color-bg-surface: #f1f5f9;
-  --color-bg-subtle: #f8fafc;
+  --color-bg-surface: #f4f1ea;
+  --color-bg-subtle: #faf8f5;
   --color-surface: var(--color-bg-surface);
   --color-subtle: var(--color-bg-subtle);
-  --color-line: #cbd5e1;
-  --color-line-strong: #94a3b8;
+  --color-line: #d4cfc7;
+  --color-line-strong: #a39e94;
 
   --line-height-tight: 1.15;
   --line-height-body: 1.6;
@@ -85,12 +85,12 @@
   --chip-gap: var(--space-2xs);
   --chip-padding-block: 0.4rem;
   --chip-padding-inline: 0.75rem;
-  --chip-border-color: rgba(30, 58, 138, 0.14);
-  --chip-background: rgba(30, 58, 138, 0.06);
+  --chip-border-color: rgba(15, 76, 129, 0.14);
+  --chip-background: rgba(15, 76, 129, 0.06);
   --chip-color: var(--color-primary);
-  --status-chip-border-color: rgba(194, 65, 12, 0.24);
-  --status-chip-background: rgba(194, 65, 12, 0.12);
-  --status-chip-color: #9a3412;
+  --status-chip-border-color: rgba(198, 107, 61, 0.24);
+  --status-chip-background: rgba(198, 107, 61, 0.12);
+  --status-chip-color: #a0563c;
 
   --eyebrow-color: var(--color-text-muted);
   --section-title-color: var(--color-text);
@@ -101,7 +101,7 @@
 
   --opener-band-background: var(--color-bg-subtle);
   --chapter-divider-color: rgba(15, 23, 42, 0.12);
-  --editorial-break-background: rgba(241, 245, 249, 0.72);
+  --editorial-break-background: rgba(244, 241, 234, 0.72);
   --timeline-rail-line: var(--color-line);
   --timeline-rail-marker: var(--color-primary);
 }
