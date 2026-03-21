@@ -100,14 +100,14 @@ const metrics: MetricCopy[] = [
       </p>
     </div>
 
-    <dl class="site-proof__grid" data-proof-grid>
+    <ul class="site-proof__grid" data-proof-grid role="list">
       {
         metrics.map((metric) => {
           const parsed = parseMetricValue(metric.value);
           const countTarget = parsed.count === null ? undefined : String(parsed.count);
 
           return (
-            <div
+            <li
               class:list={[
                 "site-proof__item",
                 "site-card",
@@ -177,8 +177,8 @@ const metrics: MetricCopy[] = [
               </div>
 
               <div class="site-proof__content">
-                <dt class="site-proof__label">{metric.label}</dt>
-                <dd class="site-proof__value" aria-label={metric.value}>
+                <p class="site-proof__label">{metric.label}</p>
+                <p class="site-proof__value" aria-label={metric.value}>
                   {parsed.prefix && (
                     <span class="site-proof__value-prefix">{parsed.prefix}</span>
                   )}
@@ -195,7 +195,7 @@ const metrics: MetricCopy[] = [
                   {parsed.suffix && (
                     <span class="site-proof__value-suffix">{parsed.suffix}</span>
                   )}
-                </dd>
+                </p>
                 <p class="site-proof__detail">{metric.detail}</p>
               </div>
 
@@ -209,11 +209,11 @@ const metrics: MetricCopy[] = [
               </div>
 
               <p class="site-proof__meta">{metric.meta}</p>
-            </div>
+            </li>
           );
         })
       }
-    </dl>
+    </ul>
   </div>
 </section>
 
@@ -362,6 +362,8 @@ const metrics: MetricCopy[] = [
     display: grid;
     gap: var(--space-lg);
     margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .site-proof__item {

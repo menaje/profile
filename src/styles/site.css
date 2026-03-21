@@ -108,6 +108,11 @@ body {
   font-weight: var(--font-weight-body);
 }
 
+html,
+body {
+  overflow-x: clip;
+}
+
 :where(h1, h2, h3, h4, h5, h6) {
   font-weight: var(--font-weight-heading);
 }
@@ -380,11 +385,11 @@ button.site-button {
 .site-badge--accent {
   border-color: color-mix(
     in srgb,
-    var(--color-accent) 24%,
+    var(--color-accent) 32%,
     var(--site-border-default)
   );
-  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-paper));
-  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-paper));
+  color: color-mix(in srgb, var(--color-accent) 40%, var(--color-ink));
 }
 
 .site-form-field {
