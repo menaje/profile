@@ -266,6 +266,39 @@ button.site-button {
   border-color: transparent;
 }
 
+.site-button--glow {
+  padding-inline: var(--space-xl);
+  padding-block: calc(var(--space-sm) + var(--space-2xs));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent),
+    0 20px 48px var(--site-glow-primary);
+}
+
+.site-button--glow:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-primary) 24%, transparent),
+    0 24px 52px
+      color-mix(in srgb, var(--site-glow-primary) 84%, var(--site-glow-secondary));
+}
+
+.site-button--icon {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.site-button--icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.site-button--icon:hover {
+  box-shadow: 0 14px 30px var(--site-glow-secondary);
+}
+
 .site-button--full {
   width: 100%;
 }
