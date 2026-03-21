@@ -4,7 +4,7 @@
   --page-margin: 18mm;
   --page-shell-padding: var(--page-margin);
 
-  --stage-background: #f8fafc;
+  --stage-background: var(--color-bg-surface);
   --body-copy-size: var(--text-sm);
   --body-copy-line-height: 1.65;
 

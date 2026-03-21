@@ -153,8 +153,8 @@ body {
 }
 
 .cover-slide .status_chip {
-  background: rgba(194, 65, 12, 0.25);
-  border-color: rgba(194, 65, 12, 0.5);
+  background: rgba(198, 107, 61, 0.25);
+  border-color: rgba(198, 107, 61, 0.5);
   color: var(--color-paper);
 }
 
@@ -328,7 +328,7 @@ body {
 
 .diagram-step--alert {
   border-top-color: var(--color-accent);
-  background: rgba(194, 65, 12, 0.05);
+  background: rgba(198, 107, 61, 0.05);
 }
 
 .diagram-step .block-label {
@@ -410,7 +410,7 @@ body {
 }
 
 .diagram-after {
-  background: rgba(30, 58, 138, 0.04);
+  background: rgba(15, 76, 129, 0.04);
   border-top: 3px solid var(--color-primary);
 }
 
@@ -553,7 +553,7 @@ body {
 
 .contrast-item--signal {
   border-left-color: var(--color-accent);
-  background: rgba(194, 65, 12, 0.04);
+  background: rgba(198, 107, 61, 0.04);
 }
 
 .contrast-item .block-label {
@@ -588,7 +588,7 @@ body {
   padding: var(--space-xl);
   border-left: 4px solid var(--color-primary);
   border-radius: 1rem;
-  background: rgba(30, 58, 138, 0.04);
+  background: rgba(15, 76, 129, 0.04);
   box-shadow: var(--shadow-sm);
 }
 
