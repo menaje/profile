@@ -599,6 +599,12 @@ function filterLabel(domain: ProjectDomain | "all"): string {
   }
 
   .site-projects__item {
+    --site-projects-card-accent: var(--color-primary);
+    --site-projects-card-glow: color-mix(
+      in srgb,
+      var(--color-primary) 24%,
+      transparent
+    );
     position: relative;
     gap: var(--space-lg);
     padding-top: calc(var(--space-lg) + var(--space-xs));
@@ -622,6 +628,19 @@ function filterLabel(domain: ProjectDomain | "all"): string {
   .site-projects__item::before {
     inset: 0 0 auto;
     height: 0.38rem;
+    background: linear-gradient(
+      90deg,
+      color-mix(
+        in srgb,
+        var(--site-projects-card-accent) 88%,
+        var(--color-paper)
+      ),
+      color-mix(
+        in srgb,
+        var(--site-projects-card-accent) 56%,
+        var(--color-paper)
+      )
+    );
   }
 
   .site-projects__item::after {
@@ -639,36 +658,19 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     z-index: 1;
   }
 
+  .site-projects__item[data-domain="construction-cm"],
   .site-projects__item--construction {
+    --site-projects-card-accent: var(--color-accent);
     --site-projects-card-glow: color-mix(
       in srgb,
-      var(--color-secondary) 30%,
+      var(--color-accent) 24%,
       transparent
     );
   }
 
-  .site-projects__item--construction::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-secondary) 94%, var(--color-paper)),
-      color-mix(in srgb, var(--color-secondary) 56%, var(--color-primary) 44%)
-    );
-  }
-
+  .site-projects__item[data-domain="ai-it"],
   .site-projects__item--ai {
-    --site-projects-card-glow: color-mix(
-      in srgb,
-      var(--color-primary) 24%,
-      transparent
-    );
-  }
-
-  .site-projects__item--ai::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
-      color-mix(in srgb, var(--color-primary) 70%, var(--color-accent) 30%)
-    );
+    --site-projects-card-accent: var(--color-primary);
   }
 
   .site-projects__item-head,

@@ -285,13 +285,13 @@ const heroMeta = [
     --site-case-study-accent: var(--color-primary);
     --site-case-study-accent-soft: color-mix(
       in srgb,
-      var(--color-primary) 14%,
+      var(--color-primary) 12%,
       var(--color-paper)
     );
     --site-case-study-accent-strong: color-mix(
       in srgb,
-      var(--color-primary) 72%,
-      var(--color-accent) 28%
+      var(--color-primary) 58%,
+      var(--color-paper)
     );
     --site-case-study-glow: color-mix(
       in srgb,
@@ -302,20 +302,20 @@ const heroMeta = [
   }
 
   .site-case-study--construction {
-    --site-case-study-accent: var(--color-secondary);
+    --site-case-study-accent: var(--color-accent);
     --site-case-study-accent-soft: color-mix(
       in srgb,
-      var(--color-secondary) 12%,
+      var(--color-accent) 12%,
       var(--color-paper)
     );
     --site-case-study-accent-strong: color-mix(
       in srgb,
-      var(--color-secondary) 56%,
-      var(--color-primary) 44%
+      var(--color-accent) 58%,
+      var(--color-paper)
     );
     --site-case-study-glow: color-mix(
       in srgb,
-      var(--color-secondary) 28%,
+      var(--color-accent) 24%,
       transparent
     );
   }
@@ -329,8 +329,8 @@ const heroMeta = [
     );
     --site-case-study-accent-strong: color-mix(
       in srgb,
-      var(--color-primary) 68%,
-      var(--color-accent) 32%
+      var(--color-primary) 58%,
+      var(--color-paper)
     );
     --site-case-study-glow: color-mix(
       in srgb,
@@ -820,32 +820,32 @@ const heroMeta = [
   }
 
   .site-case-study__pager-card--construction {
-    --site-case-study-pager-accent: var(--color-secondary);
+    --site-case-study-pager-accent: var(--color-accent);
     --site-case-study-pager-strong: color-mix(
       in srgb,
-      var(--color-secondary) 56%,
-      var(--color-primary) 44%
+      var(--color-accent) 58%,
+      var(--color-paper)
     );
   }
 
   .site-case-study__pager-card--construction::before {
     background: linear-gradient(
       90deg,
-      color-mix(in srgb, var(--color-secondary) 94%, var(--color-paper)),
+      color-mix(in srgb, var(--color-accent) 90%, var(--color-paper)),
       var(--site-case-study-pager-strong)
     );
   }
 
   .site-case-study__pager-card--construction::after {
-    background: color-mix(in srgb, var(--color-secondary) 30%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 24%, transparent);
   }
 
   .site-case-study__pager-card--ai {
     --site-case-study-pager-accent: var(--color-primary);
     --site-case-study-pager-strong: color-mix(
       in srgb,
-      var(--color-primary) 68%,
-      var(--color-accent) 32%
+      var(--color-primary) 58%,
+      var(--color-paper)
     );
   }
 
