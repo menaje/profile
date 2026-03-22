@@ -241,30 +241,17 @@ const bridgeDomains = [
     overflow: hidden;
     border-color: color-mix(
       in srgb,
-      var(--site-border-default) 68%,
-      var(--color-primary) 32%
+      var(--site-border-default) 82%,
+      var(--color-primary) 18%
     );
     background:
-      radial-gradient(
-        circle at 16% 18%,
-        var(--site-glow-secondary),
-        transparent 34%
-      ),
-      radial-gradient(
-        circle at 82% 18%,
-        var(--site-glow-primary),
-        transparent 38%
-      ),
       linear-gradient(
         160deg,
-        color-mix(in srgb, var(--color-paper) 92%, var(--color-secondary) 8%),
-        color-mix(
-          in srgb,
-          var(--site-surface-elevated) 78%,
-          var(--color-primary) 22%
-        )
-      );
-    box-shadow: var(--shadow-lg);
+        color-mix(in srgb, var(--color-primary) 4%, transparent),
+        color-mix(in srgb, var(--color-primary) 8%, transparent)
+      ),
+      color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper));
+    box-shadow: var(--site-shadow-raised);
   }
 
   .site-hero__diagram {
@@ -333,16 +320,15 @@ const bridgeDomains = [
     padding: var(--space-lg);
     background: color-mix(
       in srgb,
-      var(--color-paper) 88%,
-      var(--site-hero-accent) 12%
+      var(--color-paper) 96%,
+      var(--site-hero-accent) 4%
     );
     border-color: color-mix(
       in srgb,
-      var(--site-border-default) 48%,
-      var(--site-hero-accent) 52%
+      var(--site-border-default) 72%,
+      var(--site-hero-accent) 28%
     );
-    box-shadow: 0 18px 36px
-      color-mix(in srgb, var(--site-hero-accent) 12%, transparent);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-hero__domain-card--cm {
@@ -397,15 +383,14 @@ const bridgeDomains = [
     max-width: 15rem;
     padding: var(--space-lg);
     border: 1px solid
-      color-mix(in srgb, var(--color-accent) 30%, var(--site-border-default));
+      color-mix(in srgb, var(--site-border-default) 74%, var(--color-accent) 26%);
     border-radius: calc(var(--radius-xl) * 1.35);
     background: color-mix(
       in srgb,
-      var(--color-paper) 88%,
-      var(--color-accent) 12%
+      var(--color-paper) 95%,
+      var(--color-accent) 5%
     );
-    box-shadow: 0 20px 42px
-      color-mix(in srgb, var(--color-accent) 12%, transparent);
+    box-shadow: var(--site-shadow-flat);
     text-align: center;
   }
 
@@ -435,10 +420,15 @@ const bridgeDomains = [
 
   .site-hero__status-panel {
     gap: var(--space-sm);
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 80%,
+      var(--color-primary) 20%
+    );
     background: color-mix(
       in srgb,
-      var(--color-paper) 90%,
-      var(--color-primary) 10%
+      var(--color-paper) 94%,
+      var(--color-primary) 6%
     );
   }
 

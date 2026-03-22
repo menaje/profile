@@ -338,13 +338,7 @@ const metrics: MetricCopy[] = [
 <style>
   .site-proof {
     padding: var(--space-5xl) var(--site-gutter);
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--site-surface-default) 88%, transparent),
-        var(--site-surface-default)
-      ),
-      var(--site-surface-default);
+    background: var(--site-surface-default);
     border-top: 1px solid var(--site-border-default);
     border-bottom: 1px solid var(--site-border-default);
   }
@@ -372,13 +366,7 @@ const metrics: MetricCopy[] = [
     min-height: 100%;
     gap: var(--space-lg);
     padding: clamp(var(--space-lg), 2vw, var(--space-2xl));
-    background:
-      radial-gradient(
-        circle at top right,
-        var(--site-proof-glow, transparent),
-        transparent 62%
-      ),
-      var(--site-surface-elevated);
+    background: var(--site-surface-elevated);
   }
 
   .site-proof__item::before {
@@ -388,36 +376,21 @@ const metrics: MetricCopy[] = [
     height: 0.28rem;
     background: linear-gradient(
       90deg,
-      var(--site-proof-accent),
-      color-mix(in srgb, var(--site-proof-accent) 12%, transparent)
+      color-mix(in srgb, var(--site-proof-accent) 88%, var(--color-paper)),
+      color-mix(in srgb, var(--site-proof-accent) 56%, var(--color-paper))
     );
   }
 
   .site-proof__item--total {
-    --site-proof-accent: var(--color-accent);
-    --site-proof-glow: color-mix(
-      in srgb,
-      var(--color-accent) 14%,
-      transparent
-    );
+    --site-proof-accent: var(--color-secondary);
   }
 
   .site-proof__item--construction {
-    --site-proof-accent: var(--color-secondary);
-    --site-proof-glow: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      transparent
-    );
+    --site-proof-accent: var(--color-accent);
   }
 
   .site-proof__item--ai {
     --site-proof-accent: var(--color-primary);
-    --site-proof-glow: color-mix(
-      in srgb,
-      var(--color-primary) 14%,
-      transparent
-    );
   }
 
   .site-proof__head {

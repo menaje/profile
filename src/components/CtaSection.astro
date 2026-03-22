@@ -120,62 +120,22 @@ const ctaCopy =
     text-align: center;
     border-color: color-mix(
       in srgb,
-      var(--site-border-default) 72%,
-      var(--color-secondary) 28%
+      var(--site-border-default) 80%,
+      var(--color-secondary) 20%
     );
     background:
-      radial-gradient(
-        circle at 14% 18%,
-        color-mix(in srgb, var(--color-primary) 16%, transparent),
-        transparent 54%
-      ),
-      radial-gradient(
-        circle at 86% 18%,
-        color-mix(in srgb, var(--color-secondary) 18%, transparent),
-        transparent 52%
-      ),
       linear-gradient(
         145deg,
-        color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper)),
-        color-mix(in srgb, var(--site-surface-muted) 78%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 28px 72px
-        color-mix(in srgb, var(--site-glow-primary) 72%, var(--site-glow-secondary));
+        color-mix(in srgb, var(--color-primary) 6%, transparent),
+        color-mix(in srgb, var(--color-secondary) 8%, transparent)
+      ),
+      color-mix(in srgb, var(--site-surface-elevated) 90%, var(--color-paper));
+    box-shadow: var(--site-shadow-raised);
   }
 
   .site-cta__inner::before,
   .site-cta__inner::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .site-cta__inner::before {
-    top: -20%;
-    right: -6%;
-    width: 14rem;
-    height: 14rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-primary) 92%, transparent) 0%,
-      transparent 70%
-    );
-  }
-
-  .site-cta__inner::after {
-    bottom: -30%;
-    left: -8%;
-    width: 13rem;
-    height: 13rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-secondary) 88%, transparent) 0%,
-      transparent 72%
-    );
+    display: none;
   }
 
   .site-cta__header,

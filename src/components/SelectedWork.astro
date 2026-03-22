@@ -221,18 +221,13 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   }
 
   .site-work__card {
+    --site-work-card-accent: var(--color-primary);
     position: relative;
     min-height: 100%;
     gap: var(--space-lg);
     padding-top: calc(var(--space-lg) + var(--space-xs));
     overflow: hidden;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--color-paper) 82%, transparent),
-        transparent 34%
-      ),
-      var(--site-surface-elevated);
+    background: var(--site-surface-elevated);
   }
 
   .site-work__card::before,
@@ -245,16 +240,15 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   .site-work__card::before {
     inset: 0 0 auto;
     height: 0.38rem;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--site-work-card-accent) 88%, var(--color-paper)),
+      color-mix(in srgb, var(--site-work-card-accent) 56%, var(--color-paper))
+    );
   }
 
   .site-work__card::after {
-    top: 0.8rem;
-    right: -1.6rem;
-    width: 6.5rem;
-    height: 6.5rem;
-    border-radius: 999px;
-    opacity: 0.16;
-    background: var(--site-work-card-glow);
+    display: none;
   }
 
   .site-work__card > * {
@@ -263,35 +257,11 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   }
 
   .site-work__card--construction {
-    --site-work-card-glow: color-mix(
-      in srgb,
-      var(--color-secondary) 28%,
-      transparent
-    );
-  }
-
-  .site-work__card--construction::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-secondary) 92%, var(--color-paper)),
-      color-mix(in srgb, var(--color-secondary) 56%, var(--color-primary) 44%)
-    );
+    --site-work-card-accent: var(--color-accent);
   }
 
   .site-work__card--ai {
-    --site-work-card-glow: color-mix(
-      in srgb,
-      var(--color-primary) 24%,
-      transparent
-    );
-  }
-
-  .site-work__card--ai::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
-      color-mix(in srgb, var(--color-primary) 68%, var(--color-accent) 32%)
-    );
+    --site-work-card-accent: var(--color-primary);
   }
 
   .site-work__card-head {

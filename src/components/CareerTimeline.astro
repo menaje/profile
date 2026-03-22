@@ -466,17 +466,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 <style>
   .site-timeline {
     padding: var(--space-5xl) var(--site-gutter);
-    background:
-      radial-gradient(
-        circle at top left,
-        var(--site-glow-secondary),
-        transparent 32rem
-      ),
-      linear-gradient(
-        180deg,
-        var(--site-surface-muted),
-        var(--site-surface-default)
-      );
+    background: var(--site-surface-default);
   }
 
   .site-timeline__inner {
@@ -519,11 +509,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__rail-progress {
     height: var(--site-timeline-progress);
-    background: linear-gradient(
-      180deg,
-      var(--color-secondary),
-      var(--color-primary)
-    );
+    background: var(--color-primary);
     transition: height var(--transition-slow);
   }
 
@@ -537,14 +523,17 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__item {
     --site-timeline-accent: var(--color-primary);
-    --site-timeline-accent-soft: var(--site-glow-primary);
+    --site-timeline-accent-soft: color-mix(
+      in srgb,
+      var(--site-timeline-accent) 10%,
+      transparent
+    );
     position: relative;
     padding-left: calc(var(--space-xl) + 0.25rem);
   }
 
   .site-timeline__item[data-domain-tone="construction-cm"] {
-    --site-timeline-accent: var(--color-secondary);
-    --site-timeline-accent-soft: var(--site-glow-secondary);
+    --site-timeline-accent: var(--color-accent);
   }
 
   .site-timeline__marker {
@@ -587,26 +576,27 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
   .site-timeline__item[data-current="true"] .site-timeline__card {
     border-color: color-mix(
       in srgb,
-      var(--site-timeline-accent) 34%,
+      var(--site-timeline-accent) 28%,
       var(--site-border-strong)
     );
     background: color-mix(
       in srgb,
-      var(--site-surface-elevated) 88%,
-      var(--site-timeline-accent) 12%
+      var(--site-surface-elevated) 94%,
+      var(--site-timeline-accent) 6%
     );
     box-shadow:
       0 0 0 1px color-mix(
         in srgb,
-        var(--site-timeline-accent) 14%,
+        var(--site-timeline-accent) 10%,
         transparent
       ),
-      0 18px 40px var(--site-timeline-accent-soft);
+      var(--site-shadow-raised);
   }
 
   .site-timeline__item[data-current="true"] .site-timeline__marker-core {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--site-timeline-accent) 18%, transparent);
+    transform: scale(1.12);
+    box-shadow: 0 0 0 4px
+      color-mix(in srgb, var(--site-timeline-accent) 10%, var(--site-surface-default));
   }
 
   .site-timeline__item:has(.site-timeline__toggle:focus-visible)
