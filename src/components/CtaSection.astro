@@ -8,70 +8,96 @@ interface Props {
 
 const { profile, currentStatus } = Astro.props;
 const { github, linkedin } = profile.contacts;
+const ctaCopy =
+  currentStatus.employmentState === "seeking"
+    ? "현재 새로운 기회를 찾고 있습니다. 프로젝트 제안, 협업, 채용 논의 모두 편하게 연락주세요."
+    : "프로젝트 제안이나 협업 논의가 있다면 편하게 연락주세요.";
 ---
 
-<section class="site-cta" aria-labelledby="cta-heading">
-  <div class="site-cta__inner">
-    <h2 id="cta-heading" class="site-cta__title">함께 일해보고 싶으신가요?</h2>
-    <p class="site-cta__text">
-      {
-        currentStatus.employmentState === "seeking"
-          ? "현재 새로운 기회를 찾고 있습니다. 프로젝트나 역할에 대해 편하게 연락주세요."
-          : "프로젝트나 협업에 대해 편하게 연락주세요."
-      }
-    </p>
+<section class="site-cta" aria-labelledby="cta-heading" data-reveal="fade-in">
+  <div class="site-cta__inner site-card">
+    <div class="site-cta__header site-section-header">
+      <p class="site-cta__eyebrow site-section-header__eyebrow">Next Step</p>
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h2 id="cta-heading" class="site-cta__title site-section-header__title">
+        함께 일해보고 싶으신가요?
+      </h2>
+      <p class="site-cta__text site-section-header__lead">{ctaCopy}</p>
+    </div>
+
     <div class="site-cta__actions">
-      <a href="/contact" class="site-cta__button">연락하기</a>
-      <div class="site-cta__links">
-        <a
-          href={github.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="site-cta__link"
+      <a
+        href="/contact"
+        class="site-cta__button site-button site-button--primary site-button--glow"
+      >
+        연락하기
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </a>
+
+      <div class="site-cta__social-group">
+        <p class="site-cta__social-copy">
+          GitHub와 LinkedIn에서 작업 방식도 바로 확인할 수 있습니다.
+        </p>
+        <div class="site-cta__links" role="group" aria-label="소셜 링크">
+          <a
+            href={github.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub 프로필 새 탭에서 열기"
+            class="site-cta__link site-cta__link--github site-button site-button--ghost site-button--icon"
           >
-            <path
-              d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-            ></path>
-            <path d="M9 18c-4.51 2-5-2-7-2"></path>
-          </svg>
-          GitHub
-        </a>
-        <a
-          href={linkedin.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="site-cta__link"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+              ></path>
+              <path d="M9 18c-4.51 2-5-2-7-2"></path>
+            </svg>
+            <span class="site-cta__sr-only">GitHub</span>
+          </a>
+          <a
+            href={linkedin.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn 프로필 새 탭에서 열기"
+            class="site-cta__link site-cta__link--linkedin site-button site-button--ghost site-button--icon"
           >
-            <path
-              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-            ></path>
-            <rect width="4" height="12" x="2" y="9"></rect>
-            <circle cx="4" cy="4" r="2"></circle>
-          </svg>
-          LinkedIn
-        </a>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              ></path>
+              <rect width="4" height="12" x="2" y="9"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+            <span class="site-cta__sr-only">LinkedIn</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -80,86 +106,193 @@ const { github, linkedin } = profile.contacts;
 <style>
   .site-cta {
     padding: var(--space-5xl) var(--site-gutter);
-    text-align: center;
   }
 
   .site-cta__inner {
-    max-width: var(--site-content-max-width);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    max-width: 58rem;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
+    padding: clamp(var(--space-xl), 4vw, var(--space-3xl));
+    display: grid;
+    gap: var(--space-xl);
+    text-align: center;
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 72%,
+      var(--color-secondary) 28%
+    );
+    background:
+      radial-gradient(
+        circle at 14% 18%,
+        color-mix(in srgb, var(--color-primary) 16%, transparent),
+        transparent 54%
+      ),
+      radial-gradient(
+        circle at 86% 18%,
+        color-mix(in srgb, var(--color-secondary) 18%, transparent),
+        transparent 52%
+      ),
+      linear-gradient(
+        145deg,
+        color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper)),
+        color-mix(in srgb, var(--site-surface-muted) 78%, var(--color-paper))
+      );
+    box-shadow:
+      var(--site-card-shadow),
+      0 28px 72px
+        color-mix(in srgb, var(--site-glow-primary) 72%, var(--site-glow-secondary));
+  }
+
+  .site-cta__inner::before,
+  .site-cta__inner::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .site-cta__inner::before {
+    top: -20%;
+    right: -6%;
+    width: 14rem;
+    height: 14rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--site-glow-primary) 92%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  .site-cta__inner::after {
+    bottom: -30%;
+    left: -8%;
+    width: 13rem;
+    height: 13rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--site-glow-secondary) 88%, transparent) 0%,
+      transparent 72%
+    );
+  }
+
+  .site-cta__header,
+  .site-cta__actions {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-cta__header {
+    margin-bottom: 0;
+    justify-items: center;
+  }
+
+  .site-cta__eyebrow {
+    color: var(--color-primary);
   }
 
   .site-cta__title {
-    font-size: var(--text-2xl);
-    color: var(--color-ink);
-    margin: 0;
+    max-width: 14ch;
   }
 
   .site-cta__text {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    max-width: 48ch;
-    margin: 0;
+    max-width: 40rem;
   }
 
   .site-cta__actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
     gap: var(--space-lg);
-    margin-top: var(--space-md);
+    justify-items: center;
   }
 
   .site-cta__button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: var(--space-sm) var(--space-2xl);
-    background: var(--color-primary);
-    color: var(--color-paper);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: var(--text-md);
-    border-radius: var(--radius-md);
-    transition:
-      background var(--transition-fast),
-      transform var(--transition-fast);
+    min-width: 12rem;
   }
 
-  .site-cta__button:hover {
-    background: var(--color-ink);
-    transform: var(--hover-lift);
+  .site-cta__button svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .site-cta__social-group {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: center;
+  }
+
+  .site-cta__social-copy {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-body);
+    color: var(--color-text-muted);
   }
 
   .site-cta__links {
     display: flex;
-    align-items: center;
-    gap: var(--space-lg);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
   }
 
   .site-cta__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    min-height: 44px;
-    padding: 0 var(--space-2xs);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: var(--text-sm);
-    transition: color var(--transition-fast);
+    position: relative;
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 76%,
+      var(--color-paper)
+    );
+    color: var(--color-text);
   }
 
-  .site-cta__link:hover {
+  .site-cta__link--github:hover {
     color: var(--color-primary);
   }
 
+  .site-cta__link--linkedin:hover {
+    color: var(--color-secondary);
+  }
+
+  .site-cta__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   @media (min-width: 768px) {
-    .site-cta__title {
-      font-size: var(--text-3xl);
+    .site-cta__actions {
+      grid-template-columns: auto auto;
+      align-items: end;
+      justify-content: center;
+      gap: var(--space-2xl);
+    }
+
+    .site-cta__social-group {
+      justify-items: start;
+      text-align: left;
+    }
+
+    .site-cta__links {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-cta__inner::before {
+      width: 17rem;
+      height: 17rem;
+    }
+
+    .site-cta__inner::after {
+      width: 16rem;
+      height: 16rem;
     }
   }
 </style>

@@ -1,4 +1,6 @@
 ---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import type { PublicProject, PublicOrganization } from "../lib/public-profile";
 
 interface Props {
@@ -7,6 +9,29 @@ interface Props {
 }
 
 const { projects, organizations } = Astro.props;
+
+type ProjectDomain = "construction-cm" | "ai-it";
+type ProjectDestination = "case-study" | "listing";
+
+interface ProjectCardViewModel {
+  project: PublicProject;
+  orgName: string;
+  domain: ProjectDomain;
+  domainLabel: string;
+  href: string;
+  ctaLabel: string;
+  destinationLabel: string;
+  isFeatured: boolean;
+}
+
+const caseStudies = await getCollection(
+  "case-studies",
+  (entry: CollectionEntry<"case-studies">) => !entry.data.draft,
+);
+const caseStudyById = new Map<string, CollectionEntry<"case-studies">>(
+  caseStudies.map((entry: CollectionEntry<"case-studies">) => [entry.id, entry]),
+);
+const projectsIndexHref = "/projects/";
 
 function getOrgName(orgId: string | null): string {
   if (!orgId) return "개인 프로젝트";
@@ -26,37 +51,151 @@ function classificationLabel(classification: string): string {
       return classification;
   }
 }
+
+function classificationBadgeClass(classification: string): string {
+  switch (classification) {
+    case "personal":
+      return "site-badge site-badge--primary";
+    case "company":
+      return "site-badge site-badge--secondary";
+    case "open-source":
+      return "site-badge site-badge--accent";
+    default:
+      return "site-badge";
+  }
+}
+
+function inferProjectDomain(project: PublicProject): ProjectDomain {
+  const caseStudyDomain = caseStudyById.get(project.id)?.data.domain;
+
+  if (caseStudyDomain === "construction-cm" || caseStudyDomain === "ai-it") {
+    return caseStudyDomain;
+  }
+
+  if (
+    project.id === "cm-work-management-system" ||
+    project.organizationId === "junglim-cm"
+  ) {
+    return "construction-cm";
+  }
+
+  return "ai-it";
+}
+
+function domainLabel(domain: ProjectDomain): string {
+  return domain === "construction-cm" ? "건설 CM" : "AI / IT";
+}
+
+function getProjectHref(project: PublicProject): string {
+  const caseStudy = caseStudyById.get(project.id);
+  return caseStudy ? `/projects/${caseStudy.id}/` : projectsIndexHref;
+}
+
+function getDestination(project: PublicProject): ProjectDestination {
+  return caseStudyById.has(project.id) ? "case-study" : "listing";
+}
+
+function ctaLabel(destination: ProjectDestination): string {
+  return destination === "case-study" ? "자세히 보기" : "프로젝트 목록";
+}
+
+function destinationLabel(destination: ProjectDestination): string {
+  return destination === "case-study"
+    ? "케이스 스터디 제공"
+    : "프로젝트 목록에서 이어보기";
+}
+
+const projectCards: ProjectCardViewModel[] = projects.map((project) => {
+  const caseStudy = caseStudyById.get(project.id);
+  const domain = inferProjectDomain(project);
+  const destination = getDestination(project);
+
+  return {
+    project,
+    orgName: getOrgName(project.organizationId),
+    domain,
+    domainLabel: domainLabel(domain),
+    href: getProjectHref(project),
+    ctaLabel: ctaLabel(destination),
+    destinationLabel: destinationLabel(destination),
+    isFeatured: caseStudy?.data.featured ?? false,
+  };
+});
 ---
 
-<section class="site-work" aria-labelledby="work-heading">
+<section class="site-work" aria-labelledby="work-heading" data-reveal="slide-up">
   <div class="site-work__inner">
-    <div class="site-work__header">
-      <div class="accent-rule"></div>
-      <h2 id="work-heading" class="site-work__title">대표 프로젝트</h2>
-      <p class="site-work__lead">
+    <div class="site-work__header site-section-header">
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h2 id="work-heading" class="site-work__title site-section-header__title">
+        대표 프로젝트
+      </h2>
+      <p class="site-work__lead site-section-header__lead">
         건설 현장과 AI 기술을 잇는 시스템을 기획하고 만들었습니다.
       </p>
     </div>
 
     <div class="site-work__grid">
       {
-        projects.map((project) => (
-          <article class="site-work__card surface-card">
+        projectCards.map((card) => (
+          <article
+            class:list={[
+              "site-work__card",
+              "site-card",
+              "site-card--interactive",
+              card.domain === "construction-cm"
+                ? "site-work__card--construction"
+                : "site-work__card--ai",
+            ]}
+          >
             <div class="site-work__card-head">
-              <span class="pill">{classificationLabel(project.classification)}</span>
-              {project.statusAtBasisDate === "ongoing" && (
-                <span class="status-chip">진행 중</span>
-              )}
+              <div class="site-work__card-headline">
+                <p class="site-work__card-domain">{card.domainLabel}</p>
+                <div class="site-work__card-badges">
+                  <span
+                    class:list={[
+                      classificationBadgeClass(card.project.classification),
+                      "site-work__classification-badge",
+                    ]}
+                  >
+                    {classificationLabel(card.project.classification)}
+                  </span>
+                  {card.isFeatured && (
+                    <span class="site-badge site-work__state-badge site-work__state-badge--featured">
+                      Featured
+                    </span>
+                  )}
+                  {card.project.statusAtBasisDate === "ongoing" && (
+                    <span class="site-badge site-work__state-badge site-work__state-badge--ongoing">
+                      진행 중
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <h3 class="site-work__card-name">{project.canonicalName}</h3>
-            <p class="site-work__card-role">{project.role}</p>
+
+            <div class="site-work__card-body">
+              <h3 class="site-work__card-name">{card.project.canonicalName}</h3>
+              <p class="site-work__card-role">{card.project.role}</p>
+            </div>
+
             <div class="site-work__card-meta">
-              <span class="site-work__card-org">
-                {getOrgName(project.organizationId)}
-              </span>
+              <span class="site-work__card-org">{card.orgName}</span>
               <span class="site-work__card-period">
-                {project.period.display}
+                {card.project.period.display}
               </span>
+            </div>
+
+            <div class="site-work__card-footer">
+              <p class="site-work__card-destination">{card.destinationLabel}</p>
+              <a
+                href={card.href}
+                aria-label={`${card.project.canonicalName} ${card.ctaLabel}`}
+                class="site-work__card-cta site-button site-button--ghost site-button--quiet"
+              >
+                <span>{card.ctaLabel}</span>
+                <span class="site-work__card-cta-icon" aria-hidden="true">→</span>
+              </a>
             </div>
           </article>
         ))
@@ -75,26 +214,6 @@ function classificationLabel(classification: string): string {
     margin: 0 auto;
   }
 
-  .site-work__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-3xl);
-  }
-
-  .site-work__title {
-    font-size: var(--text-2xl);
-    color: var(--color-ink);
-    margin: 0;
-  }
-
-  .site-work__lead {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    max-width: 48ch;
-    margin: 0;
-  }
-
   .site-work__grid {
     display: grid;
     gap: var(--space-xl);
@@ -102,34 +221,155 @@ function classificationLabel(classification: string): string {
   }
 
   .site-work__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    transition:
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast);
+    position: relative;
+    min-height: 100%;
+    gap: var(--space-lg);
+    padding-top: calc(var(--space-lg) + var(--space-xs));
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 82%, transparent),
+        transparent 34%
+      ),
+      var(--site-surface-elevated);
   }
 
-  .site-work__card:hover {
-    transform: var(--hover-lift);
-    box-shadow: var(--hover-shadow);
+  .site-work__card::before,
+  .site-work__card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .site-work__card::before {
+    inset: 0 0 auto;
+    height: 0.38rem;
+  }
+
+  .site-work__card::after {
+    top: 0.8rem;
+    right: -1.6rem;
+    width: 6.5rem;
+    height: 6.5rem;
+    border-radius: 999px;
+    opacity: 0.16;
+    background: var(--site-work-card-glow);
+  }
+
+  .site-work__card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-work__card--construction {
+    --site-work-card-glow: color-mix(
+      in srgb,
+      var(--color-secondary) 28%,
+      transparent
+    );
+  }
+
+  .site-work__card--construction::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-secondary) 92%, var(--color-paper)),
+      color-mix(in srgb, var(--color-secondary) 56%, var(--color-primary) 44%)
+    );
+  }
+
+  .site-work__card--ai {
+    --site-work-card-glow: color-mix(
+      in srgb,
+      var(--color-primary) 24%,
+      transparent
+    );
+  }
+
+  .site-work__card--ai::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
+      color-mix(in srgb, var(--color-primary) 68%, var(--color-accent) 32%)
+    );
   }
 
   .site-work__card-head {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-work__card-headline {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-work__card-domain {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-work__card-badges {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-xs);
   }
 
+  .site-work__classification-badge {
+    background: color-mix(
+      in srgb,
+      var(--color-paper) 78%,
+      var(--site-surface-muted)
+    );
+  }
+
+  .site-work__state-badge {
+    border-color: transparent;
+  }
+
+  .site-work__state-badge--featured {
+    border-color: color-mix(
+      in srgb,
+      var(--color-secondary) 22%,
+      var(--site-border-default)
+    );
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 14%,
+      var(--color-paper)
+    );
+    color: var(--color-secondary);
+  }
+
+  .site-work__state-badge--ongoing {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent) 24%,
+      var(--site-border-default)
+    );
+    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
+    color: var(--color-accent);
+  }
+
+  .site-work__card-body {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
   .site-work__card-name {
-    font-size: var(--text-xl);
+    font-size: clamp(var(--text-xl), 2.2vw, var(--text-2xl));
+    line-height: var(--line-height-tight);
     color: var(--color-ink);
     margin: 0;
   }
 
   .site-work__card-role {
-    font-size: var(--text-sm);
+    font-size: var(--text-md);
     color: var(--color-text-secondary);
     margin: 0;
   }
@@ -139,7 +379,6 @@ function classificationLabel(classification: string): string {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
-    margin-top: auto;
     padding-top: var(--space-sm);
     border-top: 1px solid var(--color-line);
     font-size: var(--text-sm);
@@ -151,19 +390,98 @@ function classificationLabel(classification: string): string {
     margin-left: var(--space-sm);
   }
 
+  .site-work__card-footer {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: auto;
+    padding-top: var(--space-xs);
+  }
+
+  .site-work__card-destination {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .site-work__card-cta {
+    align-self: flex-start;
+    border-color: var(--site-border-default);
+    color: var(--color-ink);
+    background: color-mix(
+      in srgb,
+      var(--color-paper) 84%,
+      var(--site-surface-muted)
+    );
+  }
+
+  .site-work__card-cta-icon {
+    font-size: 0.95em;
+    line-height: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-work__card-footer {
+      min-height: 4.75rem;
+    }
+
+    .site-work__card-destination,
+    .site-work__card-cta {
+      transition:
+        opacity var(--transition-base),
+        transform var(--transition-base),
+        background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .site-work__card-destination {
+      transform: translateY(0.4rem);
+      opacity: 0.78;
+    }
+
+    .site-work__card-cta {
+      opacity: 0;
+      transform: translateY(1rem);
+      pointer-events: none;
+    }
+
+    .site-work__card:hover .site-work__card-destination,
+    .site-work__card:focus-within .site-work__card-destination {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .site-work__card:hover .site-work__card-cta,
+    .site-work__card:focus-within .site-work__card-cta {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
   @media (min-width: 768px) {
     .site-work__grid {
       grid-template-columns: repeat(2, 1fr);
-    }
-
-    .site-work__title {
-      font-size: var(--text-3xl);
     }
   }
 
   @media (min-width: 1024px) {
     .site-work__grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-work__card-destination,
+    .site-work__card-cta {
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
+
+    .site-work__card-footer {
+      min-height: auto;
     }
   }
 </style>

@@ -3,146 +3,484 @@ import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+type ProjectEntry = CollectionEntry<"case-studies">;
+type ProjectDomain = ProjectEntry["data"]["domain"];
+
 const allProjects = await getCollection(
   "case-studies",
-  (entry: CollectionEntry<"case-studies">) => !entry.data.draft,
+  (entry: ProjectEntry) => !entry.data.draft,
 );
 
-const projects = allProjects.sort(
-  (a: CollectionEntry<"case-studies">, b: CollectionEntry<"case-studies">) => {
-    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
-    return b.data.period.start.localeCompare(a.data.period.start);
-  },
-);
+const projects = allProjects.sort((a: ProjectEntry, b: ProjectEntry) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  return b.data.period.start.localeCompare(a.data.period.start);
+});
 
-function domainLabel(domain: string): string {
+const featuredProjects = projects.filter((entry: ProjectEntry) => entry.data.featured);
+const archiveProjects = projects.filter((entry: ProjectEntry) => !entry.data.featured);
+
+function domainLabel(domain: ProjectDomain): string {
   return domain === "construction-cm" ? "건설사업관리" : "AI/IT";
+}
+
+function domainEyebrow(domain: ProjectDomain): string {
+  return domain === "construction-cm" ? "Construction CM" : "AI Systems";
+}
+
+function domainBadgeClass(domain: ProjectDomain): string {
+  return domain === "construction-cm"
+    ? "site-badge site-badge--secondary"
+    : "site-badge site-badge--primary";
+}
+
+function domainCardClass(domain: ProjectDomain): string {
+  return domain === "construction-cm"
+    ? "site-projects__item--construction"
+    : "site-projects__item--ai";
 }
 
 function formatPeriod(period: { start: string; end?: string }): string {
   return period.end ? `${period.start} ~ ${period.end}` : `${period.start} ~ 진행 중`;
 }
+
+function filterLabel(domain: ProjectDomain | "all"): string {
+  switch (domain) {
+    case "construction-cm":
+      return "건설사업관리";
+    case "ai-it":
+      return "AI/IT";
+    default:
+      return "전체";
+  }
+}
 ---
 
 <BaseLayout
   title="프로젝트"
-  description="건설CM과 AI/IT 도메인의 프로젝트를 소개합니다."
+  description="건설 현장의 실제 문제를 시스템으로 번역한 케이스 스터디와 AI/IT 프로젝트를 소개합니다."
 >
   <section class="site-projects">
-    <div class="site-projects__header">
-      <h1 class="site-projects__title">프로젝트</h1>
-      <p class="site-projects__description">
-        건설 현장의 실제 문제를 기술로 해결한 프로젝트를 소개합니다.
+    <header class="site-projects__hero site-page-hero" data-reveal="slide-up">
+      <p class="site-page-hero__eyebrow">Projects</p>
+      <h1 class="site-page-hero__title">현장의 문제를 시스템 설계로 바꾼 프로젝트</h1>
+      <p class="site-page-hero__lead">
+        건설사업관리와 AI/IT 사이를 오가며, 복잡한 운영 맥락을 실제로
+        작동하는 협업 시스템과 자동화 흐름으로 풀어낸 사례를 모았습니다.
       </p>
-    </div>
-
-    {
-      projects.length > 0 && (
-        <div
-          class="site-projects__filters"
-          role="group"
-          aria-label="도메인 필터"
-        >
-          <button
-            class="site-projects__filter-btn"
-            data-filter="all"
-            aria-pressed="true"
-          >
-            전체
-          </button>
-          <button
-            class="site-projects__filter-btn"
-            data-filter="construction-cm"
-            aria-pressed="false"
-          >
-            건설사업관리
-          </button>
-          <button
-            class="site-projects__filter-btn"
-            data-filter="ai-it"
-            aria-pressed="false"
-          >
-            AI/IT
-          </button>
-        </div>
-      )
-    }
+      <p class="site-page-hero__meta">
+        공개된 케이스 스터디 {projects.length}건 · 대표 사례 {featuredProjects.length}
+        건
+      </p>
+    </header>
 
     {
       projects.length > 0 ? (
         <>
-          <div class="site-projects__grid">
-            {projects.map((entry: CollectionEntry<"case-studies">) => (
-              <article
-                class="site-projects__card surface-card"
-                data-domain={entry.data.domain}
+          <section class="site-projects__controls site-card" data-reveal="slide-up">
+            <div class="site-projects__controls-copy">
+              <p class="site-projects__controls-eyebrow">Browse by domain</p>
+              <p class="site-projects__controls-title">
+                대표 사례와 프로젝트 아카이브를 원하는 도메인으로 바로 좁혀볼 수
+                있습니다.
+              </p>
+            </div>
+
+            <div
+              class="site-projects__segment"
+              role="group"
+              aria-label="도메인 필터"
+            >
+              {(["all", "construction-cm", "ai-it"] as const).map((filter) => (
+                <button
+                  type="button"
+                  class="site-projects__filter"
+                  data-project-filter={filter}
+                  data-filter-label={filterLabel(filter)}
+                  aria-pressed={filter === "all" ? "true" : "false"}
+                >
+                  {filterLabel(filter)}
+                </button>
+              ))}
+            </div>
+
+            <p class="site-projects__filter-summary" data-filter-summary aria-live="polite">
+              전체 필터 · {projects.length}개 프로젝트
+            </p>
+          </section>
+
+          <div class="site-projects__content">
+            {featuredProjects.length > 0 && (
+              <section class="site-projects__section" data-project-section="featured">
+                <div
+                  class="site-projects__section-header site-section-header"
+                  data-reveal="slide-up"
+                >
+                  <p class="site-section-header__eyebrow">Featured</p>
+                  <div class="site-section-header__rule" aria-hidden="true"></div>
+                  <h2 class="site-section-header__title">대표 케이스 스터디</h2>
+                  <p class="site-section-header__lead">
+                    문제 정의, 역할, 운영 맥락까지 한 번에 읽히는 대표 사례를 먼저
+                    배치했습니다.
+                  </p>
+                </div>
+
+                <div
+                  class="site-projects__spotlight-grid stagger-children"
+                  data-reveal="stagger-children"
+                >
+                  {featuredProjects.map((entry: ProjectEntry) => (
+                    <article
+                      class:list={[
+                        "site-projects__item",
+                        "site-projects__item--spotlight",
+                        "site-card",
+                        "site-card--interactive",
+                        domainCardClass(entry.data.domain),
+                      ]}
+                      data-project-card
+                      data-domain={entry.data.domain}
+                    >
+                      <div class="site-projects__item-head">
+                        <div class="site-projects__item-badges">
+                          <span class={domainBadgeClass(entry.data.domain)}>
+                            {domainLabel(entry.data.domain)}
+                          </span>
+                          <span class="site-badge site-projects__state-badge site-projects__state-badge--featured">
+                            Featured
+                          </span>
+                          {!entry.data.period.end && (
+                            <span class="site-badge site-projects__state-badge site-projects__state-badge--ongoing">
+                              진행 중
+                            </span>
+                          )}
+                        </div>
+                        <p class="site-projects__item-kicker">
+                          {domainEyebrow(entry.data.domain)} · {entry.data.client}
+                        </p>
+                      </div>
+
+                      <div class="site-projects__item-body">
+                        <h3 class="site-projects__item-title">
+                          <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+                        </h3>
+                        <p class="site-projects__item-description">
+                          {entry.data.description}
+                        </p>
+                      </div>
+
+                      <dl class="site-projects__spotlight-meta site-metadata-block">
+                        <div class="site-metadata-block__item">
+                          <dt>Role</dt>
+                          <dd>{entry.data.role}</dd>
+                        </div>
+                        <div class="site-metadata-block__item">
+                          <dt>Client</dt>
+                          <dd>{entry.data.client}</dd>
+                        </div>
+                        <div class="site-metadata-block__item">
+                          <dt>Period</dt>
+                          <dd>{formatPeriod(entry.data.period)}</dd>
+                        </div>
+                      </dl>
+
+                      {entry.data.tags.length > 0 && (
+                        <ul class="site-projects__tags" role="list">
+                          {entry.data.tags.map((tag: string) => (
+                            <li class="site-projects__tag">{tag}</li>
+                          ))}
+                        </ul>
+                      )}
+
+                      <div class="site-projects__item-footer">
+                        <p class="site-projects__item-note">
+                          프로젝트 배경과 설계 판단, 실제 운영 맥락까지 정리한
+                          상세 페이지로 이어집니다.
+                        </p>
+                        <a
+                          href={`/projects/${entry.id}/`}
+                          class="site-projects__cta site-button site-button--ghost site-button--quiet"
+                        >
+                          <span>자세히 보기</span>
+                          <span class="site-projects__cta-icon" aria-hidden="true">→</span>
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <section
+              class="site-projects__section site-projects__section--archive"
+              data-project-section="archive"
+              data-allow-placeholder="true"
+            >
+              <div
+                class="site-projects__section-header site-section-header"
+                data-reveal="slide-up"
               >
-                <div class="site-projects__card-head">
-                  <span class="pill">{domainLabel(entry.data.domain)}</span>
-                  {entry.data.featured && (
-                    <span class="status-chip">Featured</span>
-                  )}
+                <p class="site-section-header__eyebrow">Archive</p>
+                <div class="site-section-header__rule" aria-hidden="true"></div>
+                <h2 class="site-section-header__title">프로젝트 아카이브</h2>
+                <p class="site-section-header__lead">
+                  대표 사례 외의 프로젝트도 같은 시각 시스템으로 이어서 탐색할 수
+                  있도록 준비합니다.
+                </p>
+              </div>
+
+              {archiveProjects.length > 0 ? (
+                <div
+                  class="site-projects__archive-grid stagger-children"
+                  data-reveal="stagger-children"
+                >
+                  {archiveProjects.map((entry: ProjectEntry) => (
+                    <article
+                      class:list={[
+                        "site-projects__item",
+                        "site-projects__item--archive",
+                        "site-card",
+                        "site-card--interactive",
+                        domainCardClass(entry.data.domain),
+                      ]}
+                      data-project-card
+                      data-domain={entry.data.domain}
+                    >
+                      <div class="site-projects__item-head">
+                        <div class="site-projects__item-badges">
+                          <span class={domainBadgeClass(entry.data.domain)}>
+                            {domainLabel(entry.data.domain)}
+                          </span>
+                          {!entry.data.period.end && (
+                            <span class="site-badge site-projects__state-badge site-projects__state-badge--ongoing">
+                              진행 중
+                            </span>
+                          )}
+                        </div>
+                        <p class="site-projects__item-kicker">
+                          {entry.data.client} · {formatPeriod(entry.data.period)}
+                        </p>
+                      </div>
+
+                      <div class="site-projects__item-body">
+                        <h3 class="site-projects__item-title">
+                          <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+                        </h3>
+                        <p class="site-projects__item-description">
+                          {entry.data.description}
+                        </p>
+                        <p class="site-projects__item-role">{entry.data.role}</p>
+                      </div>
+
+                      {entry.data.tags.length > 0 && (
+                        <ul class="site-projects__tags" role="list">
+                          {entry.data.tags.map((tag: string) => (
+                            <li class="site-projects__tag">{tag}</li>
+                          ))}
+                        </ul>
+                      )}
+
+                      <div class="site-projects__item-footer">
+                        <p class="site-projects__item-note">케이스 스터디 상세로 이동</p>
+                        <a
+                          href={`/projects/${entry.id}/`}
+                          class="site-projects__cta site-button site-button--ghost site-button--quiet"
+                        >
+                          <span>자세히 보기</span>
+                          <span class="site-projects__cta-icon" aria-hidden="true">→</span>
+                        </a>
+                      </div>
+                    </article>
+                  ))}
                 </div>
-                <h2 class="site-projects__card-title">
-                  <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+              ) : (
+                <article
+                  class="site-projects__placeholder site-card"
+                  data-project-placeholder="all-only"
+                  data-reveal="slide-up"
+                >
+                  <div class="site-projects__empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                      <path
+                        d="M4.75 8.75 12 4.5l7.25 4.25v8.5L12 21.5l-7.25-4.25v-8.5Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M4.75 8.75 12 13l7.25-4.25M12 13v8.5"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div class="site-projects__placeholder-copy">
+                    <h3 class="site-projects__placeholder-title">
+                      다음 케이스 스터디를 준비 중입니다.
+                    </h3>
+                    <p class="site-projects__placeholder-text">
+                      현재는 대표 프로젝트를 먼저 공개했습니다. 이후 사례가 추가되면
+                      이 영역이 같은 카드 시스템으로 확장됩니다.
+                    </p>
+                  </div>
+                </article>
+              )}
+            </section>
+
+            <article
+              class="site-projects__no-results site-card"
+              data-no-results
+              role="status"
+              aria-live="polite"
+              hidden
+            >
+              <div class="site-projects__empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                  <path
+                    d="M4 6h16M7 12h10M10 18h4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                  <circle
+                    cx="18"
+                    cy="18"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  />
+                </svg>
+              </div>
+              <div class="site-projects__placeholder-copy">
+                <h2 class="site-projects__placeholder-title">
+                  이 필터에 맞는 프로젝트가 아직 없습니다.
                 </h2>
-                <p class="site-projects__card-desc">{entry.data.description}</p>
-                <p class="site-projects__card-role">{entry.data.role}</p>
-                <div class="site-projects__card-meta">
-                  <span class="site-projects__card-period">
-                    {formatPeriod(entry.data.period)}
-                  </span>
-                </div>
-                {entry.data.tags.length > 0 && (
-                  <ul class="site-projects__card-tags" role="list">
-                    {entry.data.tags.map((tag: string) => (
-                      <li class="site-projects__card-tag">{tag}</li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            ))}
+                <p class="site-projects__placeholder-text">
+                  전체 보기로 돌아가거나 다른 도메인을 선택해 공개된 프로젝트를
+                  이어서 확인해 보세요.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="site-button site-button--primary"
+                data-filter-reset
+              >
+                전체 보기
+              </button>
+            </article>
           </div>
-          <p class="site-projects__no-results" hidden>
-            해당 도메인의 프로젝트가 없습니다.
-          </p>
         </>
       ) : (
-        <p class="site-projects__empty">아직 등록된 프로젝트가 없습니다.</p>
+        <article class="site-projects__empty site-card" data-reveal="slide-up">
+          <div class="site-projects__empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" focusable="false">
+              <path
+                d="M12 4v16M4 12h16"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </div>
+          <div class="site-projects__placeholder-copy">
+            <h2 class="site-projects__placeholder-title">
+              아직 공개된 프로젝트가 없습니다.
+            </h2>
+            <p class="site-projects__placeholder-text">
+              프로젝트 데이터가 준비되면 이 페이지에 대표 사례와 아카이브를 함께
+              공개할 예정입니다.
+            </p>
+          </div>
+        </article>
       )
     }
   </section>
 </BaseLayout>
 
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>(
-    ".site-projects__filter-btn",
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-project-filter]"),
   );
-  const cards =
-    document.querySelectorAll<HTMLElement>(".site-projects__card");
-  const noResults = document.querySelector<HTMLElement>(
-    ".site-projects__no-results",
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-project-card]"),
+  );
+  const sections = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-project-section]"),
+  );
+  const summary = document.querySelector<HTMLElement>("[data-filter-summary]");
+  const noResults = document.querySelector<HTMLElement>("[data-no-results]");
+  const resetButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-filter-reset]"),
   );
 
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const filter = btn.dataset.filter;
+  function updateSections(filter: string, visibleCount: number) {
+    sections.forEach((section) => {
+      const visibleCards = section.querySelectorAll("[data-project-card]:not([hidden])");
+      const placeholder = section.querySelector<HTMLElement>(
+        "[data-project-placeholder]",
+      );
+      const showPlaceholder =
+        section.dataset.allowPlaceholder === "true" &&
+        filter === "all" &&
+        visibleCount > 0 &&
+        visibleCards.length === 0;
 
-      buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
-      btn.setAttribute("aria-pressed", "true");
-
-      let visibleCount = 0;
-      cards.forEach((card) => {
-        const show = filter === "all" || card.dataset.domain === filter;
-        card.hidden = !show;
-        if (show) visibleCount++;
-      });
-
-      if (noResults) {
-        noResults.hidden = visibleCount > 0;
+      if (placeholder) {
+        placeholder.hidden = !showPlaceholder;
       }
+
+      section.hidden = visibleCards.length === 0 && !showPlaceholder;
+    });
+  }
+
+  function applyFilter(nextFilter: string) {
+    let visibleCount = 0;
+
+    buttons.forEach((button) => {
+      const isActive = button.dataset.projectFilter === nextFilter;
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    cards.forEach((card) => {
+      const matches = nextFilter === "all" || card.dataset.domain === nextFilter;
+      card.hidden = !matches;
+      if (matches) visibleCount += 1;
+    });
+
+    updateSections(nextFilter, visibleCount);
+
+    const activeButton = buttons.find(
+      (button) => button.dataset.projectFilter === nextFilter,
+    );
+    const label = activeButton?.dataset.filterLabel ?? "전체";
+
+    if (summary) {
+      summary.textContent = `${label} 필터 · ${visibleCount}개 프로젝트`;
+    }
+
+    if (noResults) {
+      noResults.hidden = visibleCount > 0;
+    }
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyFilter(button.dataset.projectFilter ?? "all");
     });
   });
+
+  resetButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyFilter("all");
+      buttons[0]?.focus();
+    });
+  });
+
+  if (buttons.length > 0) {
+    applyFilter("all");
+  }
 </script>
 
 <style>
@@ -152,140 +490,280 @@ function formatPeriod(period: { start: string; end?: string }): string {
     padding: var(--space-xl) var(--site-gutter) var(--space-2xl);
   }
 
-  .site-projects__header {
-    margin-bottom: var(--space-xl);
+  .site-projects__hero {
+    margin-bottom: var(--space-2xl);
   }
 
-  .site-projects__title {
-    font-size: var(--text-3xl);
-    margin: 0 0 var(--space-xs);
+  .site-projects__controls {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-paper) 88%, transparent),
+        color-mix(in srgb, var(--site-surface-muted) 82%, var(--color-paper))
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-projects__controls-copy {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .site-projects__controls-eyebrow {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-projects__controls-title {
+    margin: 0;
+    max-width: 48rem;
+    font-size: clamp(var(--text-lg), 1rem + 0.8vw, var(--text-xl));
+    line-height: var(--line-height-body);
     color: var(--color-ink);
   }
 
-  .site-projects__description {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    margin: 0;
+  .site-projects__segment {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2xs);
+    width: 100%;
+    max-width: 30rem;
+    padding: var(--space-2xs);
+    border: 1px solid var(--site-border-default);
+    border-radius: calc(var(--radius-pill) + var(--space-2xs));
+    background: color-mix(in srgb, var(--color-paper) 78%, var(--site-surface-muted));
   }
 
-  /* ── Filters ── */
-  .site-projects__filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-bottom: var(--space-xl);
-  }
-
-  .site-projects__filter-btn {
-    padding: var(--space-xs) var(--space-md);
-    font-size: var(--text-sm);
-    font-family: inherit;
-    border: 1px solid var(--color-line);
+  .site-projects__filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 var(--space-md);
+    border: none;
     border-radius: var(--radius-pill);
     background: transparent;
     color: var(--color-text-secondary);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
     cursor: pointer;
     transition:
       background var(--transition-fast),
       color var(--transition-fast),
-      border-color var(--transition-fast);
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
-  .site-projects__filter-btn:hover {
-    border-color: var(--color-primary);
+  .site-projects__filter:hover {
     color: var(--color-primary);
   }
 
-  .site-projects__filter-btn:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
+  .site-projects__filter:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--site-glow-primary);
   }
 
-  .site-projects__filter-btn[aria-pressed="true"] {
+  .site-projects__filter[aria-pressed="true"] {
     background: var(--color-primary);
-    color: var(--color-paper);
-    border-color: var(--color-primary);
+    color: var(--site-on-inverse);
+    box-shadow: 0 16px 32px var(--site-glow-primary);
   }
 
-  /* ── Grid ── */
-  .site-projects__grid {
-    display: grid;
-    gap: var(--space-xl);
-    grid-template-columns: 1fr;
-  }
-
-  /* ── Card ── */
-  .site-projects__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    transition:
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast);
-  }
-
-  .site-projects__card:hover {
-    transform: var(--hover-lift);
-    box-shadow: var(--hover-shadow);
-  }
-
-  .site-projects__card[hidden] {
-    display: none;
-  }
-
-  .site-projects__card-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-xs);
-  }
-
-  .site-projects__card-title {
-    font-size: var(--text-xl);
-    color: var(--color-ink);
+  .site-projects__filter-summary {
     margin: 0;
-    line-height: 1.4;
-  }
-
-  .site-projects__card-title a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .site-projects__card-title a:hover {
-    color: var(--color-primary);
-  }
-
-  .site-projects__card-desc {
-    font-size: var(--text-md);
-    color: var(--color-text-secondary);
-    margin: 0;
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .site-projects__card-role {
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
-    margin: 0;
-  }
-
-  .site-projects__card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm);
-    margin-top: auto;
-    padding-top: var(--space-sm);
-    border-top: 1px solid var(--color-line);
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 
-  .site-projects__card-tags {
+  .site-projects__content {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .site-projects__section-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .site-projects__spotlight-grid,
+  .site-projects__archive-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .site-projects__item {
+    position: relative;
+    gap: var(--space-lg);
+    padding-top: calc(var(--space-lg) + var(--space-xs));
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        transparent 34%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-projects__item::before,
+  .site-projects__item::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .site-projects__item::before {
+    inset: 0 0 auto;
+    height: 0.38rem;
+  }
+
+  .site-projects__item::after {
+    top: 0.8rem;
+    right: -1.8rem;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 999px;
+    opacity: 0.18;
+    background: var(--site-projects-card-glow);
+  }
+
+  .site-projects__item > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-projects__item--construction {
+    --site-projects-card-glow: color-mix(
+      in srgb,
+      var(--color-secondary) 30%,
+      transparent
+    );
+  }
+
+  .site-projects__item--construction::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-secondary) 94%, var(--color-paper)),
+      color-mix(in srgb, var(--color-secondary) 56%, var(--color-primary) 44%)
+    );
+  }
+
+  .site-projects__item--ai {
+    --site-projects-card-glow: color-mix(
+      in srgb,
+      var(--color-primary) 24%,
+      transparent
+    );
+  }
+
+  .site-projects__item--ai::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
+      color-mix(in srgb, var(--color-primary) 70%, var(--color-accent) 30%)
+    );
+  }
+
+  .site-projects__item-head,
+  .site-projects__item-body,
+  .site-projects__item-footer {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-projects__item-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+
+  .site-projects__state-badge {
+    border-color: transparent;
+  }
+
+  .site-projects__state-badge--featured {
+    border-color: color-mix(
+      in srgb,
+      var(--color-secondary) 22%,
+      var(--site-border-default)
+    );
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 14%,
+      var(--color-paper)
+    );
+    color: var(--color-secondary);
+  }
+
+  .site-projects__state-badge--ongoing {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent) 24%,
+      var(--site-border-default)
+    );
+    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
+    color: var(--color-accent);
+  }
+
+  .site-projects__item-kicker {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-projects__item-title {
+    margin: 0;
+    font-size: clamp(var(--text-xl), 1.1rem + 1vw, var(--text-3xl));
+    line-height: var(--line-height-tight);
+    color: var(--color-ink);
+  }
+
+  .site-projects__item-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-projects__item-title a:hover {
+    color: var(--color-primary);
+  }
+
+  .site-projects__item-description,
+  .site-projects__item-role,
+  .site-projects__item-note {
+    margin: 0;
+    line-height: var(--line-height-body);
+  }
+
+  .site-projects__item-description {
+    font-size: var(--text-md);
+    color: var(--color-text-secondary);
+  }
+
+  .site-projects__item-role {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .site-projects__spotlight-meta {
+    background: color-mix(in srgb, var(--color-paper) 76%, var(--site-surface-muted));
+  }
+
+  .site-projects__item--archive .site-projects__item-title {
+    font-size: clamp(var(--text-xl), 1rem + 0.7vw, var(--text-2xl));
+  }
+
+  .site-projects__tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
@@ -294,42 +772,189 @@ function formatPeriod(period: { start: string; end?: string }): string {
     padding: 0;
   }
 
-  .site-projects__card-tag {
-    display: inline-block;
-    padding: 2px var(--space-sm);
-    font-size: var(--text-xs);
-    color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  .site-projects__tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 var(--space-sm);
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-paper) 70%, var(--site-surface-muted));
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-text-secondary);
   }
 
-  /* ── Empty / No Results ── */
-  .site-projects__empty,
-  .site-projects__no-results {
-    text-align: center;
-    color: var(--color-text-muted);
-    font-size: var(--text-lg);
-    padding: var(--space-2xl) 0;
+  .site-projects__item-footer {
+    margin-top: auto;
+    padding-top: var(--space-xs);
   }
 
-  /* ── Responsive ── */
+  .site-projects__cta {
+    align-self: flex-start;
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-paper) 84%, var(--site-surface-muted));
+  }
+
+  .site-projects__cta-icon {
+    font-size: 0.95em;
+    line-height: 1;
+  }
+
+  .site-projects__placeholder,
+  .site-projects__no-results,
+  .site-projects__empty {
+    align-items: flex-start;
+    gap: var(--space-lg);
+    padding: clamp(var(--space-lg), 4vw, var(--space-2xl));
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper))
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-projects__empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 1px solid var(--site-border-default);
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-paper) 72%, var(--site-surface-muted));
+    color: var(--color-primary);
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 65%, transparent);
+  }
+
+  .site-projects__empty-icon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .site-projects__placeholder-copy {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .site-projects__placeholder-title {
+    margin: 0;
+    font-size: clamp(var(--text-xl), 1rem + 1vw, var(--text-2xl));
+    line-height: var(--line-height-tight);
+    color: var(--color-ink);
+  }
+
+  .site-projects__placeholder-text {
+    margin: 0;
+    max-width: 42rem;
+    font-size: var(--text-md);
+    line-height: var(--line-height-body);
+    color: var(--color-text-secondary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-projects__item-footer {
+      min-height: 4.85rem;
+    }
+
+    .site-projects__item-note,
+    .site-projects__cta {
+      transition:
+        opacity var(--transition-base),
+        transform var(--transition-base),
+        background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .site-projects__item-note {
+      transform: translateY(0.4rem);
+      opacity: 0.8;
+    }
+
+    .site-projects__cta {
+      opacity: 0;
+      transform: translateY(1rem);
+      pointer-events: none;
+    }
+
+    .site-projects__item:hover .site-projects__item-note,
+    .site-projects__item:focus-within .site-projects__item-note {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .site-projects__item:hover .site-projects__cta,
+    .site-projects__item:focus-within .site-projects__cta {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
   @media (min-width: 768px) {
     .site-projects {
       padding-top: var(--space-2xl);
     }
 
-    .site-projects__title {
-      font-size: var(--text-4xl);
+    .site-projects__controls {
+      padding: var(--space-xl);
     }
 
-    .site-projects__grid {
-      grid-template-columns: repeat(2, 1fr);
+    .site-projects__spotlight-grid,
+    .site-projects__archive-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-projects__item--spotlight {
+      grid-column: 1 / -1;
     }
   }
 
   @media (min-width: 1024px) {
-    .site-projects__grid {
-      grid-template-columns: repeat(3, 1fr);
+    .site-projects__content {
+      gap: var(--space-4xl);
+    }
+
+    .site-projects__controls {
+      grid-template-columns: minmax(0, 1.2fr) auto;
+      align-items: center;
+    }
+
+    .site-projects__filter-summary {
+      grid-column: 1 / -1;
+    }
+
+    .site-projects__segment {
+      width: fit-content;
+      max-width: none;
+      grid-template-columns: repeat(3, auto);
+      justify-self: end;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-projects__filter {
+      transition: none;
+    }
+
+    .site-projects__filter[aria-pressed="true"] {
+      box-shadow: none;
+    }
+
+    .site-projects__item-note,
+    .site-projects__cta {
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+      transition: none !important;
+    }
+
+    .site-projects__item-footer {
+      min-height: auto;
     }
   }
 </style>

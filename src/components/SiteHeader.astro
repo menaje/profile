@@ -12,90 +12,111 @@ const currentPath = Astro.url.pathname;
 
 <header class="site-header">
   <nav class="site-nav" aria-label="메인 내비게이션">
-    <a href="/" class="site-nav__logo">김성식</a>
+    <div class="site-nav__bar">
+      <a href="/" class="site-nav__logo" aria-label="홈으로 이동">
+        <span class="site-nav__logo-mark" aria-hidden="true">KS</span>
+        <span class="site-nav__logo-name">김성식</span>
+      </a>
 
-    <button
-      type="button"
-      class="site-nav__toggle"
-      aria-expanded="false"
-      aria-controls="site-nav-menu"
-      aria-label="메뉴 열기"
-    >
-      <svg
-        class="site-nav__icon site-nav__icon--open"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
+      <button
+        type="button"
+        class="site-nav__toggle"
+        aria-expanded="false"
+        aria-controls="site-nav-menu"
+        aria-label="메뉴 열기"
       >
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-      <svg
-        class="site-nav__icon site-nav__icon--close"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
-      >
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
+        <svg
+          class="site-nav__icon site-nav__icon--open"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg
+          class="site-nav__icon site-nav__icon--close"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
 
-    <ul id="site-nav-menu" class="site-nav__menu">
-      {
-        navItems.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class="site-nav__link"
-              aria-current={
-                currentPath === item.href ||
-                currentPath.startsWith(item.href + "/")
-                  ? "page"
-                  : undefined
-              }
-            >
-              {item.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+      <div id="site-nav-menu" class="site-nav__panel">
+        <div class="site-nav__panel-inner">
+          <ul class="site-nav__menu">
+            {
+              navItems.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="site-nav__link"
+                    aria-current={
+                      currentPath === item.href ||
+                      currentPath.startsWith(item.href + "/")
+                        ? "page"
+                        : undefined
+                    }
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
   </nav>
 </header>
 
 <script>
+  const header = document.querySelector<HTMLElement>(".site-header");
   const toggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
   const menu = document.getElementById("site-nav-menu");
 
+  const syncScrollState = () => {
+    if (!header) return;
+    header.dataset.scrolled = window.scrollY > 0 ? "true" : "false";
+  };
+
+  syncScrollState();
+  window.addEventListener("scroll", syncScrollState, { passive: true });
+
   if (toggle && menu instanceof HTMLElement) {
+    const setMenuOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+      menu.classList.toggle("site-nav__panel--open", open);
+
+      if (header) {
+        header.dataset.menuOpen = String(open);
+      }
+    };
+
     const closeMenu = () => {
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "메뉴 열기");
-      menu.classList.remove("site-nav__menu--open");
+      setMenuOpen(false);
     };
 
     toggle.addEventListener("click", () => {
-      const expanded = toggle.getAttribute("aria-expanded") === "true";
-      toggle.setAttribute("aria-expanded", String(!expanded));
-      menu.classList.toggle("site-nav__menu--open");
-      toggle.setAttribute(
-        "aria-label",
-        expanded ? "메뉴 열기" : "메뉴 닫기",
-      );
+      const nextOpen = toggle.getAttribute("aria-expanded") !== "true";
+      setMenuOpen(nextOpen);
     });
 
     menu.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
@@ -121,45 +142,108 @@ const currentPath = Astro.url.pathname;
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--color-bg-page);
-    border-bottom: 1px solid var(--color-line);
+    padding: var(--space-sm) var(--site-gutter) 0;
   }
 
   .site-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     max-width: var(--site-max-width);
     margin: 0 auto;
-    padding: 0 var(--site-gutter);
-    height: var(--site-nav-height);
+  }
+
+  .site-nav__bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: calc(var(--site-nav-height) + var(--space-sm));
+    padding: var(--space-xs);
+    border: 1px solid color-mix(in srgb, var(--site-border-default) 52%, transparent);
+    border-radius: calc(var(--radius-pill) + var(--space-xs));
+    background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--site-glow-primary) 24%, transparent);
+    transition:
+      background var(--transition-base),
+      border-color var(--transition-base),
+      box-shadow var(--transition-base),
+      backdrop-filter var(--transition-base);
+  }
+
+  .site-header[data-scrolled="true"] .site-nav__bar,
+  .site-header[data-menu-open="true"] .site-nav__bar {
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-accent) 72%,
+      var(--site-border-default)
+    );
+    background: color-mix(in srgb, var(--color-paper) 76%, transparent);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .site-nav__logo {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-sm);
     min-height: 44px;
-    font-weight: 700;
-    font-size: var(--text-lg);
+    padding-inline: var(--space-xs);
     color: var(--color-ink);
     text-decoration: none;
   }
 
-  .site-nav__logo:hover {
+  .site-nav__logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--site-border-default));
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-primary) 16%, var(--color-paper)),
+      color-mix(in srgb, var(--color-secondary) 18%, var(--color-paper))
+    );
     color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .site-nav__logo-name {
+    font-size: var(--text-md);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .site-nav__logo:hover .site-nav__logo-mark,
+  .site-nav__logo:focus-visible .site-nav__logo-mark {
+    border-color: color-mix(in srgb, var(--color-primary) 44%, var(--site-border-default));
   }
 
   .site-nav__toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: var(--space-xs);
-    color: var(--color-ink);
+    justify-self: end;
     min-width: 44px;
     min-height: 44px;
+    padding: 0;
+    border: 1px solid var(--site-border-default);
+    border-radius: var(--radius-pill);
+    background: var(--site-surface-muted);
+    cursor: pointer;
+    color: var(--color-ink);
+    transition:
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .site-nav__toggle:hover {
+    border-color: var(--site-border-accent);
+    background: color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper));
+    color: var(--color-primary);
   }
 
   .site-nav__icon--close {
@@ -174,29 +258,52 @@ const currentPath = Astro.url.pathname;
     display: block;
   }
 
-  .site-nav__menu {
-    display: none;
-    position: absolute;
-    top: var(--site-nav-height);
-    left: 0;
-    right: 0;
-    background: var(--color-bg-page);
-    border-bottom: 1px solid var(--color-line);
-    list-style: none;
-    margin: 0;
-    padding: var(--space-sm) 0;
-    box-shadow: var(--shadow-md);
+  .site-nav__panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(calc(var(--space-xs) * -1));
+    transition:
+      grid-template-rows var(--transition-base),
+      opacity var(--transition-fast),
+      visibility 0s linear var(--transition-fast),
+      transform var(--transition-base);
   }
 
-  .site-nav__menu--open {
-    display: block;
+  .site-nav__panel--open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      grid-template-rows var(--transition-base),
+      opacity var(--transition-fast),
+      transform var(--transition-base);
+  }
+
+  .site-nav__panel-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .site-nav__menu {
+    display: grid;
+    gap: var(--space-2xs);
+    list-style: none;
+    margin: 0;
+    padding: var(--space-sm) 0 0;
   }
 
   .site-nav__link {
     display: flex;
     align-items: center;
+    position: relative;
     min-height: 44px;
-    padding: var(--space-sm) var(--site-gutter);
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--site-surface-default) 72%, transparent);
     color: var(--color-text-secondary);
     text-decoration: none;
     font-size: var(--text-md);
@@ -205,37 +312,88 @@ const currentPath = Astro.url.pathname;
       background var(--transition-fast);
   }
 
+  .site-nav__link::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.7rem;
+    height: 0.16rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(
+      90deg,
+      var(--color-primary),
+      color-mix(in srgb, var(--color-secondary) 80%, var(--color-primary))
+    );
+    opacity: 0.34;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+      transform var(--transition-base),
+      opacity var(--transition-fast);
+  }
+
   .site-nav__link:hover {
+    background: color-mix(in srgb, var(--site-surface-muted) 86%, var(--color-paper));
     color: var(--color-primary);
   }
 
+  .site-nav__link:hover::after,
+  .site-nav__link:focus-visible::after,
+  .site-nav__link[aria-current="page"]::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
   .site-nav__link[aria-current="page"] {
-    color: var(--color-primary);
+    background: color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper));
+    color: var(--color-ink);
     font-weight: 600;
   }
 
   @media (min-width: 768px) {
+    .site-header {
+      padding-top: var(--space-md);
+    }
+
+    .site-nav__bar {
+      grid-template-columns: auto minmax(0, 1fr);
+      padding-inline: var(--space-sm);
+    }
+
     .site-nav__toggle {
       display: none;
     }
 
+    .site-nav__panel {
+      grid-column: 2;
+      justify-self: end;
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .site-nav__panel-inner {
+      overflow: visible;
+    }
+
     .site-nav__menu {
       display: flex;
-      position: static;
-      background: none;
-      border-bottom: none;
-      box-shadow: none;
-      padding: 0;
-      gap: var(--space-xs);
+      align-items: center;
+      gap: var(--space-2xs);
+      padding-top: 0;
     }
 
     .site-nav__link {
-      padding: var(--space-xs) var(--space-sm);
-      border-radius: var(--radius-sm);
+      padding: 0.8rem 0.95rem;
+      background: transparent;
     }
 
-    .site-nav__link:hover {
-      background: var(--color-bg-surface);
+    .site-nav__link::after {
+      left: 0.95rem;
+      right: 0.95rem;
+      bottom: 0.45rem;
     }
   }
 </style>

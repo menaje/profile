@@ -8,180 +8,475 @@ import {
   getAnonymizedClient,
 } from "../../lib/public-profile";
 
+type CaseStudyEntry = CollectionEntry<"case-studies">;
+type CaseStudyDomain = CaseStudyEntry["data"]["domain"];
+type NavigationRelation = "previous" | "next";
+
+interface MetaItem {
+  label: string;
+  value: string;
+}
+
 export async function getStaticPaths() {
   const entries = await getCollection("case-studies");
   return entries
-    .filter((e: CollectionEntry<"case-studies">) => !e.data.draft)
-    .map((entry: CollectionEntry<"case-studies">) => ({
+    .filter((candidate: CaseStudyEntry) => !candidate.data.draft)
+    .map((entry: CaseStudyEntry) => ({
       params: { slug: entry.id },
       props: { entry },
     }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<"case-studies"> };
+function sortCaseStudies(a: CaseStudyEntry, b: CaseStudyEntry) {
+  if (a.data.featured !== b.data.featured) {
+    return a.data.featured ? -1 : 1;
+  }
+
+  return b.data.period.start.localeCompare(a.data.period.start);
+}
+
+function formatPeriod(period: { start: string; end?: string }): string {
+  return period.end ? `${period.start} ~ ${period.end}` : `${period.start} ~ 진행 중`;
+}
+
+function domainLabel(domain: CaseStudyDomain): string {
+  return domain === "construction-cm" ? "건설사업관리" : "AI/IT";
+}
+
+function domainEyebrow(domain: CaseStudyDomain): string {
+  return domain === "construction-cm" ? "Construction CM" : "AI Systems";
+}
+
+function domainBadgeClass(domain: CaseStudyDomain): string {
+  return domain === "construction-cm"
+    ? "site-badge site-badge--secondary"
+    : "site-badge site-badge--primary";
+}
+
+function pageDomainClass(domain: CaseStudyDomain): string {
+  return domain === "construction-cm"
+    ? "site-case-study--construction"
+    : "site-case-study--ai";
+}
+
+function pagerDomainClass(domain: CaseStudyDomain): string {
+  return domain === "construction-cm"
+    ? "site-case-study__pager-card--construction"
+    : "site-case-study__pager-card--ai";
+}
+
+function statusLabel(entry: CaseStudyEntry): string {
+  return entry.data.period.end ? "Completed" : "In Progress";
+}
+
+function relationLabel(relation: NavigationRelation): string {
+  return relation === "previous" ? "이전 프로젝트" : "다음 프로젝트";
+}
+
+function relationFallback(relation: NavigationRelation): string {
+  return relation === "previous"
+    ? "현재 공개된 흐름의 첫 프로젝트입니다."
+    : "다음 공개 프로젝트를 준비 중입니다.";
+}
+
+const { entry } = Astro.props as { entry: CaseStudyEntry };
 const { Content } = await render(entry);
 
 const profile = getPublicProfile();
 const project = [...profile.projects.core, ...profile.projects.supporting].find(
-  (p) => p.id === entry.id,
+  (candidate) => candidate.id === entry.id,
 );
+
+const publishedEntries = (
+  await getCollection(
+    "case-studies",
+    (candidate: CaseStudyEntry) => !candidate.data.draft,
+  )
+).sort(sortCaseStudies);
+
+const currentIndex = publishedEntries.findIndex(
+  (candidate: CaseStudyEntry) => candidate.id === entry.id,
+);
+const previousEntry =
+  currentIndex > 0 ? publishedEntries[currentIndex - 1] : undefined;
+const nextEntry =
+  currentIndex >= 0 && currentIndex < publishedEntries.length - 1
+    ? publishedEntries[currentIndex + 1]
+    : undefined;
 
 const orgName = project?.organizationId
   ? getAnonymizedOrgName(project.organizationId)
   : "";
 const clientName = getAnonymizedClient(entry.id, entry.data.client);
 
-const domainLabel =
-  entry.data.domain === "construction-cm" ? "건설사업관리" : "AI/IT";
+const metadataItems: MetaItem[] = [
+  { label: "Domain", value: domainLabel(entry.data.domain) },
+  { label: "Period", value: formatPeriod(entry.data.period) },
+  { label: "Role", value: entry.data.role },
+  ...(clientName ? [{ label: "Client", value: clientName }] : []),
+  ...(orgName ? [{ label: "Organization", value: orgName }] : []),
+  { label: "Status", value: statusLabel(entry) },
+];
+
+const heroMeta = [
+  `Case Study ${currentIndex + 1} / ${publishedEntries.length}`,
+  formatPeriod(entry.data.period),
+  orgName || clientName,
+]
+  .filter(Boolean)
+  .join(" · ");
 ---
 
 <BaseLayout title={`${entry.data.title} — 프로젝트`} description={entry.data.description}>
-  <article class="site-case-study">
-    <header class="site-case-study__header">
-      <div class="site-case-study__breadcrumb">
-        <a href="/projects">프로젝트</a>
-        <span aria-hidden="true">/</span>
-        <span>{entry.data.title}</span>
-      </div>
+  <article class:list={["site-case-study", pageDomainClass(entry.data.domain)]}>
+    <section class="site-case-study__hero-shell" data-reveal="slide-up">
+      <header class="site-case-study__hero site-card">
+        <div class="site-case-study__hero-top">
+          <nav class="site-case-study__breadcrumb" aria-label="Breadcrumb">
+            <a href="/projects/">프로젝트</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{entry.data.title}</span>
+          </nav>
 
-      <h1 class="site-case-study__title">{entry.data.title}</h1>
-
-      <p class="site-case-study__lead">{entry.data.description}</p>
-
-      <dl class="site-case-study__meta">
-        <div>
-          <dt>기간</dt>
-          <dd>
-            {entry.data.period.start}{entry.data.period.end ? ` ~ ${entry.data.period.end}` : " ~ 진행 중"}
-          </dd>
-        </div>
-        <div>
-          <dt>역할</dt>
-          <dd>{entry.data.role}</dd>
-        </div>
-        {clientName && (
-          <div>
-            <dt>발주처</dt>
-            <dd>{clientName}</dd>
+          <div class="site-case-study__hero-badges">
+            <span class={domainBadgeClass(entry.data.domain)}>
+              {domainLabel(entry.data.domain)}
+            </span>
+            {entry.data.featured && (
+              <span class="site-badge site-case-study__state-badge site-case-study__state-badge--featured">
+                Featured
+              </span>
+            )}
+            {!entry.data.period.end && (
+              <span class="site-badge site-case-study__state-badge site-case-study__state-badge--ongoing">
+                진행 중
+              </span>
+            )}
           </div>
-        )}
-        {orgName && (
-          <div>
-            <dt>소속</dt>
-            <dd>{orgName}</dd>
-          </div>
-        )}
-        <div>
-          <dt>도메인</dt>
-          <dd>{domainLabel}</dd>
         </div>
-      </dl>
 
-      {entry.data.tags.length > 0 && (
-        <ul class="site-case-study__tags" role="list">
-          {entry.data.tags.map((tag: string) => (
-            <li class="site-case-study__tag">{tag}</li>
+        <div class="site-page-hero site-case-study__hero-copy">
+          <p class="site-page-hero__eyebrow">{domainEyebrow(entry.data.domain)}</p>
+          <h1 class="site-page-hero__title site-case-study__title">{entry.data.title}</h1>
+          <p class="site-page-hero__lead">{entry.data.description}</p>
+          <p class="site-page-hero__meta">{heroMeta}</p>
+        </div>
+
+        <dl class="site-case-study__metadata site-metadata-block">
+          {metadataItems.map((item: MetaItem) => (
+            <div class="site-metadata-block__item">
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
           ))}
-        </ul>
-      )}
-    </header>
+        </dl>
 
-    <div class="site-case-study__content">
-      <Content />
-    </div>
+        {entry.data.tags.length > 0 && (
+          <ul class="site-case-study__tags" role="list" aria-label="기술 태그">
+            {entry.data.tags.map((tag: string) => (
+              <li>
+                <span class="site-case-study__tag site-badge">{tag}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
+    </section>
+
+    <section class="site-case-study__article-shell" data-reveal="slide-up">
+      <div class="site-case-study__article-card site-card">
+        <div class="site-case-study__content">
+          <Content />
+        </div>
+      </div>
+    </section>
 
     <footer class="site-case-study__footer">
-      <a href="/projects" class="site-case-study__back">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="m12 19-7-7 7-7"></path>
-          <path d="M19 12H5"></path>
-        </svg>
-        모든 프로젝트 보기
-      </a>
+      <div class="site-case-study__footer-head" data-reveal="slide-up">
+        <div class="site-case-study__footer-copy">
+          <p class="site-case-study__footer-eyebrow">Continue Exploring</p>
+          <h2 class="site-case-study__footer-title">
+            공개된 프로젝트 흐름을 바로 이어서 탐색할 수 있습니다.
+          </h2>
+          <p class="site-case-study__footer-text">
+            이전과 다음 프로젝트를 살펴보거나, 전체 목록으로 돌아가 같은 시각
+            시스템 안에서 사례를 비교해 볼 수 있습니다.
+          </p>
+        </div>
+
+        <a href="/projects/" class="site-button site-button--primary">
+          프로젝트 목록 보기
+        </a>
+      </div>
+
+      <nav
+        class="site-case-study__pager"
+        aria-label="프로젝트 이동"
+        data-reveal="stagger-children"
+      >
+        {previousEntry ? (
+          <a
+            href={`/projects/${previousEntry.id}/`}
+            class:list={[
+              "site-case-study__pager-card",
+              "site-case-study__pager-link",
+              "site-card",
+              "site-card--interactive",
+              pagerDomainClass(previousEntry.data.domain),
+            ]}
+          >
+            <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
+            <h3 class="site-case-study__pager-title">{previousEntry.data.title}</h3>
+            <p class="site-case-study__pager-description">
+              {previousEntry.data.description}
+            </p>
+            <div class="site-case-study__pager-meta">
+              <span class={domainBadgeClass(previousEntry.data.domain)}>
+                {domainLabel(previousEntry.data.domain)}
+              </span>
+              <span>{formatPeriod(previousEntry.data.period)}</span>
+            </div>
+          </a>
+        ) : (
+          <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
+            <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
+            <h3 class="site-case-study__pager-title">첫 번째 공개 프로젝트</h3>
+            <p class="site-case-study__pager-description">
+              {relationFallback("previous")}
+            </p>
+          </article>
+        )}
+
+        {nextEntry ? (
+          <a
+            href={`/projects/${nextEntry.id}/`}
+            class:list={[
+              "site-case-study__pager-card",
+              "site-case-study__pager-link",
+              "site-card",
+              "site-card--interactive",
+              pagerDomainClass(nextEntry.data.domain),
+            ]}
+          >
+            <p class="site-case-study__pager-label">{relationLabel("next")}</p>
+            <h3 class="site-case-study__pager-title">{nextEntry.data.title}</h3>
+            <p class="site-case-study__pager-description">{nextEntry.data.description}</p>
+            <div class="site-case-study__pager-meta">
+              <span class={domainBadgeClass(nextEntry.data.domain)}>
+                {domainLabel(nextEntry.data.domain)}
+              </span>
+              <span>{formatPeriod(nextEntry.data.period)}</span>
+            </div>
+          </a>
+        ) : (
+          <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
+            <p class="site-case-study__pager-label">{relationLabel("next")}</p>
+            <h3 class="site-case-study__pager-title">다음 프로젝트 준비 중</h3>
+            <p class="site-case-study__pager-description">{relationFallback("next")}</p>
+          </article>
+        )}
+      </nav>
     </footer>
   </article>
 </BaseLayout>
 
 <style>
   .site-case-study {
-    max-width: var(--site-max-width);
-    margin: 0 auto;
-    padding: var(--space-2xl) var(--site-gutter);
+    --site-case-study-accent: var(--color-primary);
+    --site-case-study-accent-soft: color-mix(
+      in srgb,
+      var(--color-primary) 14%,
+      var(--color-paper)
+    );
+    --site-case-study-accent-strong: color-mix(
+      in srgb,
+      var(--color-primary) 72%,
+      var(--color-accent) 28%
+    );
+    --site-case-study-glow: color-mix(
+      in srgb,
+      var(--color-primary) 24%,
+      transparent
+    );
+    padding-bottom: clamp(var(--space-3xl), 6vw, var(--space-5xl));
   }
 
-  /* --- Header --- */
-  .site-case-study__header {
-    margin-bottom: var(--space-3xl);
+  .site-case-study--construction {
+    --site-case-study-accent: var(--color-secondary);
+    --site-case-study-accent-soft: color-mix(
+      in srgb,
+      var(--color-secondary) 12%,
+      var(--color-paper)
+    );
+    --site-case-study-accent-strong: color-mix(
+      in srgb,
+      var(--color-secondary) 56%,
+      var(--color-primary) 44%
+    );
+    --site-case-study-glow: color-mix(
+      in srgb,
+      var(--color-secondary) 28%,
+      transparent
+    );
+  }
+
+  .site-case-study--ai {
+    --site-case-study-accent: var(--color-primary);
+    --site-case-study-accent-soft: color-mix(
+      in srgb,
+      var(--color-primary) 12%,
+      var(--color-paper)
+    );
+    --site-case-study-accent-strong: color-mix(
+      in srgb,
+      var(--color-primary) 68%,
+      var(--color-accent) 32%
+    );
+    --site-case-study-glow: color-mix(
+      in srgb,
+      var(--color-primary) 24%,
+      transparent
+    );
+  }
+
+  .site-case-study__hero-shell,
+  .site-case-study__article-shell,
+  .site-case-study__footer {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding-inline: var(--site-gutter);
+  }
+
+  .site-case-study__hero-shell {
+    padding-top: clamp(var(--space-2xl), 6vw, var(--space-4xl));
+  }
+
+  .site-case-study__hero {
+    position: relative;
+    gap: var(--space-lg);
+    padding-top: calc(var(--space-xl) + var(--space-xs));
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        transparent 34%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-case-study__hero::before,
+  .site-case-study__hero::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .site-case-study__hero::before {
+    inset: 0 0 auto;
+    height: 0.38rem;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--site-case-study-accent) 92%, var(--color-paper)),
+      var(--site-case-study-accent-strong)
+    );
+  }
+
+  .site-case-study__hero::after {
+    top: 0.9rem;
+    right: -2rem;
+    width: 8.5rem;
+    height: 8.5rem;
+    border-radius: 999px;
+    opacity: 0.22;
+    background: var(--site-case-study-glow);
+  }
+
+  .site-case-study__hero > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-case-study__hero-top {
+    display: grid;
+    gap: var(--space-md);
   }
 
   .site-case-study__breadcrumb {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-xs);
+    margin: 0;
     font-size: var(--text-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-lg);
   }
 
   .site-case-study__breadcrumb a {
-    color: var(--color-primary);
+    color: var(--site-case-study-accent);
     text-decoration: none;
   }
 
   .site-case-study__breadcrumb a:hover {
-    text-decoration: underline;
+    color: var(--color-ink);
+  }
+
+  .site-case-study__hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+
+  .site-case-study__state-badge {
+    border-color: transparent;
+  }
+
+  .site-case-study__state-badge--featured {
+    border-color: color-mix(
+      in srgb,
+      var(--color-secondary) 22%,
+      var(--site-border-default)
+    );
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 14%,
+      var(--color-paper)
+    );
+    color: var(--color-secondary);
+  }
+
+  .site-case-study__state-badge--ongoing {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent) 24%,
+      var(--site-border-default)
+    );
+    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
+    color: var(--color-accent);
+  }
+
+  .site-case-study__hero-copy {
+    margin-bottom: 0;
   }
 
   .site-case-study__title {
-    font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
-    font-weight: 700;
-    line-height: var(--line-height-tight);
+    text-wrap: balance;
+  }
+
+  .site-case-study__metadata {
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--site-case-study-accent) 8%, var(--color-paper)),
+        color-mix(in srgb, var(--site-surface-muted) 90%, var(--color-paper))
+      ),
+      var(--site-surface-muted);
+  }
+
+  .site-case-study__metadata dd {
+    font-size: clamp(var(--text-sm), 0.9rem + 0.15vw, var(--text-md));
     color: var(--color-ink);
-    margin: 0 0 var(--space-md);
-  }
-
-  .site-case-study__lead {
-    font-size: var(--text-lg);
-    color: var(--color-text-secondary);
-    line-height: var(--line-height-body);
-    max-width: 40rem;
-    margin: 0 0 var(--space-xl);
-  }
-
-  .site-case-study__meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-    gap: var(--space-md) var(--space-xl);
-    padding: var(--space-lg);
-    background: var(--color-bg-surface);
-    border-radius: var(--radius-md);
-    margin: 0 0 var(--space-lg);
-  }
-
-  .site-case-study__meta dt {
-    font-size: var(--text-xs);
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-2xs);
-  }
-
-  .site-case-study__meta dd {
-    font-size: var(--text-sm);
-    color: var(--color-ink);
-    margin: 0;
   }
 
   .site-case-study__tags {
@@ -189,32 +484,63 @@ const domainLabel =
     flex-wrap: wrap;
     gap: var(--space-xs);
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
   }
 
   .site-case-study__tag {
-    display: inline-block;
-    padding: var(--space-2xs) var(--space-sm);
-    font-size: var(--text-xs);
-    color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 8%, transparent);
-    border-radius: var(--radius-pill);
+    border-color: color-mix(
+      in srgb,
+      var(--site-case-study-accent) 16%,
+      var(--site-border-default)
+    );
+    background: color-mix(
+      in srgb,
+      var(--site-case-study-accent) 10%,
+      var(--color-paper)
+    );
+    color: var(--site-case-study-accent);
   }
 
-  /* --- Content (MDX body) --- */
+  .site-case-study__article-shell {
+    padding-top: var(--space-xl);
+  }
+
+  .site-case-study__article-card {
+    padding: clamp(var(--space-lg), 3vw, var(--space-xl));
+  }
+
   .site-case-study__content {
-    line-height: var(--line-height-body);
-    color: var(--color-text);
+    color: var(--color-text-secondary);
+    font-size: clamp(var(--text-md), 0.98rem + 0.2vw, var(--text-lg));
+    line-height: 1.85;
+  }
+
+  .site-case-study__content
+    :global(:where(h2, h3, h4, p, ul, ol, blockquote, pre, table, figure, hr)) {
+    margin-top: 0;
+    margin-bottom: var(--space-lg);
+  }
+
+  .site-case-study__content :global(h2),
+  .site-case-study__content :global(h3),
+  .site-case-study__content :global(h4) {
+    color: var(--color-ink);
+    scroll-margin-top: 7rem;
+    text-wrap: balance;
   }
 
   .site-case-study__content :global(h2) {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--color-ink);
-    margin: var(--space-3xl) 0 var(--space-md);
-    padding-bottom: var(--space-xs);
-    border-bottom: 2px solid var(--color-accent);
+    margin-top: clamp(var(--space-2xl), 4vw, var(--space-4xl));
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid
+      color-mix(
+        in srgb,
+        var(--site-case-study-accent) 18%,
+        var(--site-border-default)
+      );
+    font-size: clamp(var(--text-2xl), 2.7vw, var(--text-4xl));
+    line-height: 1.16;
   }
 
   .site-case-study__content :global(h2:first-child) {
@@ -222,91 +548,432 @@ const domainLabel =
   }
 
   .site-case-study__content :global(h3) {
+    margin-top: var(--space-2xl);
+    font-size: clamp(var(--text-xl), 2vw, var(--text-2xl));
+    line-height: 1.22;
+  }
+
+  .site-case-study__content :global(h4) {
+    margin-top: var(--space-xl);
     font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-ink);
-    margin: var(--space-2xl) 0 var(--space-sm);
+    line-height: 1.35;
   }
 
   .site-case-study__content :global(p) {
-    margin: 0 0 var(--space-md);
-    max-width: 40rem;
+    max-width: 66ch;
   }
 
   .site-case-study__content :global(ul),
   .site-case-study__content :global(ol) {
-    margin: 0 0 var(--space-md);
-    padding-left: var(--space-xl);
-    max-width: 40rem;
+    max-width: 72ch;
+    padding-left: clamp(1.35rem, 1.1rem + 1vw, 2rem);
   }
 
   .site-case-study__content :global(li) {
-    margin-bottom: var(--space-xs);
+    color: var(--color-text-secondary);
+    padding-left: var(--space-2xs);
   }
 
-  .site-case-study__content :global(li strong) {
+  .site-case-study__content :global(li + li) {
+    margin-top: var(--space-xs);
+  }
+
+  .site-case-study__content :global(blockquote) {
+    position: relative;
+    max-width: 70ch;
+    padding: var(--space-lg) var(--space-xl) var(--space-lg)
+      calc(var(--space-xl) + var(--space-xs));
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--site-case-study-accent) 16%,
+        var(--site-border-default)
+      );
+    border-left: 4px solid var(--site-case-study-accent);
+    border-radius: var(--site-card-radius);
+    background:
+      linear-gradient(135deg, var(--site-case-study-accent-soft), var(--site-surface-muted));
+    color: var(--color-text);
+  }
+
+  .site-case-study__content :global(blockquote)::before {
+    content: "“";
+    position: absolute;
+    top: 0.15rem;
+    left: var(--space-sm);
+    font-size: 3rem;
+    line-height: 1;
+    color: color-mix(
+      in srgb,
+      var(--site-case-study-accent) 32%,
+      transparent
+    );
+  }
+
+  .site-case-study__content :global(blockquote p:last-child),
+  .site-case-study__content :global(li > p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .site-case-study__content :global(strong) {
     color: var(--color-ink);
-  }
-
-  .site-case-study__content :global(table) {
-    width: 100%;
-    max-width: 40rem;
-    border-collapse: collapse;
-    margin: 0 0 var(--space-xl);
-    font-size: var(--text-sm);
-  }
-
-  .site-case-study__content :global(th) {
-    text-align: left;
-    padding: var(--space-xs) var(--space-sm);
     font-weight: 600;
-    color: var(--color-text-muted);
-    border-bottom: 2px solid var(--color-line);
   }
 
-  .site-case-study__content :global(td) {
-    padding: var(--space-xs) var(--space-sm);
-    border-bottom: 1px solid var(--color-line);
-  }
-
-  /* --- Footer --- */
-  .site-case-study__footer {
-    margin-top: var(--space-4xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-line);
-  }
-
-  .site-case-study__back {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    font-size: var(--text-sm);
-    color: var(--color-primary);
-    text-decoration: none;
+  .site-case-study__content :global(a) {
+    color: var(--site-case-study-accent);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
     transition: color var(--transition-fast);
   }
 
-  .site-case-study__back:hover {
+  .site-case-study__content :global(a:hover) {
     color: var(--color-ink);
   }
 
-  /* --- Mobile responsive --- */
+  .site-case-study__content :global(:not(pre) > code) {
+    padding: 0.18em 0.45em;
+    border: 1px solid
+      color-mix(
+        in srgb,
+        var(--site-case-study-accent) 14%,
+        var(--site-border-default)
+      );
+    border-radius: var(--radius-sm);
+    background: color-mix(
+      in srgb,
+      var(--site-case-study-accent) 8%,
+      var(--color-paper)
+    );
+    color: var(--site-case-study-accent);
+    font-family: var(--font-family-mono);
+    font-size: 0.88em;
+  }
+
+  .site-case-study__content :global(pre),
+  .site-case-study__content :global(pre.astro-code) {
+    position: relative;
+    overflow-x: auto;
+    max-width: 100%;
+    padding: calc(var(--space-xl) + 0.9rem) var(--space-lg) var(--space-lg);
+    border: 1px solid
+      color-mix(in srgb, var(--color-ink) 12%, var(--site-border-default));
+    border-radius: var(--site-card-radius);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-ink) 92%, black),
+        color-mix(in srgb, var(--color-ink) 96%, black)
+      ) !important;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 8%, transparent),
+      0 20px 44px color-mix(in srgb, var(--color-ink) 18%, transparent);
+    font-family: var(--font-family-mono);
+    font-size: clamp(0.82rem, 0.78rem + 0.15vw, 0.94rem);
+    line-height: 1.8;
+  }
+
+  .site-case-study__content :global(pre)::before,
+  .site-case-study__content :global(pre.astro-code)::before {
+    content: "";
+    position: absolute;
+    top: var(--space-md);
+    left: var(--space-md);
+    width: 3rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--site-case-study-accent),
+      var(--site-case-study-accent-strong)
+    );
+  }
+
+  .site-case-study__content :global(pre code) {
+    display: block;
+    min-width: max-content;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+  }
+
+  .site-case-study__content :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--site-border-default);
+    margin-block: clamp(var(--space-xl), 4vw, var(--space-3xl));
+  }
+
+  .site-case-study__content :global(table) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid var(--site-border-default);
+    border-radius: var(--site-card-radius);
+    background: var(--site-surface-muted);
+  }
+
+  .site-case-study__content :global(th),
+  .site-case-study__content :global(td) {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--site-border-default);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .site-case-study__content :global(th) {
+    color: var(--color-ink);
+    background: color-mix(
+      in srgb,
+      var(--site-case-study-accent) 6%,
+      var(--color-paper)
+    );
+  }
+
+  .site-case-study__content :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--site-border-default);
+    border-radius: var(--site-card-radius);
+  }
+
+  .site-case-study__content :global(figure) {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-case-study__content :global(figcaption) {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .site-case-study__footer {
+    padding-top: var(--space-2xl);
+  }
+
+  .site-case-study__footer-head {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .site-case-study__footer-copy {
+    display: grid;
+    gap: var(--space-xs);
+    max-width: 42rem;
+  }
+
+  .site-case-study__footer-eyebrow {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-case-study__footer-title {
+    margin: 0;
+    font-size: clamp(var(--text-xl), 2vw, var(--text-2xl));
+    line-height: 1.22;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .site-case-study__footer-text {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .site-case-study__pager {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .site-case-study__pager-card {
+    position: relative;
+    gap: var(--space-sm);
+    min-height: 100%;
+    padding-top: calc(var(--space-lg) + var(--space-xs));
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        transparent 34%
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-case-study__pager-card::before,
+  .site-case-study__pager-card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .site-case-study__pager-card::before {
+    inset: 0 0 auto;
+    height: 0.38rem;
+  }
+
+  .site-case-study__pager-card::after {
+    top: 0.8rem;
+    right: -1.8rem;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 999px;
+    opacity: 0.18;
+  }
+
+  .site-case-study__pager-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-case-study__pager-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .site-case-study__pager-card--construction {
+    --site-case-study-pager-accent: var(--color-secondary);
+    --site-case-study-pager-strong: color-mix(
+      in srgb,
+      var(--color-secondary) 56%,
+      var(--color-primary) 44%
+    );
+  }
+
+  .site-case-study__pager-card--construction::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-secondary) 94%, var(--color-paper)),
+      var(--site-case-study-pager-strong)
+    );
+  }
+
+  .site-case-study__pager-card--construction::after {
+    background: color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+
+  .site-case-study__pager-card--ai {
+    --site-case-study-pager-accent: var(--color-primary);
+    --site-case-study-pager-strong: color-mix(
+      in srgb,
+      var(--color-primary) 68%,
+      var(--color-accent) 32%
+    );
+  }
+
+  .site-case-study__pager-card--ai::before {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
+      var(--site-case-study-pager-strong)
+    );
+  }
+
+  .site-case-study__pager-card--ai::after {
+    background: color-mix(in srgb, var(--color-primary) 24%, transparent);
+  }
+
+  .site-case-study__pager-card--placeholder {
+    border-style: dashed;
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-paper) 84%, transparent),
+        color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper))
+      ),
+      var(--site-surface-elevated);
+  }
+
+  .site-case-study__pager-card--placeholder::before {
+    background: color-mix(in srgb, var(--site-border-default) 86%, transparent);
+  }
+
+  .site-case-study__pager-card--placeholder::after {
+    background: color-mix(in srgb, var(--site-border-default) 22%, transparent);
+  }
+
+  .site-case-study__pager-label {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-case-study__pager-title {
+    margin: 0;
+    font-size: clamp(var(--text-lg), 1rem + 0.8vw, var(--text-2xl));
+    line-height: 1.2;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .site-case-study__pager-description {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .site-case-study__pager-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: auto;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--site-border-default);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .site-case-study__pager-link:hover .site-case-study__pager-title,
+  .site-case-study__pager-link:focus-visible .site-case-study__pager-title {
+    color: var(--site-case-study-pager-accent, var(--color-primary));
+  }
+
+  @media (min-width: 768px) {
+    .site-case-study__hero {
+      padding: calc(var(--space-xl) + var(--space-xs)) var(--space-xl) var(--space-xl);
+    }
+
+    .site-case-study__metadata {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-case-study__footer-head {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .site-case-study__pager {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-case-study__metadata {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
   @media (max-width: 640px) {
-    .site-case-study {
-      padding: var(--space-lg) var(--site-gutter);
-    }
-
-    .site-case-study__meta {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .site-case-study__content :global(table) {
-      font-size: var(--text-xs);
-    }
-
     .site-case-study__content :global(th),
     .site-case-study__content :global(td) {
-      padding: var(--space-2xs) var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--text-xs);
     }
   }
 </style>

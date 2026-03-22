@@ -7,6 +7,10 @@ import { getPublicProfile } from "../lib/public-profile";
 
 const profile = getPublicProfile();
 
+function formatDate(value: string): string {
+  return value.replaceAll("-", ".");
+}
+
 const documents = [
   {
     title: "이력서",
@@ -36,27 +40,57 @@ const documents = [
 }));
 
 const availableCount = documents.filter((document) => document.available).length;
+const primaryDocument = documents.find((document) => document.available) ?? null;
+const asOfDate = formatDate(profile.careerSummary.asOf);
 
-const highlights = [
+const documentsStatusMessage =
+  availableCount === documents.length
+    ? "세 문서 모두 최신 PDF로 동기화되어 있습니다."
+    : availableCount > 0
+      ? "동기화된 문서만 링크를 보여주고, 준비 중인 문서는 상태로 안내합니다."
+      : "현재 웹 다운로드용 PDF를 준비 중입니다. 빌드가 끝나면 링크가 나타납니다.";
+
+const highlightTiles = [
   {
-    label: "포지셔닝",
-    value: profile.profile.positioningTitle,
-  },
-  {
+    id: "total-career",
     label: "총 경력",
     value: profile.careerSummary.totalCareer.label,
+    detail: "현장 운영과 시스템 설계를 한 흐름으로 압축했습니다.",
+    badge: "Career",
+    badgeClass: "site-badge site-badge--accent",
+    tone: "accent",
   },
   {
+    id: "construction-cm",
     label: "건설 CM",
     value: profile.careerSummary.constructionCm.label,
+    detail: "일정, 문서, 이해관계자 맥락을 읽는 기반 경험입니다.",
+    badge: "Construction",
+    badgeClass: "site-badge site-badge--secondary",
+    tone: "secondary",
   },
   {
-    label: "AI/IT",
+    id: "ai-it",
+    label: "AI / IT",
     value: profile.careerSummary.aiIt.label,
+    detail: "업무 맥락을 에이전트와 자동화 구조로 번역해 왔습니다.",
+    badge: "AI / IT",
+    badgeClass: "site-badge site-badge--primary",
+    tone: "primary",
   },
   {
-    label: "현재 상태",
-    value: profile.currentStatus.label,
+    id: "documents",
+    label: "동기화 문서",
+    value: `${availableCount}/${documents.length}`,
+    detail:
+      availableCount === documents.length
+        ? "세 문서를 즉시 내려받을 수 있습니다."
+        : availableCount > 0
+          ? "가용한 파일만 바로 다운로드할 수 있습니다."
+          : "다운로드 파일을 준비 중입니다.",
+    badge: "PDF",
+    badgeClass: "site-badge site-badge--primary",
+    tone: "primary-soft",
   },
 ];
 ---
@@ -65,327 +99,1038 @@ const highlights = [
   title="이력서 다운로드 | 김성식"
   description="김성식의 이력서, 기술경력서, 자기소개서 PDF를 상황에 맞게 내려받을 수 있는 페이지입니다."
 >
-  <section class="site-resume-hero">
+  <section class="site-resume-hero" aria-labelledby="resume-hero-title">
     <div class="site-resume-hero__inner">
-      <p class="site-resume-eyebrow">Resume & Downloads</p>
-      <h1>웹에서 먼저 훑고, 필요할 때 PDF로 바로 가져갈 수 있게 정리했습니다.</h1>
-      <p class="site-resume-lead">
-        {profile.profile.name.ko} · {profile.profile.positioningTitle}.{" "}
-        {profile.currentStatus.display} 기준으로 최신 문서를 정리했고, 동기화된
-        파일만 다운로드 링크를 노출합니다.
-      </p>
-      <dl class="site-resume-highlights">
-        {
-          highlights.map((item) => (
-            <div class="site-resume-highlights__item">
-              <dt>{item.label}</dt>
-              <dd>{item.value}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </div>
-  </section>
+      <div class="site-page-hero site-resume-hero__content" data-reveal="slide-up">
+        <p class="site-page-hero__eyebrow site-resume-hero__eyebrow">
+          Resume & Downloads
+        </p>
+        <div class="site-section-header__rule" aria-hidden="true"></div>
+        <h1 id="resume-hero-title" class="site-page-hero__title site-resume-hero__title">
+          경력의 요점을 먼저 훑고, 필요한 PDF만 바로 꺼낼 수 있게 정리했습니다.
+        </h1>
+        <p class="site-page-hero__lead site-resume-hero__lead">
+          {profile.profile.name.ko} · {profile.profile.positioningTitle}.{" "}
+          {profile.currentStatus.display} 기준으로 공개 가능한 문서를 추려 두었고,
+          다운로드가 가능한 파일만 바로 연결합니다.
+        </p>
+        <p class="site-page-hero__meta site-resume-hero__meta">
+          업데이트 기준 {asOfDate} · 다운로드 가능 {availableCount}/{documents.length}
+          개
+        </p>
 
-  <section class="site-resume-section" aria-labelledby="resume-documents-title">
-    <div class="site-resume-section__header">
-      <div>
-        <p class="site-resume-section__eyebrow">PDF Documents</p>
-        <h2 id="resume-documents-title">다운로드 문서</h2>
+        <div class="site-resume-hero__actions">
+          {primaryDocument ? (
+            <a
+              href={primaryDocument.href}
+              download
+              class="site-button site-button--primary site-button--glow"
+            >
+              {primaryDocument.title} PDF 받기
+            </a>
+          ) : (
+            <a href="/contact" class="site-button site-button--primary site-button--glow">
+              문서 문의하기
+            </a>
+          )}
+          <a href="#resume-documents" class="site-button site-button--ghost">
+            문서 구성 보기
+          </a>
+        </div>
       </div>
-      <p class="site-resume-section__meta">
-        {availableCount === documents.length &&
-          "세 문서 모두 최신 PDF로 동기화되어 있습니다."}
-        {availableCount > 0 &&
-          availableCount < documents.length &&
-          "동기화된 문서만 링크를 보여주고, 준비 중인 문서는 숨깁니다."}
-        {availableCount === 0 &&
-          "현재 웹 다운로드용 PDF를 준비 중입니다. 문서 빌드가 끝나면 링크가 나타납니다."}
-      </p>
-    </div>
 
-    <div class="site-resume-grid">
-      {
-        documents.map((document) => (
-          <article class="site-resume-card">
-            <div class="site-resume-card__top">
-              <div>
-                <h3>{document.title}</h3>
-                <p>{document.description}</p>
-              </div>
-              <span
-                class:list={[
-                  "site-resume-card__status",
-                  document.available && "site-resume-card__status--available",
-                ]}
-              >
-                {document.available ? "다운로드 가능" : "준비 중"}
-              </span>
-            </div>
+      <aside class="site-card site-resume-hero__panel" data-reveal="slide-in-left">
+        <div class="site-resume-hero__panel-header">
+          <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+          <p class="site-resume-hero__panel-kicker">Download Package</p>
+          <h2 class="site-resume-hero__panel-title">
+            상황에 맞는 문서를 빠르게 고를 수 있는 PDF 패키지
+          </h2>
+          <p class="site-resume-hero__panel-copy">{documentsStatusMessage}</p>
+        </div>
 
-            {document.available ? (
-              <a class="site-resume-card__link" href={document.href} download>
-                PDF 다운로드
-              </a>
-            ) : (
-              <p class="site-resume-card__note">
-                현재 내려받을 수 있는 파일이 없어 링크를 숨겼습니다.
-              </p>
-            )}
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="site-resume-section site-resume-section--details" aria-labelledby="resume-details-title">
-    <div class="site-resume-section__header">
-      <div>
-        <p class="site-resume-section__eyebrow">Profile Snapshot</p>
-        <h2 id="resume-details-title">핵심 이력 스냅샷</h2>
-      </div>
-      <p class="site-resume-section__meta">
-        PDF를 열기 전에 학력, 자격, 온라인 프로필을 바로 확인할 수 있도록
-        공개 범위 안에서만 요약했습니다.
-      </p>
-    </div>
-
-    <div class="site-resume-details">
-      <section class="site-resume-panel">
-        <h3>학력</h3>
-        <ul>
+        <ul class="site-resume-hero__panel-list stagger-children" data-reveal="stagger-children">
           {
-            profile.education.map((education) => (
-              <li>
-                <strong>{education.degree}</strong>
-                <span>{education.institution}</span>
-                <span>{education.department}</span>
-                <span>{education.period.display}</span>
+            documents.map((document) => (
+              <li class="site-resume-hero__panel-item">
+                <span class="site-resume-hero__panel-item-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+                    <path d="M14 2v5h5"></path>
+                    <path d="M9 13h6"></path>
+                    <path d="M9 17h6"></path>
+                  </svg>
+                </span>
+                <div class="site-resume-hero__panel-item-copy">
+                  <strong>{document.title}</strong>
+                  <span>{document.fileName}</span>
+                </div>
+                <span
+                  class:list={[
+                    "site-badge",
+                    document.available && "site-badge--secondary",
+                  ]}
+                >
+                  {document.available ? "다운로드 가능" : "준비 중"}
+                </span>
               </li>
             ))
           }
         </ul>
-      </section>
 
-      <section class="site-resume-panel">
-        <h3>자격 및 이수</h3>
-        <ul>
-          {
-            profile.certifications.map((certification) => (
-              <li>{certification.name}</li>
-            ))
-          }
-        </ul>
-      </section>
+        <dl class="site-metadata-block site-resume-hero__metadata">
+          <div class="site-metadata-block__item">
+            <dt>포지셔닝</dt>
+            <dd>{profile.profile.positioningTitle}</dd>
+          </div>
+          <div class="site-metadata-block__item">
+            <dt>업데이트</dt>
+            <dd>{asOfDate}</dd>
+          </div>
+          <div class="site-metadata-block__item">
+            <dt>다운로드</dt>
+            <dd>
+              {availableCount}/{documents.length} 문서
+            </dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </section>
 
-      <section class="site-resume-panel">
-        <h3>온라인 프로필</h3>
-        <ul class="site-resume-links">
-          <li>
-            <a
-              href={profile.profile.contacts.github.url}
-              target="_blank"
-              rel="noreferrer"
+  <section class="site-resume-section" aria-labelledby="resume-highlights-title">
+    <div class="site-resume-section__inner">
+      <header class="site-section-header site-resume-section__header" data-reveal="slide-up">
+        <p class="site-section-header__eyebrow">Resume Snapshot</p>
+        <div class="site-section-header__rule" aria-hidden="true"></div>
+        <h2 id="resume-highlights-title" class="site-section-header__title">
+          포지셔닝과 경력 축을 한 화면에서 먼저 훑을 수 있습니다.
+        </h2>
+        <p class="site-section-header__lead">
+          채용 담당자가 PDF를 열기 전에 현재 상태, 경력의 무게중심, 다운로드
+          준비 상태를 빠르게 스캔할 수 있게 정리했습니다.
+        </p>
+      </header>
+
+      <div class="site-resume-bento stagger-children" data-reveal="stagger-children">
+        <article class="site-card site-resume-bento__featured">
+          <div class="site-resume-bento__featured-head">
+            <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+            <p class="site-resume-bento__featured-kicker">Positioning</p>
+          </div>
+          <h3 class="site-resume-bento__featured-title">
+            {profile.profile.positioningTitle}
+          </h3>
+          <p class="site-resume-bento__featured-copy">
+            건설 CM에서 익힌 현장 해석력과 이해관계자 조율 경험을, AI 협업
+            시스템과 자동화 설계로 이어가고 있습니다.
+          </p>
+          <p class="site-resume-bento__featured-note">
+            {profile.currentStatus.display}
+          </p>
+        </article>
+
+        {
+          highlightTiles.map((item) => (
+            <article
+              class:list={[
+                "site-card",
+                "site-resume-highlight",
+                `site-resume-highlight--${item.tone}`,
+              ]}
             >
-              GitHub · {profile.profile.contacts.github.username}
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.profile.contacts.linkedin.url}
-              target="_blank"
-              rel="noreferrer"
+              <div class="site-resume-highlight__head">
+                <span class="site-resume-highlight__icon" aria-hidden="true">
+                  {item.id === "total-career" && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M12 8v5l3 2"></path>
+                      <circle cx="12" cy="12" r="9"></circle>
+                    </svg>
+                  )}
+                  {item.id === "construction-cm" && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 21h18"></path>
+                      <path d="M5 21V11l7-4 7 4v10"></path>
+                      <path d="M9 21v-5h6v5"></path>
+                    </svg>
+                  )}
+                  {item.id === "ai-it" && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="7" y="7" width="10" height="10" rx="2"></rect>
+                      <path d="M12 3v4"></path>
+                      <path d="M12 17v4"></path>
+                      <path d="M3 12h4"></path>
+                      <path d="M17 12h4"></path>
+                    </svg>
+                  )}
+                  {item.id === "documents" && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+                      <path d="M14 2v5h5"></path>
+                      <path d="M9 13h6"></path>
+                      <path d="M9 17h4"></path>
+                    </svg>
+                  )}
+                </span>
+                <span class={item.badgeClass}>{item.badge}</span>
+              </div>
+              <div class="site-resume-highlight__body">
+                <p class="site-resume-highlight__label">{item.label}</p>
+                <p class="site-resume-highlight__value">{item.value}</p>
+                <p class="site-resume-highlight__detail">{item.detail}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section
+    id="resume-documents"
+    class="site-resume-section site-resume-section--documents"
+    aria-labelledby="resume-documents-title"
+  >
+    <div class="site-resume-section__inner">
+      <header class="site-section-header site-resume-section__header" data-reveal="slide-up">
+        <p class="site-section-header__eyebrow">PDF Documents</p>
+        <div class="site-section-header__rule" aria-hidden="true"></div>
+        <h2 id="resume-documents-title" class="site-section-header__title">
+          목적에 맞게 고를 수 있는 다운로드 카드
+        </h2>
+        <p class="site-section-header__meta">{documentsStatusMessage}</p>
+      </header>
+
+      <div class="site-resume-documents stagger-children" data-reveal="stagger-children">
+        {
+          documents.map((document) => (
+            <article
+              class:list={[
+                "site-card",
+                "site-resume-document",
+                document.available && "site-card--interactive",
+                document.available && "site-resume-document--available",
+              ]}
             >
-              LinkedIn 프로필 보기
-            </a>
-          </li>
-        </ul>
-      </section>
+              <div class="site-resume-document__head">
+                <div class="site-resume-document__icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
+                    <path d="M14 2v5h5"></path>
+                    <path d="M12 18v-6"></path>
+                    <path d="m9 15 3 3 3-3"></path>
+                  </svg>
+                </div>
+                <div class="site-resume-document__meta">
+                  <p class="site-resume-document__file">{document.fileName}</p>
+                  <span
+                    class:list={[
+                      "site-badge",
+                      document.available ? "site-badge--secondary" : "site-badge--accent",
+                    ]}
+                  >
+                    {document.available ? "다운로드 가능" : "준비 중"}
+                  </span>
+                </div>
+              </div>
+
+              <div class="site-resume-document__body">
+                <h3>{document.title}</h3>
+                <p>{document.description}</p>
+              </div>
+
+              <div class="site-resume-document__footer">
+                {document.available ? (
+                  <a
+                    class="site-button site-button--primary site-button--full site-resume-document__link"
+                    href={document.href}
+                    download
+                  >
+                    PDF 다운로드
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+                  </a>
+                ) : (
+                  <p class="site-resume-document__note">
+                    현재 내려받을 수 있는 파일이 없어 링크를 숨겼습니다.
+                  </p>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="site-resume-section site-resume-section--details" aria-labelledby="resume-details-title">
+    <div class="site-resume-section__inner">
+      <header class="site-section-header site-resume-section__header" data-reveal="slide-up">
+        <p class="site-section-header__eyebrow">Profile Snapshot</p>
+        <div class="site-section-header__rule" aria-hidden="true"></div>
+        <h2 id="resume-details-title" class="site-section-header__title">
+          PDF를 열기 전에 확인할 수 있는 핵심 이력 스냅샷
+        </h2>
+        <p class="site-section-header__meta">
+          학력, 자격, 온라인 프로필을 공개 범위 안에서만 요약해 두었습니다.
+        </p>
+      </header>
+
+      <div class="site-resume-panels stagger-children" data-reveal="stagger-children">
+        <section class="site-card site-resume-panel site-resume-panel--education">
+          <div class="site-resume-panel__header">
+            <span class="site-resume-panel__icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m22 10-10-5-10 5 10 5 10-5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </span>
+            <div>
+              <p class="site-resume-panel__eyebrow">Education</p>
+              <h3>학력</h3>
+            </div>
+          </div>
+          <ul>
+            {
+              profile.education.map((education) => (
+                <li>
+                  <strong>{education.degree}</strong>
+                  <span>{education.institution}</span>
+                  <span>{education.department}</span>
+                  <span>{education.period.display}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section class="site-card site-resume-panel site-resume-panel--certifications">
+          <div class="site-resume-panel__header">
+            <span class="site-resume-panel__icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 15 8.5 17l1-4-3-2.6 4-.4L12 6l1.5 4 4 .4-3 2.6 1 4z"></path>
+              </svg>
+            </span>
+            <div>
+              <p class="site-resume-panel__eyebrow">Credentials</p>
+              <h3>자격 및 이수</h3>
+            </div>
+          </div>
+          <ul>
+            {
+              profile.certifications.map((certification) => (
+                <li>
+                  <strong>{certification.name}</strong>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section class="site-card site-resume-panel site-resume-panel--profiles">
+          <div class="site-resume-panel__header">
+            <span class="site-resume-panel__icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect width="4" height="12" x="2" y="9"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+            </span>
+            <div>
+              <p class="site-resume-panel__eyebrow">Profiles</p>
+              <h3>온라인 프로필</h3>
+            </div>
+          </div>
+          <ul class="site-resume-links">
+            <li>
+              <a
+                href={profile.profile.contacts.github.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub · {profile.profile.contacts.github.username}
+              </a>
+            </li>
+            <li>
+              <a
+                href={profile.profile.contacts.linkedin.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn 프로필 보기
+              </a>
+            </li>
+          </ul>
+        </section>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
   .site-resume-hero {
-    padding: clamp(var(--space-3xl), 8vw, var(--space-5xl)) var(--site-gutter)
-      var(--space-3xl);
+    position: relative;
+    overflow: hidden;
+    padding:
+      clamp(var(--space-4xl), 9vw, 6.5rem) var(--site-gutter)
+      clamp(var(--space-3xl), 7vw, var(--space-5xl));
     background:
+      radial-gradient(
+        circle at 16% 18%,
+        color-mix(in srgb, var(--site-glow-secondary) 82%, transparent),
+        transparent 36%
+      ),
+      radial-gradient(
+        circle at 84% 14%,
+        color-mix(in srgb, var(--site-glow-primary) 84%, transparent),
+        transparent 40%
+      ),
       linear-gradient(
         140deg,
-        color-mix(in srgb, var(--color-primary) 6%, var(--color-paper)),
-        var(--color-bg-subtle)
+        color-mix(in srgb, var(--color-paper) 88%, var(--color-primary) 12%),
+        color-mix(in srgb, var(--site-surface-muted) 86%, var(--color-paper))
       );
-    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-line));
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--site-border-default) 72%, var(--color-primary) 28%);
+  }
+
+  .site-resume-hero::before,
+  .site-resume-hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(0.5rem);
+  }
+
+  .site-resume-hero::before {
+    top: -4rem;
+    right: -2rem;
+    width: 14rem;
+    height: 14rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-primary) 16%, transparent),
+      transparent 68%
+    );
+  }
+
+  .site-resume-hero::after {
+    bottom: -5rem;
+    left: -2rem;
+    width: 16rem;
+    height: 16rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--color-secondary) 18%, transparent),
+      transparent 70%
+    );
   }
 
   .site-resume-hero__inner,
-  .site-resume-section {
-    max-width: var(--site-max-width);
+  .site-resume-section__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--site-content-max-width);
     margin: 0 auto;
   }
 
-  .site-resume-eyebrow,
-  .site-resume-section__eyebrow {
-    margin: 0 0 var(--space-sm);
+  .site-resume-hero__inner {
+    display: grid;
+    gap: clamp(var(--space-xl), 4vw, var(--space-3xl));
+    align-items: start;
+  }
+
+  .site-resume-hero__content {
+    margin-bottom: 0;
+    align-content: start;
+  }
+
+  .site-resume-hero__eyebrow {
+    color: var(--color-primary);
+  }
+
+  .site-resume-hero__title {
+    max-width: 11ch;
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+    line-height: 0.94;
+    letter-spacing: -0.06em;
+  }
+
+  .site-resume-hero__lead {
+    max-width: 36rem;
+  }
+
+  .site-resume-hero__meta {
+    color: var(--color-text-secondary);
+  }
+
+  .site-resume-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+  }
+
+  .site-resume-hero__panel {
+    position: relative;
+    overflow: hidden;
+    gap: var(--space-lg);
+    padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 66%,
+      var(--color-secondary) 34%
+    );
+    background:
+      linear-gradient(
+        155deg,
+        color-mix(in srgb, var(--color-paper) 90%, var(--color-secondary) 10%),
+        color-mix(in srgb, var(--site-surface-elevated) 82%, var(--color-paper))
+      );
+    box-shadow:
+      var(--site-card-shadow),
+      0 22px 56px
+        color-mix(in srgb, var(--site-glow-primary) 38%, var(--site-glow-secondary));
+  }
+
+  .site-resume-hero__panel::before {
+    content: "";
+    position: absolute;
+    inset: auto -8% -28% auto;
+    width: 10rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--site-glow-primary) 76%, transparent),
+      transparent 72%
+    );
+    pointer-events: none;
+  }
+
+  .site-resume-hero__panel-header,
+  .site-resume-hero__panel-list,
+  .site-resume-hero__metadata {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-resume-hero__panel-kicker,
+  .site-resume-bento__featured-kicker,
+  .site-resume-highlight__label,
+  .site-resume-panel__eyebrow,
+  .site-resume-document__file {
+    margin: 0;
     font-size: var(--text-xs);
-    letter-spacing: 0.14em;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
-  .site-resume-hero h1,
-  .site-resume-section h2 {
+  .site-resume-hero__panel-title,
+  .site-resume-document h3,
+  .site-resume-panel h3 {
     margin: 0;
-    color: var(--color-text);
+    color: var(--color-ink);
     line-height: var(--line-height-tight);
   }
 
-  .site-resume-hero h1 {
-    max-width: 14ch;
-    font-size: clamp(2rem, 6vw, 4.25rem);
+  .site-resume-hero__panel-title {
+    font-size: clamp(var(--text-xl), 1.2rem + 1.6vw, var(--text-3xl));
   }
 
-  .site-resume-lead,
-  .site-resume-section__meta,
-  .site-resume-card p,
-  .site-resume-card__note,
+  .site-resume-hero__panel-copy,
+  .site-resume-bento__featured-copy,
+  .site-resume-bento__featured-note,
+  .site-resume-highlight__detail,
+  .site-resume-document p,
+  .site-resume-document__note,
   .site-resume-panel li,
   .site-resume-links a {
+    margin: 0;
     color: var(--color-text-secondary);
     line-height: var(--line-height-body);
   }
 
-  .site-resume-lead {
-    max-width: 60ch;
-    margin: var(--space-lg) 0 0;
-    font-size: var(--text-lg);
-  }
-
-  .site-resume-highlights {
-    display: grid;
-    gap: var(--space-sm);
-    margin: var(--space-2xl) 0 0;
-  }
-
-  .site-resume-highlights__item,
-  .site-resume-card,
-  .site-resume-panel {
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
-    background: color-mix(in srgb, var(--color-paper) 92%, var(--color-bg-surface));
-    box-shadow: var(--shadow-sm);
-  }
-
-  .site-resume-highlights__item {
-    padding: var(--space-lg);
-  }
-
-  .site-resume-highlights dt {
-    margin: 0;
-    font-size: var(--text-xs);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .site-resume-highlights dd {
-    margin: var(--space-xs) 0 0;
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  .site-resume-section {
-    padding: var(--space-3xl) var(--site-gutter);
-  }
-
-  .site-resume-section__header {
-    display: grid;
-    gap: var(--space-md);
-    align-items: end;
-    margin-bottom: var(--space-xl);
-  }
-
-  .site-resume-section__meta {
-    margin: 0;
-    max-width: 56ch;
-    font-size: var(--text-sm);
-  }
-
-  .site-resume-grid,
-  .site-resume-details {
+  .site-resume-hero__panel-list,
+  .site-resume-panels,
+  .site-resume-documents,
+  .site-resume-bento {
     display: grid;
     gap: var(--space-lg);
   }
 
-  .site-resume-card,
-  .site-resume-panel {
-    padding: var(--space-lg);
+  .site-resume-hero__panel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--space-sm);
   }
 
-  .site-resume-card__top {
+  .site-resume-hero__panel-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid
+      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
+    border-radius: var(--radius-md);
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 78%,
+      var(--color-paper)
+    );
+  }
+
+  .site-resume-hero__panel-item-copy {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .site-resume-hero__panel-item-copy strong {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+  }
+
+  .site-resume-hero__panel-item-copy span {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  .site-resume-hero__panel-item .site-badge {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .site-resume-hero__panel-item-icon,
+  .site-resume-highlight__icon,
+  .site-resume-document__icon,
+  .site-resume-panel__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+  }
+
+  .site-resume-hero__panel-item-icon {
+    background: color-mix(
+      in srgb,
+      var(--color-primary) 10%,
+      var(--site-surface-default)
+    );
+    color: var(--color-primary);
+  }
+
+  .site-resume-hero__panel-item-icon svg,
+  .site-resume-highlight__icon svg,
+  .site-resume-document__icon svg,
+  .site-resume-panel__icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .site-resume-hero__metadata {
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 72%,
+      var(--color-paper)
+    );
+  }
+
+  .site-resume-section {
+    padding: clamp(var(--space-3xl), 7vw, var(--space-5xl)) var(--site-gutter);
+  }
+
+  .site-resume-section--documents {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--site-surface-default) 72%, var(--color-paper)),
+      transparent 42%
+    );
+  }
+
+  .site-resume-section__header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .site-resume-bento {
+    align-items: stretch;
+  }
+
+  .site-resume-bento__featured,
+  .site-resume-highlight {
+    min-height: 100%;
+  }
+
+  .site-resume-bento__featured {
+    position: relative;
+    overflow: hidden;
+    gap: var(--space-lg);
+    padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 66%,
+      var(--color-primary) 34%
+    );
+    background:
+      radial-gradient(
+        circle at 90% 12%,
+        color-mix(in srgb, var(--site-glow-primary) 70%, transparent),
+        transparent 36%
+      ),
+      linear-gradient(
+        150deg,
+        color-mix(in srgb, var(--color-paper) 88%, var(--color-primary) 12%),
+        color-mix(in srgb, var(--site-surface-elevated) 82%, var(--color-paper))
+      );
+    box-shadow:
+      var(--site-card-shadow),
+      0 24px 60px color-mix(in srgb, var(--site-glow-primary) 28%, transparent);
+  }
+
+  .site-resume-bento__featured::before {
+    content: "";
+    position: absolute;
+    inset: auto auto -28% -10%;
+    width: 14rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--site-glow-secondary) 72%, transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .site-resume-bento__featured-head,
+  .site-resume-bento__featured-title,
+  .site-resume-bento__featured-copy,
+  .site-resume-bento__featured-note {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-resume-bento__featured-head {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .site-resume-bento__featured-title {
+    font-size: clamp(var(--text-2xl), 1.5rem + 2vw, var(--text-5xl));
+    letter-spacing: -0.04em;
+  }
+
+  .site-resume-bento__featured-note {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .site-resume-highlight {
+    gap: var(--space-lg);
+    padding: clamp(var(--space-lg), 2.6vw, var(--space-xl));
+  }
+
+  .site-resume-highlight__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  .site-resume-highlight__body {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-resume-highlight__value {
+    margin: 0;
+    font-size: clamp(var(--text-2xl), 1.4rem + 1vw, var(--text-4xl));
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    color: var(--color-ink);
+  }
+
+  .site-resume-highlight--accent {
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 60%,
+      var(--color-accent) 40%
+    );
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--site-surface-elevated));
+  }
+
+  .site-resume-highlight--accent .site-resume-highlight__icon {
+    background: color-mix(in srgb, var(--color-accent) 14%, var(--color-paper));
+    color: var(--color-accent);
+  }
+
+  .site-resume-highlight--secondary {
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 58%,
+      var(--color-secondary) 42%
+    );
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 8%,
+      var(--site-surface-elevated)
+    );
+  }
+
+  .site-resume-highlight--secondary .site-resume-highlight__icon {
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 14%,
+      var(--color-paper)
+    );
+    color: var(--color-secondary);
+  }
+
+  .site-resume-highlight--primary,
+  .site-resume-highlight--primary-soft {
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 58%,
+      var(--color-primary) 42%
+    );
+  }
+
+  .site-resume-highlight--primary {
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--site-surface-elevated));
+  }
+
+  .site-resume-highlight--primary-soft {
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper)),
+      color-mix(in srgb, var(--color-primary) 6%, var(--site-surface-elevated))
+    );
+  }
+
+  .site-resume-highlight--primary .site-resume-highlight__icon,
+  .site-resume-highlight--primary-soft .site-resume-highlight__icon {
+    background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
+    color: var(--color-primary);
+  }
+
+  .site-resume-documents {
+    gap: var(--space-lg);
+  }
+
+  .site-resume-document {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(var(--space-lg), 2.6vw, var(--space-xl));
+    gap: var(--space-lg);
+  }
+
+  .site-resume-document::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 0.25rem;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent) 30%, transparent),
+      color-mix(in srgb, var(--site-border-default) 86%, transparent)
+    );
+  }
+
+  .site-resume-document--available {
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 58%,
+      var(--color-primary) 42%
+    );
+    background:
+      radial-gradient(
+        circle at 100% 0%,
+        color-mix(in srgb, var(--site-glow-primary) 52%, transparent),
+        transparent 32%
+      ),
+      linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--site-surface-elevated) 88%, var(--color-paper)),
+        color-mix(in srgb, var(--color-primary) 5%, var(--site-surface-default))
+      );
+  }
+
+  .site-resume-document--available::before {
+    background: linear-gradient(
+      90deg,
+      var(--color-primary),
+      color-mix(in srgb, var(--color-secondary) 70%, var(--color-primary))
+    );
+  }
+
+  .site-resume-document__head,
+  .site-resume-document__body,
+  .site-resume-document__footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .site-resume-document__head {
     display: grid;
     gap: var(--space-md);
   }
 
-  .site-resume-card h3,
-  .site-resume-panel h3 {
-    margin: 0 0 var(--space-xs);
-    font-size: var(--text-xl);
-    color: var(--color-text);
+  .site-resume-document__icon {
+    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-paper));
+    color: var(--color-primary);
   }
 
-  .site-resume-card p,
-  .site-resume-card__note {
-    margin: 0;
-    font-size: var(--text-sm);
-  }
-
-  .site-resume-card__status {
-    display: inline-flex;
+  .site-resume-document__meta {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    width: fit-content;
-    min-height: 2rem;
-    padding: 0 var(--space-sm);
-    border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
+    gap: var(--space-sm);
+  }
+
+  .site-resume-document h3 {
+    font-size: var(--text-2xl);
+  }
+
+  .site-resume-document__body {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-resume-document__footer {
+    margin-top: auto;
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-resume-document__link {
+    justify-content: space-between;
+  }
+
+  .site-resume-document__link svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--transition-fast);
+  }
+
+  .site-resume-document:hover .site-resume-document__link svg {
+    transform: translateX(0.2rem);
+  }
+
+  .site-resume-panels {
+    gap: var(--space-lg);
+  }
+
+  .site-resume-panel {
+    padding: clamp(var(--space-lg), 2.6vw, var(--space-xl));
+    gap: var(--space-lg);
+  }
+
+  .site-resume-panel__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .site-resume-panel__icon {
+    background: color-mix(
+      in srgb,
+      var(--site-surface-muted) 80%,
+      var(--color-paper)
+    );
+  }
+
+  .site-resume-panel--education .site-resume-panel__icon {
+    color: var(--color-primary);
+  }
+
+  .site-resume-panel--certifications .site-resume-panel__icon {
     color: var(--color-accent);
-    font-size: var(--text-xs);
-    font-weight: 600;
   }
 
-  .site-resume-card__status--available {
-    background: color-mix(in srgb, var(--color-secondary) 12%, var(--color-paper));
+  .site-resume-panel--profiles .site-resume-panel__icon {
     color: var(--color-secondary);
-  }
-
-  .site-resume-card__link,
-  .site-resume-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    min-height: 44px;
-    text-decoration: none;
-    transition:
-      background var(--transition-fast),
-      color var(--transition-fast),
-      border-color var(--transition-fast);
-  }
-
-  .site-resume-card__link {
-    margin-top: var(--space-lg);
-    padding: 0 var(--space-lg);
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--color-primary);
-    background: var(--color-primary);
-    color: var(--color-paper);
-    font-weight: 600;
-  }
-
-  .site-resume-card__link:hover {
-    background: color-mix(in srgb, var(--color-primary) 88%, var(--color-ink));
   }
 
   .site-resume-panel ul,
@@ -401,7 +1146,8 @@ const highlights = [
     display: grid;
     gap: var(--space-2xs);
     padding-bottom: var(--space-sm);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-line) 88%, var(--color-paper));
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
   }
 
   .site-resume-panel li:last-child {
@@ -415,33 +1161,74 @@ const highlights = [
   }
 
   .site-resume-links a {
-    justify-content: flex-start;
-    padding: var(--space-xs) var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    border: 1px solid var(--color-line);
-    background: var(--color-bg-subtle);
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 82%,
+      var(--color-paper)
+    );
     color: var(--color-text);
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast),
+      transform var(--transition-fast);
   }
 
   .site-resume-links a:hover {
-    border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-line));
-    color: var(--color-primary);
+    border-color: color-mix(
+      in srgb,
+      var(--site-border-default) 56%,
+      var(--color-primary) 44%
+    );
+    box-shadow: var(--site-card-shadow);
+    transform: var(--hover-lift);
   }
 
   @media (min-width: 768px) {
-    .site-resume-highlights {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+    .site-resume-bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .site-resume-section__header {
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    .site-resume-documents,
+    .site-resume-panels {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .site-resume-grid {
+    .site-resume-document:last-child:nth-child(odd) {
+      grid-column: span 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-resume-hero__inner {
+      grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.85fr);
+    }
+
+    .site-resume-bento {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .site-resume-bento__featured {
+      grid-column: span 2;
+      grid-row: span 2;
+      justify-content: space-between;
+    }
+
+    .site-resume-documents {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .site-resume-details {
+    .site-resume-document:last-child:nth-child(odd) {
+      grid-column: auto;
+    }
+
+    .site-resume-panels {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }

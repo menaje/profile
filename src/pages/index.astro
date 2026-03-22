@@ -23,6 +23,7 @@ const data = getPublicProfile();
   <CareerTimeline
     employmentTimeline={data.employmentTimeline}
     organizations={data.organizations}
+    projects={data.projects.core}
   />
   <CtaSection profile={data.profile} currentStatus={data.currentStatus} />
 </BaseLayout>
