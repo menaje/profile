@@ -438,17 +438,7 @@ if (personalProjects.length > 0) {
       var(--site-border-default) 72%,
       var(--color-primary) 28%
     );
-    background:
-      radial-gradient(
-        circle at top right,
-        color-mix(in srgb, var(--color-primary) 10%, transparent),
-        transparent 32%
-      ),
-      linear-gradient(
-        165deg,
-        color-mix(in srgb, var(--color-paper) 94%, var(--color-primary) 6%),
-        var(--site-surface-elevated)
-      );
+    background: var(--site-surface-elevated);
   }
 
   .site-about-block::before {
@@ -456,9 +446,9 @@ if (personalProjects.length > 0) {
     position: absolute;
     inset: 0 auto auto 0;
     width: 6.5rem;
-    height: 1px;
-    background: linear-gradient(90deg, var(--color-primary), transparent);
-    opacity: 0.9;
+    height: 0.18rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
   }
 
   .site-about-block__number {
@@ -544,35 +534,17 @@ if (personalProjects.length > 0) {
   .site-about-quote::before {
     inset: 0 auto 0 50%;
     border-block: 1px solid
-      color-mix(in srgb, var(--site-border-default) 76%, var(--color-primary));
-    background:
-      radial-gradient(
-        circle at 12% 0%,
-        var(--site-glow-secondary),
-        transparent 28%
-      ),
-      linear-gradient(
-        120deg,
-        color-mix(in srgb, var(--color-paper) 92%, var(--color-primary) 8%),
-        color-mix(
-          in srgb,
-          var(--site-surface-muted) 82%,
-          var(--color-secondary) 18%
-        )
-      );
+      color-mix(in srgb, var(--site-border-default) 88%, var(--color-paper));
+    background: color-mix(
+      in srgb,
+      var(--site-surface-muted) 82%,
+      var(--color-paper)
+    );
     z-index: 0;
   }
 
   .site-about-quote::after {
-    inset: 0 auto 0 50%;
-    background:
-      radial-gradient(
-        circle at 88% 76%,
-        color-mix(in srgb, var(--color-primary) 10%, transparent),
-        transparent 28%
-      );
-    opacity: 0.9;
-    z-index: 0;
+    display: none;
   }
 
   .site-about-quote__inner {
@@ -589,11 +561,7 @@ if (personalProjects.length > 0) {
     inset: 0 auto 0 0;
     width: 4px;
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      180deg,
-      var(--color-secondary),
-      var(--color-primary)
-    );
+    background: var(--color-secondary);
   }
 
   .site-about-quote__mark {
@@ -653,24 +621,11 @@ if (personalProjects.length > 0) {
     left: 0.625rem;
     width: 2px;
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      180deg,
-      color-mix(
-        in srgb,
-        var(--color-secondary) 28%,
-        var(--site-border-default)
-      ),
-      color-mix(
-        in srgb,
-        var(--color-primary) 28%,
-        var(--site-border-default)
-      )
-    );
+    background: var(--site-border-default);
   }
 
   .site-about-timeline__item {
     --site-about-timeline-accent: var(--color-primary);
-    --site-about-timeline-glow: var(--site-glow-primary);
     position: relative;
     display: grid;
     grid-template-columns: 1.25rem minmax(0, 1fr);
@@ -679,8 +634,7 @@ if (personalProjects.length > 0) {
   }
 
   .site-about-timeline__item[data-domain-tone="construction-cm"] {
-    --site-about-timeline-accent: var(--color-secondary);
-    --site-about-timeline-glow: var(--site-glow-secondary);
+    --site-about-timeline-accent: var(--color-accent);
   }
 
   .site-about-timeline__marker {
@@ -695,7 +649,7 @@ if (personalProjects.length > 0) {
       var(--site-about-timeline-accent) 18%,
       var(--color-paper)
     );
-    box-shadow: 0 0 0 6px var(--stage-background);
+    box-shadow: 0 0 0 6px var(--color-bg-page);
   }
 
   .site-about-timeline__marker::after {
@@ -711,7 +665,7 @@ if (personalProjects.length > 0) {
 
   .site-about-timeline__item--current .site-about-timeline__marker::after {
     transform: scale(1.15);
-    box-shadow: 0 0 0 6px
+    box-shadow: 0 0 0 4px
       color-mix(in srgb, var(--site-about-timeline-accent) 18%, transparent);
   }
 
@@ -723,22 +677,14 @@ if (personalProjects.length > 0) {
       var(--site-about-timeline-accent) 22%,
       var(--site-border-default)
     );
-    background: linear-gradient(
-      160deg,
-      color-mix(
-        in srgb,
-        var(--color-paper) 95%,
-        var(--site-about-timeline-accent) 5%
-      ),
-      var(--site-surface-elevated)
-    );
+    background: var(--site-surface-elevated);
   }
 
   .site-about-timeline__item--current .site-about-timeline__card {
     box-shadow:
       0 0 0 1px
         color-mix(in srgb, var(--site-about-timeline-accent) 16%, transparent),
-      0 20px 42px var(--site-about-timeline-glow);
+      var(--site-shadow-raised);
   }
 
   .site-about-timeline__topline {

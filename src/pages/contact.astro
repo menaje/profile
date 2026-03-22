@@ -400,20 +400,8 @@ const contactMetadata = [
       var(--site-border-default) 66%,
       var(--color-primary) 34%
     );
-    background:
-      radial-gradient(
-        circle at 88% 12%,
-        color-mix(in srgb, var(--site-glow-primary) 92%, transparent),
-        transparent 32%
-      ),
-      linear-gradient(
-        145deg,
-        color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper)),
-        color-mix(in srgb, var(--site-surface-default) 92%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 24px 56px color-mix(in srgb, var(--site-glow-primary) 34%, transparent);
+    background: var(--site-surface-default);
+    box-shadow: var(--site-shadow-raised);
   }
 
   .site-contact__form-header,
@@ -447,37 +435,15 @@ const contactMetadata = [
       var(--color-primary) 20%
     );
     border-radius: var(--radius-lg);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 84%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
     transition:
       border-color var(--transition-fast),
       box-shadow var(--transition-fast),
-      background var(--transition-fast),
-      transform var(--transition-fast);
+      background var(--transition-fast);
   }
 
   .site-contact__field::after {
-    content: "";
-    position: absolute;
-    left: var(--space-md);
-    right: var(--space-md);
-    bottom: var(--space-sm);
-    height: 2px;
-    border-radius: var(--radius-pill);
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-primary) 88%, var(--color-ink)),
-      color-mix(in srgb, var(--color-secondary) 80%, var(--color-primary))
-    );
-    opacity: 0.48;
-    transform: scaleX(0.18);
-    transform-origin: left center;
-    transition:
-      transform var(--transition-base),
-      opacity var(--transition-base);
+    display: none;
   }
 
   .site-contact__field:hover {
@@ -494,20 +460,8 @@ const contactMetadata = [
       var(--color-primary) 52%,
       var(--site-border-default)
     );
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 82%,
-      var(--color-paper)
-    );
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--color-primary) 16%, transparent),
-      0 18px 42px color-mix(in srgb, var(--site-glow-primary) 38%, transparent);
-    transform: translateY(-1px);
-  }
-
-  .site-contact__field:focus-within::after {
-    opacity: 1;
-    transform: scaleX(1);
+    background: var(--site-surface-default);
+    box-shadow: var(--site-shadow-focus);
   }
 
   .site-contact__field .site-form-field__label {
@@ -660,26 +614,8 @@ const contactMetadata = [
       var(--site-border-default) 70%,
       var(--color-secondary) 30%
     );
-    background:
-      radial-gradient(
-        circle at 12% 18%,
-        color-mix(in srgb, var(--site-glow-secondary) 88%, transparent),
-        transparent 34%
-      ),
-      radial-gradient(
-        circle at 88% 10%,
-        color-mix(in srgb, var(--site-glow-accent) 78%, transparent),
-        transparent 26%
-      ),
-      linear-gradient(
-        155deg,
-        color-mix(in srgb, var(--site-surface-default) 88%, var(--color-paper)),
-        color-mix(in srgb, var(--site-surface-muted) 86%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 28px 60px
-        color-mix(in srgb, var(--site-glow-secondary) 30%, transparent);
+    background: var(--site-surface-elevated);
+    box-shadow: var(--site-shadow-raised);
   }
 
   .site-contact__profile-top {
