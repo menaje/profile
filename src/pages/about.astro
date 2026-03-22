@@ -28,8 +28,8 @@ function domainDisplay(domain: string): string {
 
 function domainBadgeClass(domain: string): string {
   return toneForDomain(domain) === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 const timelineItems = [
@@ -66,7 +66,7 @@ if (personalProjects.length > 0) {
     org: "",
     domainTone: "ai-it",
     domainDisplay: "AI / IT",
-    domainBadgeClass: "site-badge site-badge--primary",
+    domainBadgeClass: "site-badge site-badge--domain-ai",
     label: "",
     coreProjects: personalProjects,
     isCurrent: personalProjects.some(
@@ -99,17 +99,17 @@ if (personalProjects.length > 0) {
       </p>
       <ul class="site-about-hero__metrics" role="list" aria-label="경력 요약">
         <li>
-          <span class="site-badge site-badge--accent">
+          <span class="site-badge site-badge--neutral">
             총 경력 {careerSummary.totalCareer.label}
           </span>
         </li>
         <li>
-          <span class="site-badge site-badge--secondary">
+          <span class="site-badge site-badge--domain-construction">
             건설 CM {careerSummary.constructionCm.label}
           </span>
         </li>
         <li>
-          <span class="site-badge site-badge--primary">
+          <span class="site-badge site-badge--domain-ai">
             AI / IT {careerSummary.aiIt.label}
           </span>
         </li>
@@ -241,7 +241,7 @@ if (personalProjects.length > 0) {
                       {item.domainDisplay}
                     </span>
                     {item.isCurrent && (
-                      <span class="site-badge site-badge--accent site-about-timeline__badge">
+                      <span class="site-badge site-badge--state site-about-timeline__badge">
                         현재
                       </span>
                     )}

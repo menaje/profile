@@ -46,8 +46,8 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
 
 function domainBadgeClass(domain: string): string {
   return normalizeDomain(domain) === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 function statusLabel(status: string): string {
@@ -56,8 +56,8 @@ function statusLabel(status: string): string {
 
 function statusBadgeClass(status: string): string {
   return status === "ongoing"
-    ? "site-badge site-badge--accent"
-    : "site-badge";
+    ? "site-badge site-badge--state"
+    : "site-badge site-badge--neutral";
 }
 
 function domainFocus(domain: string): string {
@@ -258,7 +258,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
                               {project.canonicalName}
                             </p>
                             {project.statusAtBasisDate === "ongoing" && (
-                              <span class="site-badge site-badge--accent">
+                              <span class="site-badge site-badge--state">
                                 진행 중
                               </span>
                             )}

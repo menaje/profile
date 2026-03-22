@@ -11,14 +11,14 @@ const { profile, currentStatus } = Astro.props;
 const bridgeDomains = [
   {
     id: "cm",
-    badgeClass: "site-badge--secondary",
+    badgeClass: "site-badge--domain-construction",
     label: "건설CM",
     title: "현장 문제 해석",
     items: ["현장 맥락", "이해관계자 조율", "리스크 판단"],
   },
   {
     id: "ai",
-    badgeClass: "site-badge--primary",
+    badgeClass: "site-badge--domain-ai",
     label: "AI / IT",
     title: "협업 시스템 설계",
     items: ["자동화 흐름", "협업 인터페이스", "시스템 구조화"],
@@ -45,7 +45,7 @@ const bridgeDomains = [
         협업 구조와 자동화 가능한 시스템으로 연결합니다.
       </p>
       <div class="site-hero__status-inline">
-        <span class="site-badge site-badge--accent">{currentStatus.label}</span>
+        <span class="site-badge site-badge--state">{currentStatus.label}</span>
       </div>
       <div class="site-hero__actions">
         <a
@@ -145,7 +145,7 @@ const bridgeDomains = [
 
         <div class="site-card site-hero__status-panel">
           <div class="site-hero__status-panel-header">
-            <span class="site-badge site-badge--accent">
+            <span class="site-badge site-badge--state">
               {currentStatus.label}
             </span>
             <p class="site-hero__status-kicker">현재 포지셔닝</p>

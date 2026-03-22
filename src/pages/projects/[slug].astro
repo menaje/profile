@@ -49,8 +49,8 @@ function domainEyebrow(domain: CaseStudyDomain): string {
 
 function domainBadgeClass(domain: CaseStudyDomain): string {
   return domain === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 function pageDomainClass(domain: CaseStudyDomain): string {
@@ -143,12 +143,12 @@ const heroMeta = [
               {domainLabel(entry.data.domain)}
             </span>
             {entry.data.featured && (
-              <span class="site-badge site-case-study__state-badge site-case-study__state-badge--featured">
+              <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--featured">
                 Featured
               </span>
             )}
             {!entry.data.period.end && (
-              <span class="site-badge site-case-study__state-badge site-case-study__state-badge--ongoing">
+              <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--ongoing">
                 진행 중
               </span>
             )}
@@ -429,31 +429,7 @@ const heroMeta = [
   }
 
   .site-case-study__state-badge {
-    border-color: transparent;
-  }
-
-  .site-case-study__state-badge--featured {
-    border-color: color-mix(
-      in srgb,
-      var(--color-secondary) 22%,
-      var(--site-border-default)
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      var(--color-paper)
-    );
-    color: var(--color-secondary);
-  }
-
-  .site-case-study__state-badge--ongoing {
-    border-color: color-mix(
-      in srgb,
-      var(--color-accent) 24%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
-    color: var(--color-accent);
+    align-self: flex-start;
   }
 
   .site-case-study__hero-copy {

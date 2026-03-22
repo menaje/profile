@@ -102,7 +102,7 @@ function getDateBlockParts(date: Date) {
 
                     <div class="site-blog-card__content">
                       <div class="site-blog-card__meta">
-                        <span class="site-badge site-badge--accent">Latest</span>
+                        <span class="site-badge site-badge--state">Latest</span>
                         <span class="site-blog-card__full-date">
                           {formatDate(featuredPost.data.publishedDate)}
                         </span>
@@ -121,7 +121,7 @@ function getDateBlockParts(date: Date) {
                           <ul class="site-blog-card__tags" aria-label="태그">
                             {featuredPost.data.tags.map((tag: string) => (
                               <li>
-                                <span class="site-badge site-badge--primary">
+                                <span class="site-badge site-badge--neutral">
                                   {tag}
                                 </span>
                               </li>

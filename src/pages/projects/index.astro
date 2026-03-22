@@ -29,8 +29,8 @@ function domainEyebrow(domain: ProjectDomain): string {
 
 function domainBadgeClass(domain: ProjectDomain): string {
   return domain === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 function domainCardClass(domain: ProjectDomain): string {
@@ -145,11 +145,11 @@ function filterLabel(domain: ProjectDomain | "all"): string {
                           <span class={domainBadgeClass(entry.data.domain)}>
                             {domainLabel(entry.data.domain)}
                           </span>
-                          <span class="site-badge site-projects__state-badge site-projects__state-badge--featured">
+                          <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--featured">
                             Featured
                           </span>
                           {!entry.data.period.end && (
-                            <span class="site-badge site-projects__state-badge site-projects__state-badge--ongoing">
+                            <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
                               진행 중
                             </span>
                           )}
@@ -251,7 +251,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
                             {domainLabel(entry.data.domain)}
                           </span>
                           {!entry.data.period.end && (
-                            <span class="site-badge site-projects__state-badge site-projects__state-badge--ongoing">
+                            <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
                               진행 중
                             </span>
                           )}
@@ -686,31 +686,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
   }
 
   .site-projects__state-badge {
-    border-color: transparent;
-  }
-
-  .site-projects__state-badge--featured {
-    border-color: color-mix(
-      in srgb,
-      var(--color-secondary) 22%,
-      var(--site-border-default)
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      var(--color-paper)
-    );
-    color: var(--color-secondary);
-  }
-
-  .site-projects__state-badge--ongoing {
-    border-color: color-mix(
-      in srgb,
-      var(--color-accent) 24%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
-    color: var(--color-accent);
+    align-self: flex-start;
   }
 
   .site-projects__item-kicker {

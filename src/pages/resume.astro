@@ -57,7 +57,7 @@ const highlightTiles = [
     value: profile.careerSummary.totalCareer.label,
     detail: "현장 운영과 시스템 설계를 한 흐름으로 압축했습니다.",
     badge: "Career",
-    badgeClass: "site-badge site-badge--accent",
+    badgeClass: "site-badge site-badge--neutral",
     tone: "accent",
   },
   {
@@ -66,7 +66,7 @@ const highlightTiles = [
     value: profile.careerSummary.constructionCm.label,
     detail: "일정, 문서, 이해관계자 맥락을 읽는 기반 경험입니다.",
     badge: "Construction",
-    badgeClass: "site-badge site-badge--secondary",
+    badgeClass: "site-badge site-badge--domain-construction",
     tone: "secondary",
   },
   {
@@ -75,7 +75,7 @@ const highlightTiles = [
     value: profile.careerSummary.aiIt.label,
     detail: "업무 맥락을 에이전트와 자동화 구조로 번역해 왔습니다.",
     badge: "AI / IT",
-    badgeClass: "site-badge site-badge--primary",
+    badgeClass: "site-badge site-badge--domain-ai",
     tone: "primary",
   },
   {
@@ -89,7 +89,7 @@ const highlightTiles = [
           ? "가용한 파일만 바로 다운로드할 수 있습니다."
           : "다운로드 파일을 준비 중입니다.",
     badge: "PDF",
-    badgeClass: "site-badge site-badge--primary",
+    badgeClass: "site-badge site-badge--neutral",
     tone: "primary-soft",
   },
 ];
@@ -141,7 +141,7 @@ const highlightTiles = [
 
       <aside class="site-card site-resume-hero__panel" data-reveal="slide-in-left">
         <div class="site-resume-hero__panel-header">
-          <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+          <span class="site-badge site-badge--state">{profile.currentStatus.label}</span>
           <p class="site-resume-hero__panel-kicker">Download Package</p>
           <h2 class="site-resume-hero__panel-title">
             상황에 맞는 문서를 빠르게 고를 수 있는 PDF 패키지
@@ -175,7 +175,9 @@ const highlightTiles = [
                 <span
                   class:list={[
                     "site-badge",
-                    document.available && "site-badge--secondary",
+                    document.available
+                      ? "site-badge--state"
+                      : "site-badge--neutral",
                   ]}
                 >
                   {document.available ? "다운로드 가능" : "준비 중"}
@@ -222,7 +224,7 @@ const highlightTiles = [
       <div class="site-resume-bento stagger-children" data-reveal="stagger-children">
         <article class="site-card site-resume-bento__featured">
           <div class="site-resume-bento__featured-head">
-            <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+            <span class="site-badge site-badge--state">{profile.currentStatus.label}</span>
             <p class="site-resume-bento__featured-kicker">Positioning</p>
           </div>
           <h3 class="site-resume-bento__featured-title">
@@ -368,7 +370,9 @@ const highlightTiles = [
                   <span
                     class:list={[
                       "site-badge",
-                      document.available ? "site-badge--secondary" : "site-badge--accent",
+                      document.available
+                        ? "site-badge--state"
+                        : "site-badge--neutral",
                     ]}
                   >
                     {document.available ? "다운로드 가능" : "준비 중"}

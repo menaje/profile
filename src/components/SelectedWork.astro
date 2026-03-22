@@ -55,13 +55,13 @@ function classificationLabel(classification: string): string {
 function classificationBadgeClass(classification: string): string {
   switch (classification) {
     case "personal":
-      return "site-badge site-badge--primary";
+      return "site-badge site-badge--neutral";
     case "company":
-      return "site-badge site-badge--secondary";
+      return "site-badge site-badge--neutral";
     case "open-source":
-      return "site-badge site-badge--accent";
+      return "site-badge site-badge--neutral";
     default:
-      return "site-badge";
+      return "site-badge site-badge--neutral";
   }
 }
 
@@ -161,12 +161,12 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
                     {classificationLabel(card.project.classification)}
                   </span>
                   {card.isFeatured && (
-                    <span class="site-badge site-work__state-badge site-work__state-badge--featured">
+                    <span class="site-badge site-badge--state site-work__state-badge site-work__state-badge--featured">
                       Featured
                     </span>
                   )}
                   {card.project.statusAtBasisDate === "ongoing" && (
-                    <span class="site-badge site-work__state-badge site-work__state-badge--ongoing">
+                    <span class="site-badge site-badge--state site-work__state-badge site-work__state-badge--ongoing">
                       진행 중
                     </span>
                   )}
@@ -329,31 +329,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   }
 
   .site-work__state-badge {
-    border-color: transparent;
-  }
-
-  .site-work__state-badge--featured {
-    border-color: color-mix(
-      in srgb,
-      var(--color-secondary) 22%,
-      var(--site-border-default)
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      var(--color-paper)
-    );
-    color: var(--color-secondary);
-  }
-
-  .site-work__state-badge--ongoing {
-    border-color: color-mix(
-      in srgb,
-      var(--color-accent) 24%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-accent) 12%, var(--color-paper));
-    color: var(--color-accent);
+    align-self: flex-start;
   }
 
   .site-work__card-body {
