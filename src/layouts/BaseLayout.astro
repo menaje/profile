@@ -27,6 +27,8 @@ const preloadFonts = [
   "/fonts/pretendard-regular-subset.woff2",
   "/fonts/pretendard-semibold-subset.woff2",
 ];
+const faviconHref =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231d4ed8'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Pretendard,Arial,sans-serif' font-size='28' font-weight='700' fill='white'%3EKS%3C/text%3E%3C/svg%3E";
 ---
 
 <!doctype html>
@@ -34,6 +36,7 @@ const preloadFonts = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={faviconHref} type="image/svg+xml" />
     <ClientRouter />
     {
       preloadFonts.map((href) => (
