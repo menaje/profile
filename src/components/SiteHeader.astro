@@ -157,10 +157,10 @@ const currentPath = Astro.url.pathname;
     gap: var(--space-sm);
     min-height: calc(var(--site-nav-height) + var(--space-sm));
     padding: var(--space-xs);
-    border: 1px solid color-mix(in srgb, var(--site-border-default) 52%, transparent);
+    border: 1px solid color-mix(in srgb, var(--site-border-default) 88%, transparent);
     border-radius: calc(var(--radius-pill) + var(--space-xs));
-    background: color-mix(in srgb, var(--color-paper) 92%, transparent);
-    box-shadow: 0 18px 40px color-mix(in srgb, var(--site-glow-primary) 24%, transparent);
+    background: color-mix(in srgb, var(--color-paper) 90%, transparent);
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.08);
     transition:
       background var(--transition-base),
       border-color var(--transition-base),
@@ -172,11 +172,11 @@ const currentPath = Astro.url.pathname;
   .site-header[data-menu-open="true"] .site-nav__bar {
     border-color: color-mix(
       in srgb,
-      var(--site-border-accent) 72%,
+      var(--site-border-accent) 54%,
       var(--site-border-default)
     );
-    background: color-mix(in srgb, var(--color-paper) 76%, transparent);
-    box-shadow: var(--shadow-md);
+    background: color-mix(in srgb, var(--color-paper) 82%, transparent);
+    box-shadow: 0 1px 3px rgba(17, 24, 39, 0.1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -199,10 +199,10 @@ const currentPath = Astro.url.pathname;
     height: 2.5rem;
     border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--site-border-default));
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-primary) 16%, var(--color-paper)),
-      color-mix(in srgb, var(--color-secondary) 18%, var(--color-paper))
+    background: color-mix(
+      in srgb,
+      var(--color-paper) 78%,
+      var(--color-primary) 22%
     );
     color: var(--color-primary);
     font-size: var(--text-sm);
@@ -320,12 +320,8 @@ const currentPath = Astro.url.pathname;
     bottom: 0.7rem;
     height: 0.16rem;
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      90deg,
-      var(--color-primary),
-      color-mix(in srgb, var(--color-secondary) 80%, var(--color-primary))
-    );
-    opacity: 0.34;
+    background: var(--color-primary);
+    opacity: 0.24;
     transform: scaleX(0);
     transform-origin: left;
     transition:
