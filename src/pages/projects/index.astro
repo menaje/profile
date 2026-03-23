@@ -532,7 +532,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     padding: var(--space-2xs);
     border: 1px solid var(--site-border-default);
     border-radius: calc(var(--radius-pill) + var(--space-2xs));
-    background: color-mix(in srgb, var(--color-paper) 78%, var(--site-surface-muted));
+    background: var(--site-surface-muted);
   }
 
   .site-projects__filter {
@@ -596,43 +596,16 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     --site-projects-card-accent: var(--color-primary);
     position: relative;
     gap: var(--space-lg);
-    padding-top: calc(var(--space-lg) + var(--space-xs));
     overflow: hidden;
     background: var(--site-surface-elevated);
   }
 
-  .site-projects__item::before,
-  .site-projects__item::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
   .site-projects__item::before {
-    inset: 0 0 auto;
-    height: 0.38rem;
-    background: linear-gradient(
-      90deg,
-      color-mix(
-        in srgb,
-        var(--site-projects-card-accent) 88%,
-        var(--color-paper)
-      ),
-      color-mix(
-        in srgb,
-        var(--site-projects-card-accent) 56%,
-        var(--color-paper)
-      )
-    );
+    display: none;
   }
 
   .site-projects__item::after {
     display: none;
-  }
-
-  .site-projects__item > * {
-    position: relative;
-    z-index: 1;
   }
 
   .site-projects__item[data-domain="construction-cm"],
@@ -706,11 +679,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
   }
 
   .site-projects__spotlight-meta {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 82%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-projects__item--archive .site-projects__item-title {
@@ -733,7 +702,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     padding: 0 var(--space-sm);
     border: 1px solid var(--site-border-default);
     border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-paper) 70%, var(--site-surface-muted));
+    background: var(--site-surface-muted);
     font-size: var(--text-xs);
     font-weight: 600;
     color: var(--color-text-secondary);
@@ -747,7 +716,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
   .site-projects__cta {
     align-self: flex-start;
     color: var(--color-ink);
-    background: color-mix(in srgb, var(--color-paper) 84%, var(--site-surface-muted));
+    background: var(--site-surface-muted);
   }
 
   .site-projects__cta-icon {
@@ -772,9 +741,8 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     height: 3.5rem;
     border: 1px solid var(--site-border-default);
     border-radius: var(--radius-pill);
-    background: color-mix(in srgb, var(--color-paper) 72%, var(--site-surface-muted));
+    background: var(--site-surface-muted);
     color: var(--color-primary);
-    box-shadow: inset 0 1px 0 color-mix(in srgb, white 65%, transparent);
   }
 
   .site-projects__empty-icon svg {

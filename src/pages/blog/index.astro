@@ -300,17 +300,7 @@ function getDateBlockParts(date: Date) {
   }
 
   .site-blog-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 0.28rem;
-    background: var(--color-primary);
-    opacity: 0;
-    transition: opacity var(--transition-fast);
-  }
-
-  .site-blog-card--featured::before {
-    opacity: 1;
+    display: none;
   }
 
   .site-blog-card__link {
@@ -330,11 +320,9 @@ function getDateBlockParts(date: Date) {
     justify-items: center;
     gap: 0.12rem;
     padding: var(--space-md) var(--space-sm);
-    border: 1px solid
-      color-mix(in srgb, var(--color-primary) 16%, var(--site-border-default));
+    border: 1px solid var(--site-border-default);
     border-radius: calc(var(--site-card-radius) - var(--space-2xs));
-    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
-    box-shadow: var(--site-shadow-flat);
+    background: var(--site-surface-muted);
     color: var(--color-primary);
     text-align: center;
   }
@@ -422,18 +410,9 @@ function getDateBlockParts(date: Date) {
       color var(--transition-fast);
   }
 
-  :where(.site-blog-card:hover, .site-blog-card:focus-within)::before {
-    opacity: 1;
-  }
-
   :where(.site-blog-card:hover, .site-blog-card:focus-within)
     .site-blog-card__date-block {
-    border-color: color-mix(
-      in srgb,
-      var(--color-primary) 28%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
+    border-color: var(--color-primary);
   }
 
   :where(.site-blog-card:hover, .site-blog-card:focus-within)
@@ -442,11 +421,7 @@ function getDateBlockParts(date: Date) {
   }
 
   .site-blog-card--featured {
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 4%,
-      var(--site-surface-elevated)
-    );
+    background: var(--site-surface-elevated);
   }
 
   .site-blog-card--featured .site-blog-card__link {
@@ -468,9 +443,8 @@ function getDateBlockParts(date: Date) {
     width: 3.25rem;
     height: 3.25rem;
     border-radius: 999px;
-    border: 1px solid
-      color-mix(in srgb, var(--color-primary) 18%, var(--site-border-default));
-    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
+    border: 1px solid var(--site-border-default);
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 

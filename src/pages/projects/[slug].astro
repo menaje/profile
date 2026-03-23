@@ -283,45 +283,15 @@ const heroMeta = [
 <style>
   .site-case-study {
     --site-case-study-accent: var(--color-primary);
-    --site-case-study-accent-soft: color-mix(
-      in srgb,
-      var(--color-primary) 12%,
-      var(--color-paper)
-    );
-    --site-case-study-accent-strong: color-mix(
-      in srgb,
-      var(--color-primary) 58%,
-      var(--color-paper)
-    );
     padding-bottom: clamp(var(--space-3xl), 6vw, var(--space-5xl));
   }
 
   .site-case-study--construction {
     --site-case-study-accent: var(--color-accent);
-    --site-case-study-accent-soft: color-mix(
-      in srgb,
-      var(--color-accent) 12%,
-      var(--color-paper)
-    );
-    --site-case-study-accent-strong: color-mix(
-      in srgb,
-      var(--color-accent) 58%,
-      var(--color-paper)
-    );
   }
 
   .site-case-study--ai {
     --site-case-study-accent: var(--color-primary);
-    --site-case-study-accent-soft: color-mix(
-      in srgb,
-      var(--color-primary) 12%,
-      var(--color-paper)
-    );
-    --site-case-study-accent-strong: color-mix(
-      in srgb,
-      var(--color-primary) 58%,
-      var(--color-paper)
-    );
   }
 
   .site-case-study__hero-shell,
@@ -339,35 +309,13 @@ const heroMeta = [
   .site-case-study__hero {
     position: relative;
     gap: var(--space-lg);
-    padding-top: calc(var(--space-xl) + var(--space-xs));
     overflow: hidden;
     background: var(--site-surface-elevated);
   }
 
   .site-case-study__hero::before,
   .site-case-study__hero::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .site-case-study__hero::before {
-    inset: 0 0 auto;
-    height: 0.38rem;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--site-case-study-accent) 92%, var(--color-paper)),
-      var(--site-case-study-accent-strong)
-    );
-  }
-
-  .site-case-study__hero::after {
     display: none;
-  }
-
-  .site-case-study__hero > * {
-    position: relative;
-    z-index: 1;
   }
 
   .site-case-study__hero-top {
@@ -414,11 +362,7 @@ const heroMeta = [
   }
 
   .site-case-study__metadata {
-    background: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 4%,
-      var(--site-surface-muted)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-case-study__metadata dd {
@@ -436,17 +380,9 @@ const heroMeta = [
   }
 
   .site-case-study__tag {
-    border-color: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 16%,
-      var(--site-border-default)
-    );
-    background: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 10%,
-      var(--color-paper)
-    );
-    color: var(--site-case-study-accent);
+    border-color: var(--site-border-default);
+    background: var(--site-surface-muted);
+    color: var(--color-text-secondary);
   }
 
   .site-case-study__article-shell {
@@ -480,12 +416,7 @@ const heroMeta = [
   .site-case-study__content :global(h2) {
     margin-top: clamp(var(--space-2xl), 4vw, var(--space-4xl));
     padding-bottom: var(--space-sm);
-    border-bottom: 1px solid
-      color-mix(
-        in srgb,
-        var(--site-case-study-accent) 18%,
-        var(--site-border-default)
-      );
+    border-bottom: 1px solid var(--site-border-default);
     font-size: clamp(var(--text-2xl), 2.7vw, var(--text-4xl));
     line-height: 1.16;
   }
@@ -530,19 +461,10 @@ const heroMeta = [
     max-width: 70ch;
     padding: var(--space-lg) var(--space-xl) var(--space-lg)
       calc(var(--space-xl) + var(--space-xs));
-    border: 1px solid
-      color-mix(
-        in srgb,
-        var(--site-case-study-accent) 16%,
-        var(--site-border-default)
-      );
+    border: 1px solid var(--site-border-default);
     border-left: 4px solid var(--site-case-study-accent);
     border-radius: var(--site-card-radius);
-    background: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 5%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-text);
   }
 
@@ -553,11 +475,7 @@ const heroMeta = [
     left: var(--space-sm);
     font-size: 3rem;
     line-height: 1;
-    color: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 32%,
-      transparent
-    );
+    color: color-mix(in srgb, var(--color-text-muted) 30%, transparent);
   }
 
   .site-case-study__content :global(blockquote p:last-child),
@@ -583,19 +501,10 @@ const heroMeta = [
 
   .site-case-study__content :global(:not(pre) > code) {
     padding: 0.18em 0.45em;
-    border: 1px solid
-      color-mix(
-        in srgb,
-        var(--site-case-study-accent) 14%,
-        var(--site-border-default)
-      );
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-sm);
-    background: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 8%,
-      var(--color-paper)
-    );
-    color: var(--site-case-study-accent);
+    background: var(--site-surface-muted);
+    color: var(--color-text);
     font-family: var(--font-family-mono);
     font-size: 0.88em;
   }
@@ -605,14 +514,10 @@ const heroMeta = [
     position: relative;
     overflow-x: auto;
     max-width: 100%;
-    padding: calc(var(--space-xl) + 0.9rem) var(--space-lg) var(--space-lg);
-    border: 1px solid
-      color-mix(in srgb, var(--color-ink) 12%, var(--site-border-default));
+    padding: var(--space-lg);
+    border: 1px solid var(--site-border-default);
     border-radius: var(--site-card-radius);
     background: color-mix(in srgb, var(--color-ink) 94%, black) !important;
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 8%, transparent),
-      0 20px 44px color-mix(in srgb, var(--color-ink) 18%, transparent);
     font-family: var(--font-family-mono);
     font-size: clamp(0.82rem, 0.78rem + 0.15vw, 0.94rem);
     line-height: 1.8;
@@ -620,14 +525,7 @@ const heroMeta = [
 
   .site-case-study__content :global(pre)::before,
   .site-case-study__content :global(pre.astro-code)::before {
-    content: "";
-    position: absolute;
-    top: var(--space-md);
-    left: var(--space-md);
-    width: 3rem;
-    height: 0.4rem;
-    border-radius: 999px;
-    background: var(--site-case-study-accent);
+    display: none;
   }
 
   .site-case-study__content :global(pre code) {
@@ -668,11 +566,7 @@ const heroMeta = [
 
   .site-case-study__content :global(th) {
     color: var(--color-ink);
-    background: color-mix(
-      in srgb,
-      var(--site-case-study-accent) 6%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-case-study__content :global(img) {
@@ -742,30 +636,13 @@ const heroMeta = [
     position: relative;
     gap: var(--space-sm);
     min-height: 100%;
-    padding-top: calc(var(--space-lg) + var(--space-xs));
     overflow: hidden;
     background: var(--site-surface-elevated);
   }
 
   .site-case-study__pager-card::before,
   .site-case-study__pager-card::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .site-case-study__pager-card::before {
-    inset: 0 0 auto;
-    height: 0.38rem;
-  }
-
-  .site-case-study__pager-card::after {
     display: none;
-  }
-
-  .site-case-study__pager-card > * {
-    position: relative;
-    z-index: 1;
   }
 
   .site-case-study__pager-link {
@@ -775,61 +652,15 @@ const heroMeta = [
 
   .site-case-study__pager-card--construction {
     --site-case-study-pager-accent: var(--color-accent);
-    --site-case-study-pager-strong: color-mix(
-      in srgb,
-      var(--color-accent) 58%,
-      var(--color-paper)
-    );
-  }
-
-  .site-case-study__pager-card--construction::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-accent) 90%, var(--color-paper)),
-      var(--site-case-study-pager-strong)
-    );
-  }
-
-  .site-case-study__pager-card--construction::after {
-    background: color-mix(in srgb, var(--color-accent) 24%, transparent);
   }
 
   .site-case-study__pager-card--ai {
     --site-case-study-pager-accent: var(--color-primary);
-    --site-case-study-pager-strong: color-mix(
-      in srgb,
-      var(--color-primary) 58%,
-      var(--color-paper)
-    );
-  }
-
-  .site-case-study__pager-card--ai::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-primary) 90%, var(--color-paper)),
-      var(--site-case-study-pager-strong)
-    );
-  }
-
-  .site-case-study__pager-card--ai::after {
-    background: color-mix(in srgb, var(--color-primary) 24%, transparent);
   }
 
   .site-case-study__pager-card--placeholder {
     border-style: dashed;
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 80%,
-      var(--color-paper)
-    );
-  }
-
-  .site-case-study__pager-card--placeholder::before {
-    background: color-mix(in srgb, var(--site-border-default) 86%, transparent);
-  }
-
-  .site-case-study__pager-card--placeholder::after {
-    display: none;
+    background: var(--site-surface-muted);
   }
 
   .site-case-study__pager-label {
@@ -874,7 +705,7 @@ const heroMeta = [
 
   @media (min-width: 768px) {
     .site-case-study__hero {
-      padding: calc(var(--space-xl) + var(--space-xs)) var(--space-xl) var(--space-xl);
+      padding: var(--space-xl);
     }
 
     .site-case-study__metadata {

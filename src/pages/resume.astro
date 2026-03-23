@@ -551,18 +551,8 @@ const highlightTiles = [
     padding:
       clamp(var(--space-4xl), 9vw, 6.5rem) var(--site-gutter)
       clamp(var(--space-3xl), 7vw, var(--space-5xl));
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-primary) 4%, var(--color-paper)),
-      color-mix(in srgb, var(--site-surface-muted) 72%, var(--color-paper))
-    );
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--site-border-default) 72%, var(--color-primary) 28%);
-  }
-
-  .site-resume-hero::before,
-  .site-resume-hero::after {
-    display: none;
+    background: var(--color-paper);
+    border-bottom: 1px solid var(--site-border-default);
   }
 
   .site-resume-hero__inner,
@@ -615,17 +605,9 @@ const highlightTiles = [
     overflow: hidden;
     gap: var(--space-lg);
     padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 84%,
-      var(--color-secondary) 16%
-    );
+    border-color: var(--site-border-default);
     background: var(--site-surface-default);
-    box-shadow: var(--site-shadow-raised);
-  }
-
-  .site-resume-hero__panel::before {
-    display: none;
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-resume-hero__panel-header,
@@ -694,14 +676,9 @@ const highlightTiles = [
     gap: var(--space-sm);
     align-items: center;
     padding: var(--space-sm) var(--space-md);
-    border: 1px solid
-      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 78%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
   }
 
   .site-resume-hero__panel-item-copy {
@@ -738,11 +715,7 @@ const highlightTiles = [
   }
 
   .site-resume-hero__panel-item-icon {
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 10%,
-      var(--site-surface-default)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -755,11 +728,7 @@ const highlightTiles = [
   }
 
   .site-resume-hero__metadata {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 72%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-section {
@@ -767,11 +736,7 @@ const highlightTiles = [
   }
 
   .site-resume-section--documents {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 58%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-section__header {
@@ -792,21 +757,9 @@ const highlightTiles = [
     overflow: hidden;
     gap: var(--space-lg);
     padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 66%,
-      var(--color-primary) 34%
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 4%,
-      var(--site-surface-elevated)
-    );
-    box-shadow: var(--site-shadow-raised);
-  }
-
-  .site-resume-bento__featured::before {
-    display: none;
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-resume-bento__featured-head,
@@ -858,66 +811,27 @@ const highlightTiles = [
     color: var(--color-ink);
   }
 
-  .site-resume-highlight--accent {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 60%,
-      var(--color-accent) 40%
-    );
-    background: color-mix(in srgb, var(--color-accent) 7%, var(--site-surface-elevated));
+  .site-resume-highlight--accent,
+  .site-resume-highlight--secondary,
+  .site-resume-highlight--primary,
+  .site-resume-highlight--primary-soft {
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-resume-highlight--accent .site-resume-highlight__icon {
-    background: color-mix(in srgb, var(--color-accent) 14%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-accent);
   }
 
-  .site-resume-highlight--secondary {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-secondary) 42%
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 8%,
-      var(--site-surface-elevated)
-    );
-  }
-
   .site-resume-highlight--secondary .site-resume-highlight__icon {
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-secondary);
-  }
-
-  .site-resume-highlight--primary,
-  .site-resume-highlight--primary-soft {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-primary) 42%
-    );
-  }
-
-  .site-resume-highlight--primary {
-    background: color-mix(in srgb, var(--color-primary) 8%, var(--site-surface-elevated));
-  }
-
-  .site-resume-highlight--primary-soft {
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 4%,
-      var(--site-surface-muted)
-    );
   }
 
   .site-resume-highlight--primary .site-resume-highlight__icon,
   .site-resume-highlight--primary-soft .site-resume-highlight__icon {
-    background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -933,29 +847,12 @@ const highlightTiles = [
   }
 
   .site-resume-document::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 100%;
-    height: 0.25rem;
-    background: color-mix(in srgb, var(--site-border-default) 92%, var(--color-paper));
+    display: none;
   }
 
   .site-resume-document--available {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-primary) 42%
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 4%,
-      var(--site-surface-elevated)
-    );
-  }
-
-  .site-resume-document--available::before {
-    background: var(--color-primary);
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-resume-document__head,
@@ -971,7 +868,7 @@ const highlightTiles = [
   }
 
   .site-resume-document__icon {
-    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -1027,11 +924,7 @@ const highlightTiles = [
   }
 
   .site-resume-panel__icon {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 80%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-panel--education .site-resume-panel__icon {
@@ -1059,8 +952,7 @@ const highlightTiles = [
     display: grid;
     gap: var(--space-2xs);
     padding-bottom: var(--space-sm);
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
+    border-bottom: 1px solid var(--site-border-default);
   }
 
   .site-resume-panel li:last-child {
@@ -1080,27 +972,17 @@ const highlightTiles = [
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 82%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
     color: var(--color-text);
     text-decoration: none;
     transition:
       border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
+      background var(--transition-fast);
   }
 
   .site-resume-links a:hover {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 56%,
-      var(--color-primary) 44%
-    );
-    box-shadow: var(--site-card-shadow);
-    transform: var(--hover-lift);
+    border-color: var(--color-primary);
+    background: var(--site-surface-muted);
   }
 
   @media (min-width: 768px) {

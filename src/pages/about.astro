@@ -433,22 +433,12 @@ if (personalProjects.length > 0) {
     position: relative;
     overflow: hidden;
     padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--color-primary) 28%
-    );
+    border-color: var(--site-border-default);
     background: var(--site-surface-elevated);
   }
 
   .site-about-block::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 6.5rem;
-    height: 0.18rem;
-    border-radius: var(--radius-pill);
-    background: var(--color-primary);
+    display: none;
   }
 
   .site-about-block__number {
@@ -463,7 +453,7 @@ if (personalProjects.length > 0) {
     line-height: 0.82;
     letter-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
-    color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: color-mix(in srgb, var(--color-text-muted) 18%, transparent);
     pointer-events: none;
     user-select: none;
   }
@@ -534,13 +524,8 @@ if (personalProjects.length > 0) {
 
   .site-about-quote::before {
     inset: 0 auto 0 50%;
-    border-block: 1px solid
-      color-mix(in srgb, var(--site-border-default) 88%, var(--color-paper));
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 82%,
-      var(--color-paper)
-    );
+    border-block: 1px solid var(--site-border-default);
+    background: var(--site-surface-muted);
     z-index: 0;
   }
 
@@ -571,7 +556,7 @@ if (personalProjects.length > 0) {
     font-size: clamp(var(--text-6xl), 11vw, 7rem);
     line-height: 1;
     font-weight: 700;
-    color: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    color: color-mix(in srgb, var(--color-text-muted) 20%, transparent);
     pointer-events: none;
     user-select: none;
   }
@@ -645,12 +630,8 @@ if (personalProjects.length > 0) {
     height: 1.25rem;
     margin-top: var(--space-lg);
     border-radius: 999px;
-    background: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 18%,
-      var(--color-paper)
-    );
-    box-shadow: 0 0 0 6px var(--color-bg-page);
+    background: var(--color-paper);
+    border: 2px solid var(--site-border-default);
   }
 
   .site-about-timeline__marker::after {
@@ -659,33 +640,21 @@ if (personalProjects.length > 0) {
     inset: 0.3125rem;
     border-radius: 999px;
     background: var(--site-about-timeline-accent);
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
   }
 
   .site-about-timeline__item--current .site-about-timeline__marker::after {
     transform: scale(1.15);
-    box-shadow: 0 0 0 4px
-      color-mix(in srgb, var(--site-about-timeline-accent) 18%, transparent);
   }
 
   .site-about-timeline__card {
     min-width: 0;
     gap: var(--space-md);
-    border-color: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 22%,
-      var(--site-border-default)
-    );
+    border-color: var(--site-border-default);
     background: var(--site-surface-elevated);
   }
 
   .site-about-timeline__item--current .site-about-timeline__card {
-    box-shadow:
-      0 0 0 1px
-        color-mix(in srgb, var(--site-about-timeline-accent) 16%, transparent),
-      var(--site-shadow-raised);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-about-timeline__topline {
@@ -746,23 +715,10 @@ if (personalProjects.length > 0) {
     margin: 0;
     font-size: var(--text-xs);
     padding: var(--chip-padding-block) var(--chip-padding-inline);
-    border: 1px solid
-      color-mix(
-        in srgb,
-        var(--site-about-timeline-accent) 20%,
-        var(--site-border-default)
-      );
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-pill);
-    background: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 9%,
-      var(--site-surface-muted)
-    );
-    color: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 72%,
-      var(--color-ink)
-    );
+    background: var(--site-surface-muted);
+    color: var(--color-text-secondary);
   }
 
   @media (min-width: 768px) {

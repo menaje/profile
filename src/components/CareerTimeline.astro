@@ -466,7 +466,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 <style>
   .site-timeline {
     padding: var(--space-5xl) var(--site-gutter);
-    background: var(--site-surface-default);
+    background: var(--color-paper);
   }
 
   .site-timeline__inner {
@@ -500,11 +500,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__rail-track {
     height: var(--site-timeline-rail-height);
-    background: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--color-paper)
-    );
+    background: var(--site-border-default);
   }
 
   .site-timeline__rail-progress {
@@ -523,11 +519,6 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__item {
     --site-timeline-accent: var(--color-primary);
-    --site-timeline-accent-soft: color-mix(
-      in srgb,
-      var(--site-timeline-accent) 10%,
-      transparent
-    );
     position: relative;
     padding-left: calc(var(--space-xl) + 0.25rem);
   }
@@ -546,65 +537,38 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     height: 1.25rem;
     transform: translateX(-50%);
     border-radius: 999px;
-    background: color-mix(
-      in srgb,
-      var(--site-timeline-accent) 18%,
-      var(--color-paper)
-    );
-    box-shadow: 0 0 0 6px var(--site-surface-default);
+    background: var(--color-paper);
+    border: 2px solid var(--site-border-default);
   }
 
   .site-timeline__marker-core {
-    width: 0.625rem;
-    height: 0.625rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 999px;
     background: var(--site-timeline-accent);
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base),
-      background var(--transition-base);
+    transition: background var(--transition-base);
   }
 
   .site-timeline__card {
     gap: var(--space-md);
     transition:
       border-color var(--transition-base),
-      background var(--transition-base),
-      box-shadow var(--transition-base);
+      background var(--transition-base);
   }
 
   .site-timeline__item[data-current="true"] .site-timeline__card {
-    border-color: color-mix(
-      in srgb,
-      var(--site-timeline-accent) 28%,
-      var(--site-border-strong)
-    );
-    background: color-mix(
-      in srgb,
-      var(--site-surface-elevated) 94%,
-      var(--site-timeline-accent) 6%
-    );
-    box-shadow:
-      0 0 0 1px color-mix(
-        in srgb,
-        var(--site-timeline-accent) 10%,
-        transparent
-      ),
-      var(--site-shadow-raised);
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-timeline__item[data-current="true"] .site-timeline__marker-core {
     transform: scale(1.12);
-    box-shadow: 0 0 0 4px
-      color-mix(in srgb, var(--site-timeline-accent) 10%, var(--site-surface-default));
   }
 
   .site-timeline__item:has(.site-timeline__toggle:focus-visible)
     .site-timeline__card {
-    box-shadow:
-      0 0 0 var(--focus-ring-width)
-        color-mix(in srgb, var(--site-timeline-accent) 20%, transparent),
-      var(--site-card-shadow-hover);
+    box-shadow: var(--site-shadow-focus);
   }
 
   .site-timeline__toggle {
@@ -689,7 +653,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     display: grid;
     gap: var(--space-md);
     padding-top: var(--space-md);
-    border-top: 1px solid color-mix(in srgb, var(--site-border-default) 88%, var(--site-timeline-accent) 12%);
+    border-top: 1px solid var(--site-border-default);
   }
 
   .site-timeline__detail,
@@ -735,13 +699,9 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     display: grid;
     gap: var(--space-2xs);
     padding: var(--space-md);
-    border: 1px solid color-mix(in srgb, var(--site-border-default) 84%, var(--site-timeline-accent) 16%);
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 84%,
-      var(--site-timeline-accent) 16%
-    );
+    background: var(--site-surface-default);
   }
 
   .site-timeline__project-head {

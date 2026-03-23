@@ -388,20 +388,15 @@ const contactMetadata = [
   .site-contact__form-card,
   .site-contact__profile-card {
     position: relative;
-    isolation: isolate;
     overflow: hidden;
   }
 
   .site-contact__form-card {
     padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
     gap: var(--space-xl);
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 66%,
-      var(--color-primary) 34%
-    );
+    border-color: var(--site-border-default);
     background: var(--site-surface-default);
-    box-shadow: var(--site-shadow-raised);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-contact__form-header,
@@ -429,17 +424,12 @@ const contactMetadata = [
     position: relative;
     gap: var(--space-sm);
     padding: var(--space-md) var(--space-md) calc(var(--space-sm) + var(--space-xs));
-    border: 1px solid color-mix(
-      in srgb,
-      var(--site-border-default) 80%,
-      var(--color-primary) 20%
-    );
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-lg);
     background: var(--site-surface-default);
     transition:
       border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      background var(--transition-fast);
+      box-shadow var(--transition-fast);
   }
 
   .site-contact__field::after {
@@ -447,34 +437,20 @@ const contactMetadata = [
   }
 
   .site-contact__field:hover {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-accent) 78%,
-      var(--color-primary) 22%
-    );
+    border-color: var(--color-text-muted);
   }
 
   .site-contact__field:focus-within {
-    border-color: color-mix(
-      in srgb,
-      var(--color-primary) 52%,
-      var(--site-border-default)
-    );
-    background: var(--site-surface-default);
+    border-color: var(--color-primary);
     box-shadow: var(--site-shadow-focus);
   }
 
   .site-contact__field .site-form-field__label {
-    transition:
-      color var(--transition-fast),
-      letter-spacing var(--transition-fast),
-      transform var(--transition-fast);
+    transition: color var(--transition-fast);
   }
 
   .site-contact__field:focus-within .site-form-field__label {
     color: var(--color-primary);
-    letter-spacing: 0.02em;
-    transform: translateY(-0.05rem);
   }
 
   .site-contact__field .site-form-field__control {
@@ -503,12 +479,7 @@ const contactMetadata = [
     padding: var(--space-md) var(--space-lg);
     border: 1px solid var(--site-border-default);
     border-radius: var(--radius-lg);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 88%,
-      var(--color-paper)
-    );
-    box-shadow: var(--shadow-sm);
+    background: var(--site-surface-default);
   }
 
   .site-contact__feedback:not([hidden]) {
@@ -516,21 +487,13 @@ const contactMetadata = [
   }
 
   .site-contact__feedback[data-state="success"] {
-    border-color: color-mix(
-      in srgb,
-      var(--color-secondary) 34%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-secondary) 10%, var(--color-paper));
+    border-color: var(--color-secondary);
+    background: var(--site-surface-default);
   }
 
   .site-contact__feedback[data-state="error"] {
-    border-color: color-mix(
-      in srgb,
-      var(--color-accent) 38%,
-      var(--site-border-default)
-    );
-    background: color-mix(in srgb, var(--color-accent) 10%, var(--color-paper));
+    border-color: var(--color-accent);
+    background: var(--site-surface-default);
   }
 
   .site-contact__feedback-icon {
@@ -540,11 +503,7 @@ const contactMetadata = [
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 70%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-text-secondary);
     flex-shrink: 0;
   }
@@ -609,13 +568,9 @@ const contactMetadata = [
   .site-contact__profile-card {
     padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
     gap: var(--space-lg);
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 70%,
-      var(--color-secondary) 30%
-    );
+    border-color: var(--site-border-default);
     background: var(--site-surface-elevated);
-    box-shadow: var(--site-shadow-raised);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-contact__profile-top {
@@ -647,7 +602,7 @@ const contactMetadata = [
   .site-contact__profile-title {
     font-size: var(--text-lg);
     line-height: 1.4;
-    color: color-mix(in srgb, var(--color-primary) 80%, var(--color-ink));
+    color: var(--color-primary);
   }
 
   .site-contact__profile-copy {
@@ -658,11 +613,7 @@ const contactMetadata = [
 
   .site-contact__metadata {
     gap: var(--space-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 72%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-contact__social-header {
@@ -691,11 +642,7 @@ const contactMetadata = [
     justify-content: space-between;
     width: 100%;
     padding-inline: var(--space-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 76%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
   }
 
   .site-contact__social-main {
