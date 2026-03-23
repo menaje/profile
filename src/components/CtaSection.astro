@@ -106,42 +106,19 @@ const ctaCopy =
 <style>
   .site-cta {
     padding: var(--space-5xl) var(--site-gutter);
+    background: var(--site-surface-default);
   }
 
   .site-cta__inner {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
     max-width: 58rem;
     margin: 0 auto;
     padding: clamp(var(--space-xl), 4vw, var(--space-3xl));
     display: grid;
     gap: var(--space-xl);
     text-align: center;
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 80%,
-      var(--color-secondary) 20%
-    );
-    background:
-      linear-gradient(
-        145deg,
-        color-mix(in srgb, var(--color-primary) 6%, transparent),
-        color-mix(in srgb, var(--color-secondary) 8%, transparent)
-      ),
-      color-mix(in srgb, var(--site-surface-elevated) 90%, var(--color-paper));
-    box-shadow: var(--site-shadow-raised);
-  }
-
-  .site-cta__inner::before,
-  .site-cta__inner::after {
-    display: none;
-  }
-
-  .site-cta__header,
-  .site-cta__actions {
-    position: relative;
-    z-index: 1;
+    border: 1px solid var(--color-line);
+    background: var(--site-surface-elevated);
   }
 
   .site-cta__header {
@@ -198,11 +175,7 @@ const ctaCopy =
 
   .site-cta__link {
     position: relative;
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 76%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
     color: var(--color-text);
   }
 
@@ -241,18 +214,6 @@ const ctaCopy =
 
     .site-cta__links {
       justify-content: flex-start;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .site-cta__inner::before {
-      width: 17rem;
-      height: 17rem;
-    }
-
-    .site-cta__inner::after {
-      width: 16rem;
-      height: 16rem;
     }
   }
 </style>

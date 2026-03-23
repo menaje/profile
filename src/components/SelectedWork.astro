@@ -225,35 +225,18 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
     position: relative;
     min-height: 100%;
     gap: var(--space-lg);
-    padding-top: calc(var(--space-lg) + var(--space-xs));
-    overflow: hidden;
     background: var(--site-surface-elevated);
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--site-work-card-accent);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base);
   }
 
-  .site-work__card::before,
-  .site-work__card::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .site-work__card::before {
-    inset: 0 0 auto;
-    height: 0.38rem;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--site-work-card-accent) 88%, var(--color-paper)),
-      color-mix(in srgb, var(--site-work-card-accent) 56%, var(--color-paper))
-    );
-  }
-
-  .site-work__card::after {
-    display: none;
-  }
-
-  .site-work__card > * {
-    position: relative;
-    z-index: 1;
+  .site-work__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .site-work__card--construction {
@@ -291,11 +274,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   }
 
   .site-work__classification-badge {
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 78%,
-      var(--site-surface-muted)
-    );
+    background: var(--site-surface-default);
   }
 
   .site-work__state-badge {
@@ -347,63 +326,20 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
     margin: 0;
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
+    opacity: 1;
   }
 
   .site-work__card-cta {
     align-self: flex-start;
     border-color: var(--site-border-default);
     color: var(--color-ink);
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 84%,
-      var(--site-surface-muted)
-    );
+    background: var(--site-surface-default);
+    opacity: 1;
   }
 
   .site-work__card-cta-icon {
     font-size: 0.95em;
     line-height: 1;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .site-work__card-footer {
-      min-height: 4.75rem;
-    }
-
-    .site-work__card-destination,
-    .site-work__card-cta {
-      transition:
-        opacity var(--transition-base),
-        transform var(--transition-base),
-        background var(--transition-fast),
-        color var(--transition-fast),
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast);
-    }
-
-    .site-work__card-destination {
-      transform: translateY(0.4rem);
-      opacity: 0.78;
-    }
-
-    .site-work__card-cta {
-      opacity: 0;
-      transform: translateY(1rem);
-      pointer-events: none;
-    }
-
-    .site-work__card:hover .site-work__card-destination,
-    .site-work__card:focus-within .site-work__card-destination {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .site-work__card:hover .site-work__card-cta,
-    .site-work__card:focus-within .site-work__card-cta {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
   }
 
   @media (min-width: 768px) {
@@ -415,19 +351,6 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   @media (min-width: 1024px) {
     .site-work__grid {
       grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .site-work__card-destination,
-    .site-work__card-cta {
-      opacity: 1 !important;
-      transform: none !important;
-      pointer-events: auto !important;
-    }
-
-    .site-work__card-footer {
-      min-height: auto;
     }
   }
 </style>
