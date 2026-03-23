@@ -16,8 +16,9 @@ const projects = allProjects.sort((a: ProjectEntry, b: ProjectEntry) => {
   return b.data.period.start.localeCompare(a.data.period.start);
 });
 
-const featuredProjects = projects.filter((entry: ProjectEntry) => entry.data.featured);
-const archiveProjects = projects.filter((entry: ProjectEntry) => !entry.data.featured);
+function allDomains(entry: ProjectEntry): ProjectDomain[] {
+  return [entry.data.domain, ...entry.data.extraDomains];
+}
 
 function domainLabel(domain: ProjectDomain): string {
   return domain === "construction-cm" ? "건설사업관리" : "AI/IT";
@@ -68,23 +69,14 @@ function filterLabel(domain: ProjectDomain | "all"): string {
         작동하는 협업 시스템과 자동화 흐름으로 풀어낸 사례를 모았습니다.
       </p>
       <p class="site-page-hero__meta">
-        공개된 케이스 스터디 {projects.length}건 · 대표 사례 {featuredProjects.length}
-        건
+        공개된 케이스 스터디 {projects.length}건
       </p>
     </header>
 
     {
       projects.length > 0 ? (
         <>
-          <section class="site-projects__controls site-card" data-reveal="slide-up">
-            <div class="site-projects__controls-copy">
-              <p class="site-projects__controls-eyebrow">Browse by domain</p>
-              <p class="site-projects__controls-title">
-                대표 사례와 프로젝트 아카이브를 원하는 도메인으로 바로 좁혀볼 수
-                있습니다.
-              </p>
-            </div>
-
+          <div class="site-projects__controls-bar" data-reveal="slide-up">
             <div
               class="site-projects__segment"
               role="group"
@@ -102,295 +94,117 @@ function filterLabel(domain: ProjectDomain | "all"): string {
                 </button>
               ))}
             </div>
-
             <p class="site-projects__filter-summary" data-filter-summary aria-live="polite">
-              전체 필터 · {projects.length}개 프로젝트
+              전체 · {projects.length}개 프로젝트
             </p>
-          </section>
+          </div>
 
-          <div class="site-projects__content">
-            {featuredProjects.length > 0 && (
-              <section class="site-projects__section" data-project-section="featured">
-                <div
-                  class="site-projects__section-header site-section-header"
-                  data-reveal="slide-up"
-                >
-                  <p class="site-section-header__eyebrow">Featured</p>
-                  <div class="site-section-header__rule" aria-hidden="true"></div>
-                  <h2 class="site-section-header__title">대표 케이스 스터디</h2>
-                  <p class="site-section-header__lead">
-                    문제 정의, 역할, 운영 맥락까지 한 번에 읽히는 대표 사례를 먼저
-                    배치했습니다.
+          <div
+            class="site-projects__grid stagger-children"
+            data-reveal="stagger-children"
+          >
+            {projects.map((entry: ProjectEntry) => (
+              <article
+                class:list={[
+                  "site-projects__item",
+                  "site-card",
+                  "site-card--interactive",
+                  domainCardClass(entry.data.domain),
+                ]}
+                data-project-card
+                data-domains={allDomains(entry).join(",")}
+              >
+                <div class="site-projects__item-head">
+                  <div class="site-projects__item-badges">
+                    {allDomains(entry).map((d) => (
+                      <span class={domainBadgeClass(d)}>
+                        {domainLabel(d)}
+                      </span>
+                    ))}
+                    {!entry.data.period.end && (
+                      <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
+                        진행 중
+                      </span>
+                    )}
+                  </div>
+                  <p class="site-projects__item-kicker">
+                    {entry.data.client} · {formatPeriod(entry.data.period)}
                   </p>
                 </div>
 
-                <div
-                  class="site-projects__spotlight-grid stagger-children"
-                  data-reveal="stagger-children"
-                >
-                  {featuredProjects.map((entry: ProjectEntry) => (
-                    <article
-                      class:list={[
-                        "site-projects__item",
-                        "site-projects__item--spotlight",
-                        "site-card",
-                        "site-card--interactive",
-                        domainCardClass(entry.data.domain),
-                      ]}
-                      data-project-card
-                      data-domain={entry.data.domain}
-                    >
-                      <div class="site-projects__item-head">
-                        <div class="site-projects__item-badges">
-                          <span class={domainBadgeClass(entry.data.domain)}>
-                            {domainLabel(entry.data.domain)}
-                          </span>
-                          <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--featured">
-                            Featured
-                          </span>
-                          {!entry.data.period.end && (
-                            <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
-                              진행 중
-                            </span>
-                          )}
-                        </div>
-                        <p class="site-projects__item-kicker">
-                          {domainEyebrow(entry.data.domain)} · {entry.data.client}
-                        </p>
-                      </div>
-
-                      <div class="site-projects__item-body">
-                        <h3 class="site-projects__item-title">
-                          <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
-                        </h3>
-                        <p class="site-projects__item-description">
-                          {entry.data.description}
-                        </p>
-                      </div>
-
-                      <dl class="site-projects__spotlight-meta site-metadata-block">
-                        <div class="site-metadata-block__item">
-                          <dt>Role</dt>
-                          <dd>{entry.data.role}</dd>
-                        </div>
-                        <div class="site-metadata-block__item">
-                          <dt>Client</dt>
-                          <dd>{entry.data.client}</dd>
-                        </div>
-                        <div class="site-metadata-block__item">
-                          <dt>Period</dt>
-                          <dd>{formatPeriod(entry.data.period)}</dd>
-                        </div>
-                      </dl>
-
-                      {entry.data.tags.length > 0 && (
-                        <ul class="site-projects__tags" role="list">
-                          {entry.data.tags.map((tag: string) => (
-                            <li class="site-projects__tag">{tag}</li>
-                          ))}
-                        </ul>
-                      )}
-
-                      <div class="site-projects__item-footer">
-                        <p class="site-projects__item-note">
-                          프로젝트 배경과 설계 판단, 실제 운영 맥락까지 정리한
-                          상세 페이지로 이어집니다.
-                        </p>
-                        <a
-                          href={`/projects/${entry.id}/`}
-                          class="site-projects__cta site-button site-button--ghost site-button--quiet"
-                        >
-                          <span>자세히 보기</span>
-                          <span class="site-projects__cta-icon" aria-hidden="true">→</span>
-                        </a>
-                      </div>
-                    </article>
-                  ))}
+                <div class="site-projects__item-body">
+                  <h3 class="site-projects__item-title">
+                    <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+                  </h3>
+                  <p class="site-projects__item-description">
+                    {entry.data.description}
+                  </p>
                 </div>
-              </section>
-            )}
 
-            <section
-              class="site-projects__section site-projects__section--archive"
-              data-project-section="archive"
-              data-allow-placeholder="true"
-            >
-              <div
-                class="site-projects__section-header site-section-header"
-                data-reveal="slide-up"
-              >
-                <p class="site-section-header__eyebrow">Archive</p>
-                <div class="site-section-header__rule" aria-hidden="true"></div>
-                <h2 class="site-section-header__title">프로젝트 아카이브</h2>
-                <p class="site-section-header__lead">
-                  대표 사례 외의 프로젝트도 같은 시각 시스템으로 이어서 탐색할 수
-                  있도록 준비합니다.
-                </p>
-              </div>
+                <dl class="site-projects__item-meta site-metadata-block">
+                  <div class="site-metadata-block__item">
+                    <dt>Role</dt>
+                    <dd>{entry.data.role}</dd>
+                  </div>
+                  <div class="site-metadata-block__item">
+                    <dt>Period</dt>
+                    <dd>{formatPeriod(entry.data.period)}</dd>
+                  </div>
+                </dl>
 
-              {archiveProjects.length > 0 ? (
-                <div
-                  class="site-projects__archive-grid stagger-children"
-                  data-reveal="stagger-children"
-                >
-                  {archiveProjects.map((entry: ProjectEntry) => (
-                    <article
-                      class:list={[
-                        "site-projects__item",
-                        "site-projects__item--archive",
-                        "site-card",
-                        "site-card--interactive",
-                        domainCardClass(entry.data.domain),
-                      ]}
-                      data-project-card
-                      data-domain={entry.data.domain}
-                    >
-                      <div class="site-projects__item-head">
-                        <div class="site-projects__item-badges">
-                          <span class={domainBadgeClass(entry.data.domain)}>
-                            {domainLabel(entry.data.domain)}
-                          </span>
-                          {!entry.data.period.end && (
-                            <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
-                              진행 중
-                            </span>
-                          )}
-                        </div>
-                        <p class="site-projects__item-kicker">
-                          {entry.data.client} · {formatPeriod(entry.data.period)}
-                        </p>
-                      </div>
+                {entry.data.tags.length > 0 && (
+                  <ul class="site-projects__tags" role="list">
+                    {entry.data.tags.map((tag: string) => (
+                      <li class="site-projects__tag">{tag}</li>
+                    ))}
+                  </ul>
+                )}
 
-                      <div class="site-projects__item-body">
-                        <h3 class="site-projects__item-title">
-                          <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
-                        </h3>
-                        <p class="site-projects__item-description">
-                          {entry.data.description}
-                        </p>
-                        <p class="site-projects__item-role">{entry.data.role}</p>
-                      </div>
-
-                      {entry.data.tags.length > 0 && (
-                        <ul class="site-projects__tags" role="list">
-                          {entry.data.tags.map((tag: string) => (
-                            <li class="site-projects__tag">{tag}</li>
-                          ))}
-                        </ul>
-                      )}
-
-                      <div class="site-projects__item-footer">
-                        <p class="site-projects__item-note">케이스 스터디 상세로 이동</p>
-                        <a
-                          href={`/projects/${entry.id}/`}
-                          class="site-projects__cta site-button site-button--ghost site-button--quiet"
-                        >
-                          <span>자세히 보기</span>
-                          <span class="site-projects__cta-icon" aria-hidden="true">→</span>
-                        </a>
-                      </div>
-                    </article>
-                  ))}
+                <div class="site-projects__item-footer">
+                  <a
+                    href={`/projects/${entry.id}/`}
+                    class="site-projects__cta site-button site-button--ghost site-button--quiet"
+                  >
+                    <span>자세히 보기</span>
+                    <span class="site-projects__cta-icon" aria-hidden="true">→</span>
+                  </a>
                 </div>
-              ) : (
-                <article
-                  class="site-projects__placeholder site-card"
-                  data-project-placeholder="all-only"
-                  data-reveal="slide-up"
-                >
-                  <div class="site-projects__empty-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" focusable="false">
-                      <path
-                        d="M4.75 8.75 12 4.5l7.25 4.25v8.5L12 21.5l-7.25-4.25v-8.5Z"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M4.75 8.75 12 13l7.25-4.25M12 13v8.5"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div class="site-projects__placeholder-copy">
-                    <h3 class="site-projects__placeholder-title">
-                      다음 케이스 스터디를 준비 중입니다.
-                    </h3>
-                    <p class="site-projects__placeholder-text">
-                      현재는 대표 프로젝트를 먼저 공개했습니다. 이후 사례가 추가되면
-                      이 영역이 같은 카드 시스템으로 확장됩니다.
-                    </p>
-                  </div>
-                </article>
-              )}
-            </section>
-
-            <article
-              class="site-projects__no-results site-card"
-              data-no-results
-              role="status"
-              aria-live="polite"
-              hidden
-            >
-              <div class="site-projects__empty-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" focusable="false">
-                  <path
-                    d="M4 6h16M7 12h10M10 18h4"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                  />
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="3"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  />
-                </svg>
-              </div>
-              <div class="site-projects__placeholder-copy">
-                <h2 class="site-projects__placeholder-title">
-                  이 필터에 맞는 프로젝트가 아직 없습니다.
-                </h2>
-                <p class="site-projects__placeholder-text">
-                  전체 보기로 돌아가거나 다른 도메인을 선택해 공개된 프로젝트를
-                  이어서 확인해 보세요.
-                </p>
-              </div>
-              <button
-                type="button"
-                class="site-button site-button--primary"
-                data-filter-reset
-              >
-                전체 보기
-              </button>
-            </article>
+              </article>
+            ))}
           </div>
+
+          <article
+            class="site-projects__no-results site-card"
+            data-no-results
+            role="status"
+            aria-live="polite"
+            hidden
+          >
+            <div class="site-projects__placeholder-copy">
+              <h2 class="site-projects__placeholder-title">
+                이 필터에 맞는 프로젝트가 아직 없습니다.
+              </h2>
+              <p class="site-projects__placeholder-text">
+                전체 보기로 돌아가거나 다른 도메인을 선택해 보세요.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="site-button site-button--primary"
+              data-filter-reset
+            >
+              전체 보기
+            </button>
+          </article>
         </>
       ) : (
         <article class="site-projects__empty site-card" data-reveal="slide-up">
-          <div class="site-projects__empty-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" focusable="false">
-              <path
-                d="M12 4v16M4 12h16"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-          </div>
           <div class="site-projects__placeholder-copy">
             <h2 class="site-projects__placeholder-title">
               아직 공개된 프로젝트가 없습니다.
             </h2>
             <p class="site-projects__placeholder-text">
-              프로젝트 데이터가 준비되면 이 페이지에 대표 사례와 아카이브를 함께
-              공개할 예정입니다.
+              프로젝트 데이터가 준비되면 이 페이지에 공개할 예정입니다.
             </p>
           </div>
         </article>
@@ -400,86 +214,73 @@ function filterLabel(domain: ProjectDomain | "all"): string {
 </BaseLayout>
 
 <script>
-  const buttons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>("[data-project-filter]"),
-  );
-  const cards = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-project-card]"),
-  );
-  const sections = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-project-section]"),
-  );
-  const summary = document.querySelector<HTMLElement>("[data-filter-summary]");
-  const noResults = document.querySelector<HTMLElement>("[data-no-results]");
-  const resetButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>("[data-filter-reset]"),
-  );
+  function initProjectFilters() {
+    const buttons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-project-filter]"),
+    );
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-project-card]"),
+    );
+    const summary = document.querySelector<HTMLElement>("[data-filter-summary]");
+    const noResults = document.querySelector<HTMLElement>("[data-no-results]");
+    const resetButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-filter-reset]"),
+    );
 
-  function updateSections(filter: string, visibleCount: number) {
-    sections.forEach((section) => {
-      const visibleCards = section.querySelectorAll("[data-project-card]:not([hidden])");
-      const placeholder = section.querySelector<HTMLElement>(
-        "[data-project-placeholder]",
+    function applyFilter(nextFilter: string) {
+      let visibleCount = 0;
+
+      buttons.forEach((button) => {
+        const isActive = button.dataset.projectFilter === nextFilter;
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+
+      cards.forEach((card) => {
+        const domains = (card.dataset.domains ?? "").split(",");
+        const matches = nextFilter === "all" || domains.includes(nextFilter);
+        card.hidden = !matches;
+        if (matches) visibleCount += 1;
+      });
+
+      const activeButton = buttons.find(
+        (button) => button.dataset.projectFilter === nextFilter,
       );
-      const showPlaceholder =
-        section.dataset.allowPlaceholder === "true" &&
-        filter === "all" &&
-        visibleCount > 0 &&
-        visibleCards.length === 0;
+      const label = activeButton?.dataset.filterLabel ?? "전체";
 
-      if (placeholder) {
-        placeholder.hidden = !showPlaceholder;
+      if (summary) {
+        summary.textContent = `${label} · ${visibleCount}개 프로젝트`;
       }
 
-      section.hidden = visibleCards.length === 0 && !showPlaceholder;
-    });
-  }
-
-  function applyFilter(nextFilter: string) {
-    let visibleCount = 0;
+      if (noResults) {
+        noResults.hidden = visibleCount > 0;
+      }
+    }
 
     buttons.forEach((button) => {
-      const isActive = button.dataset.projectFilter === nextFilter;
-      button.setAttribute("aria-pressed", String(isActive));
+      button.addEventListener("click", () => {
+        applyFilter(button.dataset.projectFilter ?? "all");
+      });
     });
 
-    cards.forEach((card) => {
-      const matches = nextFilter === "all" || card.dataset.domain === nextFilter;
-      card.hidden = !matches;
-      if (matches) visibleCount += 1;
+    resetButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        applyFilter("all");
+        buttons[0]?.focus();
+      });
     });
 
-    updateSections(nextFilter, visibleCount);
-
-    const activeButton = buttons.find(
-      (button) => button.dataset.projectFilter === nextFilter,
-    );
-    const label = activeButton?.dataset.filterLabel ?? "전체";
-
-    if (summary) {
-      summary.textContent = `${label} 필터 · ${visibleCount}개 프로젝트`;
-    }
-
-    if (noResults) {
-      noResults.hidden = visibleCount > 0;
+    if (buttons.length > 0) {
+      applyFilter("all");
     }
   }
 
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      applyFilter(button.dataset.projectFilter ?? "all");
-    });
-  });
-
-  resetButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      applyFilter("all");
-      buttons[0]?.focus();
-    });
-  });
-
-  if (buttons.length > 0) {
-    applyFilter("all");
+  // View Transitions 네비게이션 시
+  document.addEventListener("astro:page-load", initProjectFilters);
+  // 초기 로드 폴백
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProjectFilters);
+  } else {
+    initProjectFilters();
   }
 </script>
 
@@ -494,33 +295,12 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     margin-bottom: var(--space-2xl);
   }
 
-  .site-projects__controls {
-    display: grid;
-    gap: var(--space-lg);
-    margin-bottom: var(--space-2xl);
-    background: var(--site-surface-elevated);
-  }
-
-  .site-projects__controls-copy {
-    display: grid;
-    gap: var(--space-xs);
-  }
-
-  .site-projects__controls-eyebrow {
-    margin: 0;
-    font-size: var(--text-xs);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .site-projects__controls-title {
-    margin: 0;
-    max-width: 48rem;
-    font-size: clamp(var(--text-lg), 1rem + 0.8vw, var(--text-xl));
-    line-height: var(--line-height-body);
-    color: var(--color-ink);
+  .site-projects__controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
   }
 
   .site-projects__segment {
@@ -577,17 +357,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     color: var(--color-text-muted);
   }
 
-  .site-projects__content {
-    display: grid;
-    gap: var(--space-2xl);
-  }
-
-  .site-projects__section-header {
-    margin-bottom: var(--space-xl);
-  }
-
-  .site-projects__spotlight-grid,
-  .site-projects__archive-grid {
+  .site-projects__grid {
     display: grid;
     gap: var(--space-xl);
   }
@@ -598,6 +368,10 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     gap: var(--space-lg);
     overflow: hidden;
     background: var(--site-surface-elevated);
+  }
+
+  .site-projects__item[hidden] {
+    display: none;
   }
 
   .site-projects__item::before {
@@ -678,12 +452,8 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     color: var(--color-text-muted);
   }
 
-  .site-projects__spotlight-meta {
+  .site-projects__item-meta {
     background: var(--site-surface-muted);
-  }
-
-  .site-projects__item--archive .site-projects__item-title {
-    font-size: clamp(var(--text-xl), 1rem + 0.7vw, var(--text-2xl));
   }
 
   .site-projects__tags {
@@ -816,39 +586,14 @@ function filterLabel(domain: ProjectDomain | "all"): string {
       padding-top: var(--space-2xl);
     }
 
-    .site-projects__controls {
-      padding: var(--space-xl);
-    }
-
-    .site-projects__spotlight-grid,
-    .site-projects__archive-grid {
+    .site-projects__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .site-projects__item--spotlight {
-      grid-column: 1 / -1;
     }
   }
 
   @media (min-width: 1024px) {
-    .site-projects__content {
-      gap: var(--space-4xl);
-    }
-
-    .site-projects__controls {
-      grid-template-columns: minmax(0, 1.2fr) auto;
-      align-items: center;
-    }
-
-    .site-projects__filter-summary {
-      grid-column: 1 / -1;
-    }
-
-    .site-projects__segment {
-      width: fit-content;
-      max-width: none;
-      grid-template-columns: repeat(3, auto);
-      justify-self: end;
+    .site-projects__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 

@@ -130,7 +130,7 @@ function getDateBlockParts(date: Date) {
       </div>
     </section>
 
-    <div class="site-blog-post__article-shell" data-reveal="slide-up">
+    <div class="site-blog-post__article-shell">
       <div class="site-blog-post__article-card site-card">
         <div class="site-blog-post__content">
           <Content />
@@ -439,6 +439,254 @@ function getDateBlockParts(date: Date) {
     text-align: center;
   }
 
+  .site-blog-post__content :global(.blog-visual),
+  .site-blog-post__content :global(.blog-flow),
+  .site-blog-post__content :global(.blog-compare-grid),
+  .site-blog-post__content :global(.blog-filter-grid),
+  .site-blog-post__content :global(.blog-policy-grid),
+  .site-blog-post__content :global(.blog-evidence-grid),
+  .site-blog-post__content :global(.blog-system-grid),
+  .site-blog-post__content :global(.blog-common-grid) {
+    max-width: none;
+  }
+
+  .site-blog-post__content :global(.blog-visual) {
+    display: grid;
+    gap: var(--space-lg);
+    padding: clamp(var(--space-lg), 3vw, var(--space-xl));
+    border: 1px solid var(--site-border-default);
+    border-radius: calc(var(--site-card-radius) + var(--space-2xs));
+    background: color-mix(
+      in srgb,
+      var(--site-surface-default) 60%,
+      var(--site-surface-muted)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-visual--summary) {
+    border-color: var(--site-border-accent);
+    background: color-mix(
+      in srgb,
+      var(--color-primary) 4%,
+      var(--site-surface-default)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-visual__intro) {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-visual__title),
+  .site-blog-post__content :global(.blog-issue-card__title),
+  .site-blog-post__content :global(.blog-compare-card__title),
+  .site-blog-post__content :global(.blog-flow-card__title) {
+    margin: 0;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .site-blog-post__content :global(.blog-visual__title) {
+    font-size: clamp(var(--text-xl), 2vw, var(--text-2xl));
+    line-height: 1.25;
+  }
+
+  .site-blog-post__content :global(.blog-visual__lead),
+  .site-blog-post__content :global(.blog-issue-card__summary),
+  .site-blog-post__content :global(.blog-flow-card__text) {
+    max-width: none;
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+  }
+
+  .site-blog-post__content :global(.blog-chip-row) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .site-blog-post__content :global(.blog-issue-grid),
+  .site-blog-post__content :global(.blog-compare-grid),
+  .site-blog-post__content :global(.blog-filter-grid),
+  .site-blog-post__content :global(.blog-policy-grid),
+  .site-blog-post__content :global(.blog-evidence-grid),
+  .site-blog-post__content :global(.blog-system-grid),
+  .site-blog-post__content :global(.blog-common-grid) {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .site-blog-post__content :global(.blog-issue-card),
+  .site-blog-post__content :global(.blog-compare-card),
+  .site-blog-post__content :global(.blog-flow-card),
+  .site-blog-post__content :global(.blog-filter-card),
+  .site-blog-post__content :global(.blog-policy-card),
+  .site-blog-post__content :global(.blog-evidence-card),
+  .site-blog-post__content :global(.blog-system-card),
+  .site-blog-post__content :global(.blog-common-card) {
+    height: 100%;
+    background: var(--site-surface-default);
+  }
+
+  .site-blog-post__content :global(.blog-issue-card__title) {
+    font-size: var(--text-lg);
+    line-height: 1.3;
+  }
+
+  .site-blog-post__content :global(.blog-compare-card) {
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-compare-card--focus) {
+    border-color: var(--site-border-accent);
+    background: color-mix(
+      in srgb,
+      var(--color-primary) 4%,
+      var(--site-surface-default)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-compare-card__eyebrow) {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .site-blog-post__content :global(.blog-compare-card__title) {
+    font-size: clamp(var(--text-lg), 1.6vw, var(--text-xl));
+    line-height: 1.3;
+  }
+
+  .site-blog-post__content :global(.blog-compare-card__list),
+  .site-blog-post__content :global(.blog-filter-card__list) {
+    max-width: none;
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .site-blog-post__content :global(.blog-flow) {
+    display: grid;
+    gap: var(--space-sm);
+    align-items: stretch;
+  }
+
+  .site-blog-post__content :global(.blog-flow__arrow) {
+    display: grid;
+    place-items: center;
+    min-height: 2.5rem;
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    transform: rotate(90deg);
+  }
+
+  .site-blog-post__content :global(.blog-flow-card) {
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-flow-card__title) {
+    font-size: clamp(var(--text-lg), 1.4vw, var(--text-xl));
+    line-height: 1.28;
+  }
+
+  .site-blog-post__content :global(.blog-filter-card) {
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-policy-card),
+  .site-blog-post__content :global(.blog-evidence-card) {
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-policy-card--performance) {
+    border-color: color-mix(in srgb, var(--color-secondary) 30%, var(--site-border-default));
+    background: color-mix(
+      in srgb,
+      var(--color-secondary) 4%,
+      var(--site-surface-default)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-policy-card--data) {
+    border-color: color-mix(
+      in srgb,
+      var(--color-accent) 30%,
+      var(--site-border-default)
+    );
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 4%,
+      var(--site-surface-default)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-policy-card--hybrid),
+  .site-blog-post__content :global(.blog-evidence-card--accent) {
+    border-color: color-mix(in srgb, var(--color-primary) 28%, var(--site-border-default));
+    background: color-mix(
+      in srgb,
+      var(--color-primary) 4%,
+      var(--site-surface-default)
+    );
+  }
+
+  .site-blog-post__content :global(.blog-policy-card__title),
+  .site-blog-post__content :global(.blog-evidence-card__title) {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(var(--text-lg), 1.5vw, var(--text-xl));
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .site-blog-post__content :global(.blog-policy-card__summary),
+  .site-blog-post__content :global(.blog-evidence-card__text) {
+    max-width: none;
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.72;
+    color: var(--color-text-secondary);
+  }
+
+  .site-blog-post__content :global(.blog-policy-card__list) {
+    max-width: none;
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .site-blog-post__content :global(.blog-system-card),
+  .site-blog-post__content :global(.blog-common-card) {
+    gap: var(--space-sm);
+  }
+
+  .site-blog-post__content :global(.blog-system-card__title) {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(var(--text-lg), 1.6vw, var(--text-xl));
+    line-height: 1.28;
+    text-wrap: balance;
+  }
+
+  .site-blog-post__content :global(.blog-system-card__summary),
+  .site-blog-post__content :global(.blog-common-card__text) {
+    max-width: none;
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.72;
+    color: var(--color-text-secondary);
+  }
+
+  .site-blog-post__content :global(.blog-system-card__list) {
+    max-width: none;
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
   .site-blog-post__footer {
     padding: var(--space-2xl) var(--site-gutter) 0;
   }
@@ -496,10 +744,55 @@ function getDateBlockParts(date: Date) {
       padding-inline: clamp(var(--space-xl), 4vw, var(--space-3xl));
     }
 
+    .site-blog-post__content :global(.blog-issue-grid) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-compare-grid),
+    .site-blog-post__content :global(.blog-filter-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-policy-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-evidence-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-system-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-common-grid) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .site-blog-post__footer-card {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-blog-post__content :global(.blog-flow) {
+      grid-template-columns:
+        minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+
+    .site-blog-post__content :global(.blog-flow__arrow) {
+      min-width: 2rem;
+      transform: none;
+    }
+
+    .site-blog-post__content :global(.blog-policy-grid) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .site-blog-post__content :global(.blog-common-grid) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 </style>

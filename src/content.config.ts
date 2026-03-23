@@ -24,6 +24,7 @@ const caseStudies = defineCollection({
     description: z.string(),
     client: z.string(),
     domain: z.enum(["construction-cm", "ai-it"]),
+    extraDomains: z.array(z.enum(["construction-cm", "ai-it"])).default([]),
     period: z.object({
       start: z.string(),
       end: z.string().optional(),

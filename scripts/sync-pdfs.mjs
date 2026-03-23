@@ -4,8 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptRoot = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptRoot, "..");
-const workspaceRoot = path.resolve(projectRoot, "..");
-const outputRoot = path.join(workspaceRoot, "output");
+const outputRoot = path.join(projectRoot, "output");
 const downloadsRoot = path.join(projectRoot, "public", "downloads");
 
 const pdfTargets = [

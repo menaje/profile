@@ -77,38 +77,38 @@ const bridgeDomains = [
         >
           <path
             class="site-hero__diagram-line site-hero__diagram-line--cm"
-            d="M94 104C150 110 186 124 230 180"
+            d="M110 100C160 120 200 170 234 240"
           ></path>
           <path
             class="site-hero__diagram-line site-hero__diagram-line--ai"
-            d="M382 172C330 172 294 184 244 212"
+            d="M380 120C330 140 280 190 250 240"
           ></path>
           <path
             class="site-hero__diagram-line site-hero__diagram-line--bridge"
-            d="M240 232V304"
+            d="M240 270V330"
           ></path>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--cm"
-            cx="94"
-            cy="104"
+            cx="110"
+            cy="100"
             r="10"
           ></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--hub"
             cx="240"
-            cy="200"
+            cy="250"
             r="16"
           ></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--ai"
-            cx="382"
-            cy="172"
+            cx="380"
+            cy="120"
             r="10"
           ></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--status"
             cx="240"
-            cy="304"
+            cy="330"
             r="10"
           ></circle>
         </svg>
@@ -468,19 +468,19 @@ const bridgeDomains = [
     }
 
     .site-hero__domain-card--cm {
-      grid-column: 1 / 8;
+      grid-column: 1 / 7;
       grid-row: 1 / 5;
     }
 
-    .site-hero__hub {
-      grid-column: 4 / 10;
-      grid-row: 5 / 8;
-      align-self: center;
+    .site-hero__domain-card--ai {
+      grid-column: 7 / -1;
+      grid-row: 2 / 6;
     }
 
-    .site-hero__domain-card--ai {
-      grid-column: 6 / -1;
-      grid-row: 4 / 9;
+    .site-hero__hub {
+      grid-column: 3 / 11;
+      grid-row: 6 / 9;
+      align-self: center;
     }
 
     .site-hero__status-panel {

@@ -9,9 +9,17 @@ interface Props {
   employmentTimeline: PublicEmployment[];
   organizations: PublicOrganization[];
   projects?: PublicProject[];
+  supportingProjects?: PublicProject[];
 }
 
-const { employmentTimeline, organizations, projects = [] } = Astro.props;
+const {
+  employmentTimeline,
+  organizations,
+  projects = [],
+  supportingProjects = [],
+} = Astro.props;
+
+const allProjects = [...projects, ...supportingProjects];
 
 type DomainKey = "construction-cm" | "ai-it";
 
@@ -22,7 +30,6 @@ function getOrgName(orgId: string): string {
 
 function normalizeDomain(domain: string): DomainKey {
   const value = domain.trim().toLowerCase();
-
   if (
     value === "construction-cm" ||
     value.includes("construction") ||
@@ -30,7 +37,6 @@ function normalizeDomain(domain: string): DomainKey {
   ) {
     return "construction-cm";
   }
-
   return "ai-it";
 }
 
@@ -60,18 +66,6 @@ function statusBadgeClass(status: string): string {
     : "site-badge site-badge--neutral";
 }
 
-function domainFocus(domain: string): string {
-  return normalizeDomain(domain) === "construction-cm"
-    ? "현장 운영, 일정 조율, 문서 체계화"
-    : "서비스 기획, 에이전트 설계, 자동화 구현";
-}
-
-function domainNarrative(domain: string): string {
-  return normalizeDomain(domain) === "construction-cm"
-    ? "복잡한 현장 운영과 이해관계자 조율을 구조화하며, 실무 문제를 시스템 요구사항으로 바꾸는 기반을 만든 시기입니다."
-    : "도메인 문제를 AI 서비스와 자동화 흐름으로 번역해 조직 안팎의 제품과 개인 시스템으로 확장한 시기입니다.";
-}
-
 function compareStartDesc(a: PublicProject, b: PublicProject): number {
   const aStart = a.period.start?.value ?? "";
   const bStart = b.period.start?.value ?? "";
@@ -79,50 +73,210 @@ function compareStartDesc(a: PublicProject, b: PublicProject): number {
 }
 
 function getRelatedProjects(employment: PublicEmployment): PublicProject[] {
-  const domain = normalizeDomain(employment.domain);
-  const employmentStart = employment.period.start?.value ?? "";
-
-  return [...projects]
-    .filter((project) => {
-      if (project.organizationId === employment.organizationId) {
-        return true;
-      }
-
-      if (project.organizationId !== null) {
-        return false;
-      }
-
-      if (domain !== "ai-it") {
-        return false;
-      }
-
-      const projectStart = project.period.start?.value ?? "";
-      return projectStart >= employmentStart;
-    })
+  return [...allProjects]
+    .filter((project) => project.organizationId === employment.organizationId)
     .sort(compareStartDesc);
 }
 
-const timelineEntries = sortedTimeline.map((employment, index) => {
-  const relatedProjects = getRelatedProjects(employment);
-  const panelId = `timeline-panel-${employment.id}`;
-  const buttonId = `timeline-toggle-${employment.id}`;
+const personalProjects = [...allProjects]
+  .filter((p) => p.organizationId === null)
+  .sort(compareStartDesc);
 
-  return {
-    employment,
-    index,
-    panelId,
-    buttonId,
-    domainKey: normalizeDomain(employment.domain),
-    domainDisplay: domainLabel(employment.domain),
-    domainBadge: domainBadgeClass(employment.domain),
-    organizationName: getOrgName(employment.organizationId),
-    narrative: domainNarrative(employment.domain),
-    focus: domainFocus(employment.domain),
-    statusDisplay: statusLabel(employment.statusAtBasisDate),
-    statusBadge: statusBadgeClass(employment.statusAtBasisDate),
-    relatedProjects,
-  };
-});
+function getStartYear(period: { start?: { value: string } | null }): string {
+  return (period.start?.value ?? "").substring(0, 4);
+}
+
+/* ── 정림 연도별 Phase 데이터 (03_건설관련경력.md, 04_IT_AI경력.md 기반) ── */
+
+type JunglimPhase = {
+  period: string;
+  project: string;
+  cmRole: string;
+  cmHighlights: string[];
+  dxHighlights: string[];
+  dxInsight?: string;
+};
+
+const JUNGLIM_PHASES: JunglimPhase[] = [
+  {
+    period: "2015 ~ 2016",
+    project: "세종시 복합커뮤니티센터 신축",
+    cmRole: "CM 실무자",
+    cmHighlights: ["발주: 행복청"],
+    dxHighlights: [
+      "스케치업 3D 모델링으로 설계변경 의사결정 지원",
+    ],
+  },
+  {
+    period: "2017 ~ 2019",
+    project: "본사 기술팀",
+    cmRole: "구조분야 기술지원 · VE 전문가",
+    cmHighlights: [
+      "47개 신탁사업 구조분야 기술지원",
+      "13개 VE 프로젝트 퍼실리테이터",
+    ],
+    dxHighlights: [
+      "VE 업무 자동화 시스템 개발 (프로세스 표준화, 보고서 자동 생성)",
+      "VE 아이디어·아이템 데이터베이스 구축",
+    ],
+    dxInsight:
+      "\"데이터 중심 설계\" 철학의 출발점 — 정성적 데이터를 정량화하고 자동화하면 의사결정의 질이 달라진다는 것을 체감",
+  },
+  {
+    period: "2019 ~ 2020",
+    project: "삼일빌딩 리모델링",
+    cmRole: "공무 담당자",
+    cmHighlights: ["발주: 그린오크, SK D&D"],
+    dxHighlights: [
+      "엑셀 기반 CM 업무관리 시스템 개발 (공정·WBS별 관리)",
+      "REDMINE 서버 직접 구축·운용",
+    ],
+  },
+  {
+    period: "2021",
+    project: "본사 연구소 (신설 부서)",
+    cmRole: "연구원",
+    cmHighlights: [
+      "ISO9001 인증 획득 지원",
+      "CM 업무 매뉴얼·절차서 작성",
+    ],
+    dxHighlights: [
+      "DX를 통한 CM 업무 고도화 로드맵 연구",
+      "품질경영관리시스템 기반 CM 서비스 향상 방안",
+    ],
+  },
+  {
+    period: "2021 ~ 2022",
+    project: "명동N빌딩 리모델링",
+    cmRole: "공무 담당자",
+    cmHighlights: ["발주: SK D&D"],
+    dxHighlights: [
+      "Trello를 발주처 공식 협업툴로 도입 (직접 제안·설득)",
+      "REDMINE 기반 CM 내부 업무관리 시스템 활용",
+    ],
+    dxInsight:
+      "기술 도입은 도구 설치가 아닌, 이해관계자를 설득하고 프로세스를 정착시키는 과정",
+  },
+  {
+    period: "2023 ~ 2024.05",
+    project: "대전 5개현장 통합건설사업관리",
+    cmRole: "공무 담당자 (단장 보좌)",
+    cmHighlights: [
+      "발주: 대전시청 | 5개 현장 총괄",
+      "시공사·발주처 이슈 조율 및 의사결정",
+    ],
+    dxHighlights: [
+      "Obsidian 기반 5개 현장 통합 문서관리 시스템 구축",
+      "GPT·Gemini 활용 문서 자동 등록·요약",
+      "CM 월간보고서 자동 생성 파이프라인",
+    ],
+    dxInsight: "현장 전체의 핵심 협업 시스템으로 자리매김 — AI 독학의 출발점",
+  },
+];
+
+/* ── Timeline entry type ── */
+
+type TimelineEntry = {
+  kind: "employment" | "personal";
+  id: string;
+  index: number;
+  panelId: string;
+  buttonId: string;
+  domainKey: DomainKey;
+  domainDisplay: string;
+  domainBadge: string;
+  organizationName: string;
+  roleTitle: string;
+  periodDisplay: string;
+  narrative: string;
+  focus: string;
+  statusDisplay: string;
+  statusBadge: string;
+  relatedProjects: PublicProject[];
+  hasDualTrack: boolean;
+  phases: JunglimPhase[];
+  yearMarker: string;
+  totalProjectCount: number;
+};
+
+/* ── Build entries ── */
+
+const employmentEntries: TimelineEntry[] = sortedTimeline.map(
+  (employment, index) => {
+    const relatedProjects = getRelatedProjects(employment);
+    const isJunglim = employment.organizationId === "junglim-cm";
+    const panelId = `timeline-panel-${employment.id}`;
+    const buttonId = `timeline-toggle-${employment.id}`;
+    const domainKey = normalizeDomain(employment.domain);
+
+    return {
+      kind: "employment" as const,
+      id: employment.id,
+      index,
+      panelId,
+      buttonId,
+      domainKey,
+      domainDisplay: domainLabel(employment.domain),
+      domainBadge: domainBadgeClass(employment.domain),
+      organizationName: getOrgName(employment.organizationId),
+      roleTitle: employment.roleTitle,
+      periodDisplay: employment.period.display ?? "기간 확인 필요",
+      narrative: isJunglim
+        ? "건설 현장의 복잡성을 9년간 체감하면서, 반복되는 비효율을 시스템과 자동화로 해결해온 여정입니다. CM 본업과 병행한 DX 시도가 AI 서비스 아키텍트로의 전환 기반이 되었습니다."
+        : "도메인 문제를 AI 서비스와 자동화 흐름으로 번역해 조직 안팎의 제품과 개인 시스템으로 확장한 시기입니다.",
+      focus: domainKey === "construction-cm"
+        ? "현장 운영, 일정 조율, 문서 체계화"
+        : "서비스 기획, 에이전트 설계, 자동화 구현",
+      statusDisplay: statusLabel(employment.statusAtBasisDate),
+      statusBadge: statusBadgeClass(employment.statusAtBasisDate),
+      relatedProjects: isJunglim ? [] : relatedProjects,
+      hasDualTrack: isJunglim,
+      phases: isJunglim ? JUNGLIM_PHASES : [],
+      yearMarker: getStartYear(employment.period),
+      totalProjectCount: isJunglim
+        ? JUNGLIM_PHASES.length
+        : relatedProjects.length,
+    };
+  },
+);
+
+const hasOngoingPersonal = personalProjects.some(
+  (p) => p.statusAtBasisDate === "ongoing",
+);
+
+const personalEntry: TimelineEntry | null =
+  personalProjects.length > 0
+    ? {
+        kind: "personal" as const,
+        id: "personal-projects",
+        index: employmentEntries.length,
+        panelId: "timeline-panel-personal-projects",
+        buttonId: "timeline-toggle-personal-projects",
+        domainKey: "ai-it" as DomainKey,
+        domainDisplay: "자기주도 개발",
+        domainBadge: "site-badge site-badge--domain-ai",
+        organizationName: "개인",
+        roleTitle: "기획, 설계, 개발",
+        periodDisplay: "2026.01 ~ 현재",
+        narrative:
+          "실무에서 느낀 문제의식을 직접 설계하고 구현하며, 도구와 시스템으로 풀어낸 자기주도 프로젝트입니다.",
+        focus: "시스템 설계, 자동화, 도구 개발",
+        statusDisplay: hasOngoingPersonal ? "진행 중" : "완료",
+        statusBadge: hasOngoingPersonal
+          ? "site-badge site-badge--state"
+          : "site-badge site-badge--neutral",
+        relatedProjects: personalProjects,
+        hasDualTrack: false,
+        phases: [],
+        yearMarker: "2026",
+        totalProjectCount: personalProjects.length,
+      }
+    : null;
+
+const timelineEntries = [
+  ...employmentEntries,
+  ...(personalEntry ? [personalEntry] : []),
+];
 ---
 
 <section
@@ -157,125 +311,220 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
       <ol class="site-timeline__list" role="list">
       {
-        timelineEntries.map((entry) => (
-          <li
-            class="site-timeline__item"
-            data-timeline-item
-            data-index={entry.index}
-            data-current={entry.index === 0 ? "true" : "false"}
-            data-expanded={entry.index === 0 ? "true" : "false"}
-            data-domain-tone={entry.domainKey}
-          >
-            <span class="site-timeline__marker" data-timeline-marker aria-hidden="true">
-              <span class="site-timeline__marker-core"></span>
-            </span>
+        timelineEntries.flatMap((entry) => {
+          const items: any[] = [];
 
-            <article class="site-timeline__card site-card site-card--interactive">
-              <button
-                id={entry.buttonId}
-                type="button"
-                class="site-timeline__toggle"
-                aria-expanded={entry.index === 0 ? "true" : "false"}
-                aria-controls={entry.panelId}
-                data-timeline-toggle
+          /* ── Year divider ── */
+          if (entry.yearMarker) {
+            items.push(
+              <li
+                class="site-timeline__year-divider"
+                role="presentation"
+                aria-hidden="true"
               >
-                <span class="site-timeline__toggle-top">
-                  <span class:list={[entry.domainBadge, "site-timeline__domain"]}>
-                    {entry.domainDisplay}
-                  </span>
-                  <span class:list={[entry.statusBadge, "site-timeline__status"]}>
-                    {entry.statusDisplay}
-                  </span>
-                  {entry.relatedProjects.length > 0 && (
-                    <span class="site-badge site-timeline__count">
-                      연결 프로젝트 {entry.relatedProjects.length}건
-                    </span>
-                  )}
-                </span>
+                <span class="site-timeline__year-label">{entry.yearMarker}</span>
+                <span class="site-timeline__year-line"></span>
+              </li>,
+            );
+          }
 
-                <span class="site-timeline__toggle-body">
-                  <span class="site-timeline__summary">
-                    <span class="site-timeline__role">
-                      {entry.employment.roleTitle}
-                    </span>
-                    <span class="site-timeline__org">{entry.organizationName}</span>
-                  </span>
-                  <span class="site-timeline__period-row">
-                    <span class="site-timeline__period">
-                      {entry.employment.period.display ?? "기간 확인 필요"}
-                    </span>
-                    <span class="site-timeline__chevron" aria-hidden="true">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </span>
-                  </span>
-                </span>
-              </button>
-
-              <div
-                id={entry.panelId}
-                class="site-timeline__panel"
-                role="region"
-                aria-labelledby={entry.buttonId}
-                data-timeline-panel
-                hidden={entry.index !== 0}
+          /* ── Timeline item ── */
+          items.push(
+            <li
+              class="site-timeline__item"
+              data-timeline-item
+              data-index={entry.index}
+              data-current={entry.index === 0 ? "true" : "false"}
+              data-expanded={entry.index === 0 ? "true" : "false"}
+              data-domain-tone={entry.domainKey}
+            >
+              <span
+                class="site-timeline__marker"
+                data-timeline-marker
+                aria-hidden="true"
               >
-                <p class="site-timeline__detail">{entry.narrative}</p>
+                <span class="site-timeline__marker-core"></span>
+              </span>
 
-                <dl class="site-timeline__details site-metadata-block">
-                  <div class="site-metadata-block__item">
-                    <dt>조직</dt>
-                    <dd>{entry.organizationName}</dd>
-                  </div>
-                  <div class="site-metadata-block__item">
-                    <dt>핵심 포커스</dt>
-                    <dd>{entry.focus}</dd>
-                  </div>
-                  <div class="site-metadata-block__item">
-                    <dt>상태</dt>
-                    <dd>{entry.statusDisplay}</dd>
-                  </div>
-                </dl>
+              <article class="site-timeline__card site-card site-card--interactive">
+                <button
+                  id={entry.buttonId}
+                  type="button"
+                  class="site-timeline__toggle"
+                  aria-expanded={entry.index === 0 ? "true" : "false"}
+                  aria-controls={entry.panelId}
+                  data-timeline-toggle
+                >
+                  <span class="site-timeline__toggle-top">
+                    <span
+                      class:list={[entry.domainBadge, "site-timeline__domain"]}
+                    >
+                      {entry.domainDisplay}
+                    </span>
+                    {entry.hasDualTrack && (
+                      <span class="site-badge site-badge--domain-ai site-timeline__domain">
+                        DX
+                      </span>
+                    )}
+                    <span
+                      class:list={[entry.statusBadge, "site-timeline__status"]}
+                    >
+                      {entry.statusDisplay}
+                    </span>
+                    {entry.totalProjectCount > 0 && (
+                      <span class="site-badge site-timeline__count">
+                        {entry.hasDualTrack
+                          ? `${entry.totalProjectCount}개 프로젝트·부서`
+                          : `연결 프로젝트 ${entry.totalProjectCount}건`}
+                      </span>
+                    )}
+                  </span>
 
-                {entry.relatedProjects.length > 0 && (
-                  <div class="site-timeline__projects">
-                    <p class="site-timeline__projects-label">연결 프로젝트</p>
-                    <ul class="site-timeline__project-list" role="list">
-                      {entry.relatedProjects.map((project) => (
-                        <li class="site-timeline__project-item">
-                          <div class="site-timeline__project-head">
-                            <p class="site-timeline__project-name">
-                              {project.canonicalName}
-                            </p>
-                            {project.statusAtBasisDate === "ongoing" && (
-                              <span class="site-badge site-badge--state">
-                                진행 중
-                              </span>
-                            )}
+                  <span class="site-timeline__toggle-body">
+                    <span class="site-timeline__summary">
+                      <span class="site-timeline__role">
+                        {entry.roleTitle}
+                      </span>
+                      <span class="site-timeline__org">
+                        {entry.organizationName}
+                      </span>
+                    </span>
+                    <span class="site-timeline__period-row">
+                      <span class="site-timeline__period">
+                        {entry.periodDisplay}
+                      </span>
+                      <span class="site-timeline__chevron" aria-hidden="true">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+
+                <div
+                  id={entry.panelId}
+                  class="site-timeline__panel"
+                  role="region"
+                  aria-labelledby={entry.buttonId}
+                  data-timeline-panel
+                  hidden={entry.index !== 0}
+                >
+                  <p class="site-timeline__detail">{entry.narrative}</p>
+
+                  {/* ── 정림: 연도별 Phase 리스트 ── */}
+                  {entry.hasDualTrack && entry.phases.length > 0 && (
+                    <div class="site-timeline__phases">
+                      {entry.phases.map((phase) => (
+                        <div class="site-timeline__phase">
+                          <div class="site-timeline__phase-header">
+                            <span class="site-timeline__phase-period">
+                              {phase.period}
+                            </span>
+                            <span class="site-timeline__phase-project">
+                              {phase.project}
+                            </span>
                           </div>
-                          <p class="site-timeline__project-role">{project.role}</p>
-                          <p class="site-timeline__project-period">
-                            {project.period.display ?? "기간 확인 필요"}
-                          </p>
-                        </li>
+
+                          <div class="site-timeline__phase-tracks">
+                            <div class="site-timeline__phase-track" data-track="cm">
+                              <span class="site-timeline__phase-label">CM</span>
+                              <div class="site-timeline__phase-content">
+                                <p class="site-timeline__phase-role">
+                                  {phase.cmRole}
+                                </p>
+                                {phase.cmHighlights.length > 0 && (
+                                  <ul class="site-timeline__phase-list" role="list">
+                                    {phase.cmHighlights.map((h) => (
+                                      <li>{h}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            </div>
+
+                            <div class="site-timeline__phase-track" data-track="dx">
+                              <span class="site-timeline__phase-label">DX</span>
+                              <div class="site-timeline__phase-content">
+                                <ul class="site-timeline__phase-list" role="list">
+                                  {phase.dxHighlights.map((h) => (
+                                    <li>{h}</li>
+                                  ))}
+                                </ul>
+                                {phase.dxInsight && (
+                                  <p class="site-timeline__phase-insight">
+                                    {phase.dxInsight}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </article>
-          </li>
-        ))
+                    </div>
+                  )}
+
+                  {/* ── Regular panel (희림, 자기주도 개발) ── */}
+                  {!entry.hasDualTrack && (
+                    <dl class="site-timeline__details site-metadata-block">
+                      <div class="site-metadata-block__item">
+                        <dt>조직</dt>
+                        <dd>{entry.organizationName}</dd>
+                      </div>
+                      <div class="site-metadata-block__item">
+                        <dt>핵심 포커스</dt>
+                        <dd>{entry.focus}</dd>
+                      </div>
+                      <div class="site-metadata-block__item">
+                        <dt>상태</dt>
+                        <dd>{entry.statusDisplay}</dd>
+                      </div>
+                    </dl>
+                  )}
+
+                  {!entry.hasDualTrack && entry.relatedProjects.length > 0 && (
+                    <div class="site-timeline__projects">
+                      <p class="site-timeline__projects-label">연결 프로젝트</p>
+                      <ul class="site-timeline__project-list" role="list">
+                        {entry.relatedProjects.map((project) => (
+                          <li class="site-timeline__project-item">
+                            <div class="site-timeline__project-head">
+                              <p class="site-timeline__project-name">
+                                {project.canonicalName}
+                              </p>
+                              {project.statusAtBasisDate === "ongoing" && (
+                                <span class="site-badge site-badge--state">
+                                  진행 중
+                                </span>
+                              )}
+                            </div>
+                            <p class="site-timeline__project-role">
+                              {project.role}
+                            </p>
+                            <p class="site-timeline__project-period">
+                              {project.period.display ?? ""}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </article>
+            </li>,
+          );
+
+          return items;
+        })
       }
       </ol>
     </div>
@@ -332,7 +581,9 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     const bodyElement = body;
     let currentIndex = Math.max(
       0,
-      toggles.findIndex((toggle) => toggle.getAttribute("aria-expanded") === "true"),
+      toggles.findIndex(
+        (toggle) => toggle.getAttribute("aria-expanded") === "true",
+      ),
     );
     let expandedIndex: number | null = currentIndex;
 
@@ -349,16 +600,28 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     function updateProgress(index: number) {
       const bodyRect = bodyElement.getBoundingClientRect();
       const firstCenter = getMarkerCenter(items[0], bodyRect.top);
-      const lastCenter = getMarkerCenter(items[items.length - 1], bodyRect.top);
+      const lastCenter = getMarkerCenter(
+        items[items.length - 1],
+        bodyRect.top,
+      );
       const currentCenter = getMarkerCenter(items[index], bodyRect.top);
       const railHeight = Math.max(lastCenter - firstCenter, 2);
       const progressHeight = prefersReducedMotion.matches
         ? railHeight
         : Math.max(currentCenter - firstCenter, 2);
 
-      bodyElement.style.setProperty("--site-timeline-rail-start", `${firstCenter}px`);
-      bodyElement.style.setProperty("--site-timeline-rail-height", `${railHeight}px`);
-      bodyElement.style.setProperty("--site-timeline-progress", `${progressHeight}px`);
+      bodyElement.style.setProperty(
+        "--site-timeline-rail-start",
+        `${firstCenter}px`,
+      );
+      bodyElement.style.setProperty(
+        "--site-timeline-rail-height",
+        `${railHeight}px`,
+      );
+      bodyElement.style.setProperty(
+        "--site-timeline-progress",
+        `${progressHeight}px`,
+      );
     }
 
     function setCurrent(index: number) {
@@ -464,6 +727,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 </script>
 
 <style>
+  /* ── Section ── */
+
   .site-timeline {
     padding: var(--space-5xl) var(--site-gutter);
     background: var(--color-paper);
@@ -473,6 +738,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     max-width: var(--site-content-max-width);
     margin: 0 auto;
   }
+
+  /* ── Body / Rail ── */
 
   .site-timeline__body {
     --site-timeline-rail-start: 0px;
@@ -509,6 +776,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     transition: height var(--transition-slow);
   }
 
+  /* ── List ── */
+
   .site-timeline__list {
     list-style: none;
     margin: 0;
@@ -516,6 +785,32 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     display: grid;
     gap: var(--space-lg);
   }
+
+  /* ── Year divider ── */
+
+  .site-timeline__year-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-left: calc(var(--space-xl) + 0.25rem);
+  }
+
+  .site-timeline__year-label {
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-timeline__year-line {
+    flex: 1;
+    height: 1px;
+    background: var(--site-border-default);
+  }
+
+  /* ── Item ── */
 
   .site-timeline__item {
     --site-timeline-accent: var(--color-primary);
@@ -526,6 +821,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
   .site-timeline__item[data-domain-tone="construction-cm"] {
     --site-timeline-accent: var(--color-accent);
   }
+
+  /* ── Marker ── */
 
   .site-timeline__marker {
     position: absolute;
@@ -549,6 +846,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     transition: background var(--transition-base);
   }
 
+  /* ── Card ── */
+
   .site-timeline__card {
     gap: var(--space-md);
     transition:
@@ -570,6 +869,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     .site-timeline__card {
     box-shadow: var(--site-shadow-focus);
   }
+
+  /* ── Toggle button ── */
 
   .site-timeline__toggle {
     display: grid;
@@ -649,6 +950,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     transform: rotate(180deg);
   }
 
+  /* ── Panel ── */
+
   .site-timeline__panel {
     display: grid;
     gap: var(--space-md);
@@ -673,6 +976,143 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
   .site-timeline__details {
     padding: var(--space-md);
   }
+
+  /* ── Phases (정림 연도별 CM / DX) ── */
+
+  .site-timeline__phases {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .site-timeline__phase {
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border: 1px solid var(--site-border-default);
+    border-radius: var(--radius-md);
+    background: var(--site-surface-default);
+  }
+
+  .site-timeline__phase-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--site-border-default);
+  }
+
+  .site-timeline__phase-period {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-ink);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-timeline__phase-project {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .site-timeline__phase-tracks {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .site-timeline__phase-track {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-sm);
+    align-items: start;
+  }
+
+  .site-timeline__phase-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    padding: 2px 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .site-timeline__phase-track[data-track="cm"] .site-timeline__phase-label {
+    background: color-mix(in oklch, var(--color-accent) 15%, transparent);
+    color: var(--color-accent);
+  }
+
+  .site-timeline__phase-track[data-track="dx"] .site-timeline__phase-label {
+    background: color-mix(in oklch, var(--color-primary) 15%, transparent);
+    color: var(--color-primary);
+  }
+
+  .site-timeline__phase-content {
+    display: grid;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  .site-timeline__phase-role {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .site-timeline__phase-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .site-timeline__phase-list li {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-body);
+    padding-left: var(--space-md);
+    position: relative;
+  }
+
+  .site-timeline__phase-list li::before {
+    content: "";
+    position: absolute;
+    left: var(--space-2xs);
+    top: 0.6em;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--site-border-default);
+  }
+
+  .site-timeline__phase-track[data-track="cm"] .site-timeline__phase-list li::before {
+    background: var(--color-accent);
+    opacity: 0.6;
+  }
+
+  .site-timeline__phase-track[data-track="dx"] .site-timeline__phase-list li::before {
+    background: var(--color-primary);
+    opacity: 0.6;
+  }
+
+  .site-timeline__phase-insight {
+    margin: 0;
+    font-size: var(--text-xs);
+    font-style: italic;
+    line-height: var(--line-height-body);
+    color: var(--color-primary);
+    padding-left: var(--space-md);
+    border-left: 2px solid color-mix(in oklch, var(--color-primary) 30%, transparent);
+  }
+
+  /* ── Projects ── */
 
   .site-timeline__projects {
     display: grid;
@@ -723,6 +1163,8 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     color: var(--color-text-secondary);
   }
 
+  /* ── Motion ── */
+
   @media (prefers-reduced-motion: reduce) {
     .site-timeline__rail-progress,
     .site-timeline__marker-core,
@@ -732,12 +1174,18 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     }
   }
 
+  /* ── Responsive ── */
+
   @media (min-width: 768px) {
     .site-timeline__list {
       gap: var(--space-xl);
     }
 
     .site-timeline__item {
+      padding-left: calc(var(--space-2xl) + 0.25rem);
+    }
+
+    .site-timeline__year-divider {
       padding-left: calc(var(--space-2xl) + 0.25rem);
     }
 
@@ -754,10 +1202,19 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     .site-timeline__projects {
       grid-template-columns: minmax(0, 1fr);
     }
+
+    .site-timeline__phase-tracks {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
   }
 
   @media (min-width: 1024px) {
     .site-timeline__item {
+      padding-left: calc(var(--space-3xl) + var(--space-sm));
+    }
+
+    .site-timeline__year-divider {
       padding-left: calc(var(--space-3xl) + var(--space-sm));
     }
 

@@ -47,22 +47,22 @@
     "totalCareer": {
       "label": "11년차",
       "start": {
-        "value": "2015-03",
+        "value": "2015-07",
         "precision": "month"
       }
     },
     "constructionCm": {
-      "label": "9년 3개월",
+      "label": "8년 10개월",
       "period": {
         "start": {
-          "value": "2015-03",
+          "value": "2015-07",
           "precision": "month"
         },
         "end": {
           "value": "2024-05",
           "precision": "month"
         },
-        "display": "2015.03 ~ 2024.05",
+        "display": "2015.07 ~ 2024.05",
         "dateKnown": true,
         "ongoing": false
       }
@@ -137,14 +137,14 @@
       "domain": "건설사업관리(CM)",
       "period": {
         "start": {
-          "value": "2015-03",
+          "value": "2015-07",
           "precision": "month"
         },
         "end": {
           "value": "2024-05",
           "precision": "month"
         },
-        "display": "2015.03 ~ 2024.05",
+        "display": "2015.07 ~ 2024.05",
         "dateKnown": true,
         "ongoing": false
       },

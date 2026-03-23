@@ -2,5 +2,8 @@
 output/*.pdf
 public/downloads/*.pdf
 typst/**/*.pdf
+html/*.pdf
 node_modules/
 dist/
+.astro/
+.coni/tmp/

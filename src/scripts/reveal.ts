@@ -92,6 +92,9 @@ export function initScrollReveal(root: ParentNode = document) {
     return;
   }
 
+  // Reset state so elements are re-animated after View Transitions navigation
+  targets.forEach((t) => t.removeAttribute(STATE_ATTR));
+
   if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
     document.documentElement.setAttribute(READY_ATTR, "true");
     document.documentElement.setAttribute(REDUCED_ATTR, "true");
@@ -124,6 +127,18 @@ export function initScrollReveal(root: ParentNode = document) {
 
     observer?.observe(target);
   });
+
+  // View Transitions may prevent IntersectionObserver from firing while
+  // the transition animation is active. Re-check after it typically completes.
+  setTimeout(() => {
+    targets.forEach((target) => {
+      if (target.getAttribute(STATE_ATTR) !== "pending") return;
+      const rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        reveal(target);
+      }
+    });
+  }, 300);
 }
 
 function boot() {

@@ -110,7 +110,7 @@ const orgName = project?.organizationId
 const clientName = getAnonymizedClient(entry.id, entry.data.client);
 
 const metadataItems: MetaItem[] = [
-  { label: "Domain", value: domainLabel(entry.data.domain) },
+  { label: "Domain", value: [entry.data.domain, ...entry.data.extraDomains].map(domainLabel).join(" · ") },
   { label: "Period", value: formatPeriod(entry.data.period) },
   { label: "Role", value: entry.data.role },
   ...(clientName ? [{ label: "Client", value: clientName }] : []),
@@ -139,9 +139,11 @@ const heroMeta = [
           </nav>
 
           <div class="site-case-study__hero-badges">
-            <span class={domainBadgeClass(entry.data.domain)}>
-              {domainLabel(entry.data.domain)}
-            </span>
+            {[entry.data.domain, ...entry.data.extraDomains].map((d) => (
+              <span class={domainBadgeClass(d)}>
+                {domainLabel(d)}
+              </span>
+            ))}
             {entry.data.featured && (
               <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--featured">
                 Featured
@@ -156,7 +158,7 @@ const heroMeta = [
         </div>
 
         <div class="site-page-hero site-case-study__hero-copy">
-          <p class="site-page-hero__eyebrow">{domainEyebrow(entry.data.domain)}</p>
+          <p class="site-page-hero__eyebrow">{[entry.data.domain, ...entry.data.extraDomains].map(domainEyebrow).join(" · ")}</p>
           <h1 class="site-page-hero__title site-case-study__title">{entry.data.title}</h1>
           <p class="site-page-hero__lead">{entry.data.description}</p>
           <p class="site-page-hero__meta">{heroMeta}</p>

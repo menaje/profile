@@ -134,76 +134,10 @@ const highlightTiles = [
             </a>
           )}
           <a href="#resume-documents" class="site-button site-button--ghost">
-            문서 구성 보기
+            다운로드 카드 보기
           </a>
         </div>
       </div>
-
-      <aside class="site-card site-resume-hero__panel" data-reveal="slide-in-left">
-        <div class="site-resume-hero__panel-header">
-          <span class="site-badge site-badge--state">{profile.currentStatus.label}</span>
-          <p class="site-resume-hero__panel-kicker">Download Package</p>
-          <h2 class="site-resume-hero__panel-title">
-            상황에 맞는 문서를 빠르게 고를 수 있는 PDF 패키지
-          </h2>
-          <p class="site-resume-hero__panel-copy">{documentsStatusMessage}</p>
-        </div>
-
-        <ul class="site-resume-hero__panel-list stagger-children" data-reveal="stagger-children">
-          {
-            documents.map((document) => (
-              <li class="site-resume-hero__panel-item">
-                <span class="site-resume-hero__panel-item-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
-                    <path d="M14 2v5h5"></path>
-                    <path d="M9 13h6"></path>
-                    <path d="M9 17h6"></path>
-                  </svg>
-                </span>
-                <div class="site-resume-hero__panel-item-copy">
-                  <strong>{document.title}</strong>
-                  <span>{document.fileName}</span>
-                </div>
-                <span
-                  class:list={[
-                    "site-badge",
-                    document.available
-                      ? "site-badge--state"
-                      : "site-badge--neutral",
-                  ]}
-                >
-                  {document.available ? "다운로드 가능" : "준비 중"}
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-
-        <dl class="site-metadata-block site-resume-hero__metadata">
-          <div class="site-metadata-block__item">
-            <dt>포지셔닝</dt>
-            <dd>{profile.profile.positioningTitle}</dd>
-          </div>
-          <div class="site-metadata-block__item">
-            <dt>업데이트</dt>
-            <dd>{asOfDate}</dd>
-          </div>
-          <div class="site-metadata-block__item">
-            <dt>다운로드</dt>
-            <dd>
-              {availableCount}/{documents.length} 문서
-            </dd>
-          </div>
-        </dl>
-      </aside>
     </div>
   </section>
 
@@ -333,9 +267,11 @@ const highlightTiles = [
         <p class="site-section-header__eyebrow">PDF Documents</p>
         <div class="site-section-header__rule" aria-hidden="true"></div>
         <h2 id="resume-documents-title" class="site-section-header__title">
-          목적에 맞게 고를 수 있는 다운로드 카드
+          실제로 바로 내려받을 수 있는 PDF 카드
         </h2>
-        <p class="site-section-header__meta">{documentsStatusMessage}</p>
+        <p class="site-section-header__meta">
+          필요한 문서를 아래에서 바로 다운로드할 수 있습니다. {documentsStatusMessage}
+        </p>
       </header>
 
       <div class="site-resume-documents stagger-children" data-reveal="stagger-children">
@@ -567,6 +503,7 @@ const highlightTiles = [
     display: grid;
     gap: clamp(var(--space-xl), 4vw, var(--space-3xl));
     align-items: start;
+    max-width: 58rem;
   }
 
   .site-resume-hero__content {
@@ -579,14 +516,11 @@ const highlightTiles = [
   }
 
   .site-resume-hero__title {
-    max-width: 11ch;
-    font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
-    line-height: 0.94;
-    letter-spacing: -0.06em;
+    max-width: 22ch;
   }
 
   .site-resume-hero__lead {
-    max-width: 36rem;
+    max-width: 42rem;
   }
 
   .site-resume-hero__meta {
@@ -598,23 +532,6 @@ const highlightTiles = [
     flex-wrap: wrap;
     gap: var(--space-md);
     margin-top: var(--space-sm);
-  }
-
-  .site-resume-hero__panel {
-    position: relative;
-    overflow: hidden;
-    gap: var(--space-lg);
-    padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
-    border-color: var(--site-border-default);
-    background: var(--site-surface-default);
-    box-shadow: var(--site-shadow-flat);
-  }
-
-  .site-resume-hero__panel-header,
-  .site-resume-hero__panel-list,
-  .site-resume-hero__metadata {
-    position: relative;
-    z-index: 1;
   }
 
   .site-resume-hero__panel-kicker,
@@ -638,10 +555,6 @@ const highlightTiles = [
     line-height: var(--line-height-tight);
   }
 
-  .site-resume-hero__panel-title {
-    font-size: clamp(var(--text-xl), 1.2rem + 1.6vw, var(--text-3xl));
-  }
-
   .site-resume-hero__panel-copy,
   .site-resume-bento__featured-copy,
   .site-resume-bento__featured-note,
@@ -663,44 +576,6 @@ const highlightTiles = [
     gap: var(--space-lg);
   }
 
-  .site-resume-hero__panel-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: var(--space-sm);
-  }
-
-  .site-resume-hero__panel-item {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: var(--space-sm);
-    align-items: center;
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--site-border-default);
-    border-radius: var(--radius-md);
-    background: var(--site-surface-default);
-  }
-
-  .site-resume-hero__panel-item-copy {
-    display: grid;
-    gap: var(--space-2xs);
-  }
-
-  .site-resume-hero__panel-item-copy strong {
-    color: var(--color-text);
-    font-size: var(--text-sm);
-  }
-
-  .site-resume-hero__panel-item-copy span {
-    color: var(--color-text-muted);
-    font-size: var(--text-xs);
-  }
-
-  .site-resume-hero__panel-item .site-badge {
-    grid-column: 2;
-    justify-self: start;
-  }
-
   .site-resume-hero__panel-item-icon,
   .site-resume-highlight__icon,
   .site-resume-document__icon,
@@ -714,11 +589,6 @@ const highlightTiles = [
     flex-shrink: 0;
   }
 
-  .site-resume-hero__panel-item-icon {
-    background: var(--site-surface-muted);
-    color: var(--color-primary);
-  }
-
   .site-resume-hero__panel-item-icon svg,
   .site-resume-highlight__icon svg,
   .site-resume-document__icon svg,
@@ -726,11 +596,6 @@ const highlightTiles = [
     width: 1.25rem;
     height: 1.25rem;
   }
-
-  .site-resume-hero__metadata {
-    background: var(--site-surface-muted);
-  }
-
   .site-resume-section {
     padding: clamp(var(--space-3xl), 7vw, var(--space-5xl)) var(--site-gutter);
   }
@@ -1001,10 +866,6 @@ const highlightTiles = [
   }
 
   @media (min-width: 1024px) {
-    .site-resume-hero__inner {
-      grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.85fr);
-    }
-
     .site-resume-bento {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
