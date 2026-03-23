@@ -197,7 +197,7 @@ const bridgeDomains = [
   }
 
   .site-hero__headline--accent {
-    color: color-mix(in srgb, var(--color-primary) 80%, var(--color-ink));
+    color: var(--color-primary);
   }
 
   .site-hero__name {
@@ -239,19 +239,9 @@ const bridgeDomains = [
     min-height: 0;
     padding: clamp(var(--space-lg), 3vw, var(--space-xl));
     overflow: hidden;
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 82%,
-      var(--color-primary) 18%
-    );
-    background:
-      linear-gradient(
-        160deg,
-        color-mix(in srgb, var(--color-primary) 4%, transparent),
-        color-mix(in srgb, var(--color-primary) 8%, transparent)
-      ),
-      color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper));
-    box-shadow: var(--site-shadow-raised);
+    border-color: var(--site-border-default);
+    background: var(--site-surface-muted);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-hero__diagram {
@@ -272,39 +262,39 @@ const bridgeDomains = [
   }
 
   .site-hero__diagram-line--cm {
-    stroke: color-mix(in srgb, var(--color-accent) 52%, transparent);
+    stroke: var(--color-accent);
   }
 
   .site-hero__diagram-line--ai {
-    stroke: color-mix(in srgb, var(--color-primary) 54%, transparent);
+    stroke: var(--color-primary);
   }
 
   .site-hero__diagram-line--bridge {
-    stroke: color-mix(in srgb, var(--color-accent) 56%, transparent);
+    stroke: var(--color-accent);
   }
 
   .site-hero__diagram-point {
-    stroke-width: 8;
+    stroke-width: 2;
   }
 
   .site-hero__diagram-point--cm {
-    fill: color-mix(in srgb, var(--color-accent) 26%, var(--color-paper));
-    stroke: color-mix(in srgb, var(--color-accent) 20%, transparent);
+    fill: var(--color-paper);
+    stroke: var(--color-accent);
   }
 
   .site-hero__diagram-point--hub {
-    fill: color-mix(in srgb, var(--color-accent) 22%, var(--color-paper));
-    stroke: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    fill: var(--color-paper);
+    stroke: var(--color-accent);
   }
 
   .site-hero__diagram-point--ai {
-    fill: color-mix(in srgb, var(--color-primary) 26%, var(--color-paper));
-    stroke: color-mix(in srgb, var(--color-primary) 18%, transparent);
+    fill: var(--color-paper);
+    stroke: var(--color-primary);
   }
 
   .site-hero__diagram-point--status {
-    fill: color-mix(in srgb, var(--color-accent) 16%, var(--color-paper));
-    stroke: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    fill: var(--color-paper);
+    stroke: var(--color-accent);
   }
 
   .site-hero__domain-card,
@@ -318,16 +308,8 @@ const bridgeDomains = [
     --site-hero-accent: var(--color-primary);
     gap: var(--space-sm);
     padding: var(--space-lg);
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 96%,
-      var(--site-hero-accent) 4%
-    );
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--site-hero-accent) 28%
-    );
+    background: var(--color-paper);
+    border-color: var(--site-border-default);
     box-shadow: var(--site-shadow-flat);
   }
 
@@ -368,11 +350,7 @@ const bridgeDomains = [
     inline-size: 0.45rem;
     block-size: 0.45rem;
     border-radius: 50%;
-    background: color-mix(
-      in srgb,
-      var(--site-hero-accent) 70%,
-      var(--color-paper)
-    );
+    background: var(--site-hero-accent);
     flex: none;
   }
 
@@ -382,14 +360,9 @@ const bridgeDomains = [
     gap: var(--space-2xs);
     max-width: 15rem;
     padding: var(--space-lg);
-    border: 1px solid
-      color-mix(in srgb, var(--site-border-default) 74%, var(--color-accent) 26%);
+    border: 1px solid var(--site-border-default);
     border-radius: calc(var(--radius-xl) * 1.35);
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 95%,
-      var(--color-accent) 5%
-    );
+    background: var(--color-paper);
     box-shadow: var(--site-shadow-flat);
     text-align: center;
   }
@@ -420,16 +393,8 @@ const bridgeDomains = [
 
   .site-hero__status-panel {
     gap: var(--space-sm);
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 80%,
-      var(--color-primary) 20%
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-paper) 94%,
-      var(--color-primary) 6%
-    );
+    border-color: var(--site-border-default);
+    background: var(--color-paper);
   }
 
   .site-hero__status-panel-header {
