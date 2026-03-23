@@ -46,8 +46,8 @@ const sortedTimeline = [...employmentTimeline].sort((a, b) => {
 
 function domainBadgeClass(domain: string): string {
   return normalizeDomain(domain) === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 function statusLabel(status: string): string {
@@ -56,8 +56,8 @@ function statusLabel(status: string): string {
 
 function statusBadgeClass(status: string): string {
   return status === "ongoing"
-    ? "site-badge site-badge--accent"
-    : "site-badge";
+    ? "site-badge site-badge--state"
+    : "site-badge site-badge--neutral";
 }
 
 function domainFocus(domain: string): string {
@@ -258,7 +258,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
                               {project.canonicalName}
                             </p>
                             {project.statusAtBasisDate === "ongoing" && (
-                              <span class="site-badge site-badge--accent">
+                              <span class="site-badge site-badge--state">
                                 진행 중
                               </span>
                             )}
@@ -466,17 +466,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 <style>
   .site-timeline {
     padding: var(--space-5xl) var(--site-gutter);
-    background:
-      radial-gradient(
-        circle at top left,
-        var(--site-glow-secondary),
-        transparent 32rem
-      ),
-      linear-gradient(
-        180deg,
-        var(--site-surface-muted),
-        var(--site-surface-default)
-      );
+    background: var(--color-paper);
   }
 
   .site-timeline__inner {
@@ -510,20 +500,12 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__rail-track {
     height: var(--site-timeline-rail-height);
-    background: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--color-paper)
-    );
+    background: var(--site-border-default);
   }
 
   .site-timeline__rail-progress {
     height: var(--site-timeline-progress);
-    background: linear-gradient(
-      180deg,
-      var(--color-secondary),
-      var(--color-primary)
-    );
+    background: var(--color-primary);
     transition: height var(--transition-slow);
   }
 
@@ -537,14 +519,12 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
 
   .site-timeline__item {
     --site-timeline-accent: var(--color-primary);
-    --site-timeline-accent-soft: var(--site-glow-primary);
     position: relative;
     padding-left: calc(var(--space-xl) + 0.25rem);
   }
 
   .site-timeline__item[data-domain-tone="construction-cm"] {
-    --site-timeline-accent: var(--color-secondary);
-    --site-timeline-accent-soft: var(--site-glow-secondary);
+    --site-timeline-accent: var(--color-accent);
   }
 
   .site-timeline__marker {
@@ -557,64 +537,38 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     height: 1.25rem;
     transform: translateX(-50%);
     border-radius: 999px;
-    background: color-mix(
-      in srgb,
-      var(--site-timeline-accent) 18%,
-      var(--color-paper)
-    );
-    box-shadow: 0 0 0 6px var(--site-surface-default);
+    background: var(--color-paper);
+    border: 2px solid var(--site-border-default);
   }
 
   .site-timeline__marker-core {
-    width: 0.625rem;
-    height: 0.625rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 999px;
     background: var(--site-timeline-accent);
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base),
-      background var(--transition-base);
+    transition: background var(--transition-base);
   }
 
   .site-timeline__card {
     gap: var(--space-md);
     transition:
       border-color var(--transition-base),
-      background var(--transition-base),
-      box-shadow var(--transition-base);
+      background var(--transition-base);
   }
 
   .site-timeline__item[data-current="true"] .site-timeline__card {
-    border-color: color-mix(
-      in srgb,
-      var(--site-timeline-accent) 34%,
-      var(--site-border-strong)
-    );
-    background: color-mix(
-      in srgb,
-      var(--site-surface-elevated) 88%,
-      var(--site-timeline-accent) 12%
-    );
-    box-shadow:
-      0 0 0 1px color-mix(
-        in srgb,
-        var(--site-timeline-accent) 14%,
-        transparent
-      ),
-      0 18px 40px var(--site-timeline-accent-soft);
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-timeline__item[data-current="true"] .site-timeline__marker-core {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--site-timeline-accent) 18%, transparent);
+    transform: scale(1.12);
   }
 
   .site-timeline__item:has(.site-timeline__toggle:focus-visible)
     .site-timeline__card {
-    box-shadow:
-      0 0 0 var(--focus-ring-width)
-        color-mix(in srgb, var(--site-timeline-accent) 20%, transparent),
-      var(--site-card-shadow-hover);
+    box-shadow: var(--site-shadow-focus);
   }
 
   .site-timeline__toggle {
@@ -699,7 +653,7 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     display: grid;
     gap: var(--space-md);
     padding-top: var(--space-md);
-    border-top: 1px solid color-mix(in srgb, var(--site-border-default) 88%, var(--site-timeline-accent) 12%);
+    border-top: 1px solid var(--site-border-default);
   }
 
   .site-timeline__detail,
@@ -745,13 +699,9 @@ const timelineEntries = sortedTimeline.map((employment, index) => {
     display: grid;
     gap: var(--space-2xs);
     padding: var(--space-md);
-    border: 1px solid color-mix(in srgb, var(--site-border-default) 84%, var(--site-timeline-accent) 16%);
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 84%,
-      var(--site-timeline-accent) 16%
-    );
+    background: var(--site-surface-default);
   }
 
   .site-timeline__project-head {

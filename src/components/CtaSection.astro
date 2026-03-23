@@ -106,82 +106,19 @@ const ctaCopy =
 <style>
   .site-cta {
     padding: var(--space-5xl) var(--site-gutter);
+    background: var(--site-surface-default);
   }
 
   .site-cta__inner {
     position: relative;
-    isolation: isolate;
-    overflow: hidden;
     max-width: 58rem;
     margin: 0 auto;
     padding: clamp(var(--space-xl), 4vw, var(--space-3xl));
     display: grid;
     gap: var(--space-xl);
     text-align: center;
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--color-secondary) 28%
-    );
-    background:
-      radial-gradient(
-        circle at 14% 18%,
-        color-mix(in srgb, var(--color-primary) 16%, transparent),
-        transparent 54%
-      ),
-      radial-gradient(
-        circle at 86% 18%,
-        color-mix(in srgb, var(--color-secondary) 18%, transparent),
-        transparent 52%
-      ),
-      linear-gradient(
-        145deg,
-        color-mix(in srgb, var(--site-surface-elevated) 92%, var(--color-paper)),
-        color-mix(in srgb, var(--site-surface-muted) 78%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 28px 72px
-        color-mix(in srgb, var(--site-glow-primary) 72%, var(--site-glow-secondary));
-  }
-
-  .site-cta__inner::before,
-  .site-cta__inner::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .site-cta__inner::before {
-    top: -20%;
-    right: -6%;
-    width: 14rem;
-    height: 14rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-primary) 92%, transparent) 0%,
-      transparent 70%
-    );
-  }
-
-  .site-cta__inner::after {
-    bottom: -30%;
-    left: -8%;
-    width: 13rem;
-    height: 13rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-secondary) 88%, transparent) 0%,
-      transparent 72%
-    );
-  }
-
-  .site-cta__header,
-  .site-cta__actions {
-    position: relative;
-    z-index: 1;
+    border: 1px solid var(--color-line);
+    background: var(--site-surface-elevated);
   }
 
   .site-cta__header {
@@ -238,11 +175,7 @@ const ctaCopy =
 
   .site-cta__link {
     position: relative;
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 76%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
     color: var(--color-text);
   }
 
@@ -281,18 +214,6 @@ const ctaCopy =
 
     .site-cta__links {
       justify-content: flex-start;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .site-cta__inner::before {
-      width: 17rem;
-      height: 17rem;
-    }
-
-    .site-cta__inner::after {
-      width: 16rem;
-      height: 16rem;
     }
   }
 </style>

@@ -52,56 +52,92 @@
   --font-family-sans:
     "Pretendard Site", "Noto Sans CJK KR Site", "Apple SD Gothic Neo",
     "Malgun Gothic", "Segoe UI", sans-serif;
-  --site-surface-default: color-mix(
-    in srgb,
-    var(--color-paper) 96%,
-    var(--color-primary) 4%
-  );
+  --color-ink: #111827;
+  --color-text: var(--color-ink);
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #4b5563;
+  --color-muted: var(--color-text-muted);
+  --color-primary: #1d4ed8;
+  --color-secondary: #6366f1;
+  --color-accent: #10b981;
+  --color-paper: #ffffff;
+  --color-bg-page: #ffffff;
+  --color-bg-surface: #f3f4f6;
+  --color-bg-subtle: #f9fafb;
+  --color-surface: var(--color-bg-surface);
+  --color-subtle: var(--color-bg-subtle);
+  --color-line: #e5e7eb;
+  --color-line-strong: #d1d5db;
+  --shadow-sm: 0 1px 3px rgba(17, 24, 39, 0.08);
+  --shadow-md: 0 4px 12px rgba(17, 24, 39, 0.08);
+  --shadow-lg: 0 12px 28px rgba(17, 24, 39, 0.1);
+  --shadow-page: 0 16px 40px rgba(17, 24, 39, 0.1);
+  --page-rule: 1px solid rgba(17, 24, 39, 0.08);
+  --site-surface-default: var(--color-paper);
   --site-surface-elevated: color-mix(
     in srgb,
-    var(--color-paper) 72%,
-    var(--color-bg-surface)
+    var(--color-paper) 94%,
+    var(--color-bg-subtle)
   );
-  --site-surface-muted: color-mix(
-    in srgb,
-    var(--color-bg-subtle) 88%,
-    var(--color-secondary) 12%
-  );
-  --site-border-default: color-mix(
-    in srgb,
-    var(--color-line) 82%,
-    var(--color-primary) 18%
-  );
-  --site-border-strong: color-mix(
-    in srgb,
-    var(--color-line-strong) 70%,
-    var(--color-primary) 30%
-  );
+  --site-surface-muted: var(--color-bg-surface);
+  --site-border-default: var(--color-line);
+  --site-border-strong: var(--color-line-strong);
   --site-border-accent: color-mix(
     in srgb,
-    var(--color-secondary) 34%,
+    var(--color-primary) 18%,
     var(--color-line)
   );
-  --site-glow-primary: color-mix(
-    in srgb,
-    var(--color-primary) 22%,
-    transparent
-  );
-  --site-glow-secondary: color-mix(
-    in srgb,
-    var(--color-secondary) 20%,
-    transparent
-  );
-  --site-glow-accent: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  --site-glow-primary: transparent;
+  --site-glow-secondary: transparent;
+  --site-glow-accent: transparent;
   --site-nav-height: 3.5rem;
   --site-content-max-width: var(--site-max-width);
-  --site-footer-bg: var(--site-surface-elevated);
-  --stage-background: var(--site-surface-default);
-  --focus-ring-color: var(--site-glow-primary);
+  --site-footer-bg: var(--site-surface-muted);
+  --stage-background: var(--color-bg-subtle);
+  --focus-ring-color: var(--color-primary);
   --site-button-radius: var(--radius-md);
   --site-card-radius: var(--radius-lg);
-  --site-card-shadow: var(--shadow-sm);
-  --site-card-shadow-hover: var(--shadow-md);
+  --site-shadow-flat: 0 1px 2px rgba(17, 24, 39, 0.06);
+  --site-shadow-raised:
+    0 1px 3px rgba(17, 24, 39, 0.08), 0 4px 6px rgba(17, 24, 39, 0.06);
+  --site-shadow-raised-lg: 0 8px 24px rgba(17, 24, 39, 0.12);
+  --site-shadow-focus: 0 0 0 calc(var(--focus-ring-width) + 1px)
+    color-mix(in srgb, var(--color-primary) 24%, transparent);
+  --site-card-shadow: var(--site-shadow-flat);
+  --site-card-shadow-hover: var(--site-shadow-raised);
+  --link-color: var(--color-primary);
+  --chip-border-color: color-mix(
+    in srgb,
+    var(--color-primary) 16%,
+    transparent
+  );
+  --chip-background: color-mix(
+    in srgb,
+    var(--color-primary) 8%,
+    var(--color-paper)
+  );
+  --chip-color: var(--color-primary);
+  --status-chip-border-color: color-mix(
+    in srgb,
+    var(--color-secondary) 18%,
+    transparent
+  );
+  --status-chip-background: color-mix(
+    in srgb,
+    var(--color-secondary) 10%,
+    var(--color-paper)
+  );
+  --status-chip-color: var(--color-secondary);
+  --panel-border-color: var(--site-border-default);
+  --panel-background: var(--site-surface-default);
+  --panel-tint-background: var(--site-surface-muted);
+  --rail-panel-accent: var(--color-primary);
+  --eyebrow-color: var(--color-text-muted);
+  --section-title-color: var(--color-text);
+  --section-lead-color: var(--color-text-secondary);
+  --accent-rule-background: var(--color-primary);
+  --timeline-rail-line: var(--site-border-default);
+  --timeline-rail-marker: var(--color-primary);
 }
 
 body {
@@ -130,6 +166,12 @@ body {
   display: grid;
   gap: var(--space-sm);
   margin-bottom: var(--space-2xl);
+  padding: clamp(var(--space-lg), 3vw, var(--space-xl));
+  border: 1px solid
+    color-mix(in srgb, var(--site-border-default) 92%, var(--color-paper));
+  border-radius: calc(var(--site-card-radius) + var(--space-2xs));
+  background: var(--site-surface-default);
+  box-shadow: var(--site-shadow-flat);
 }
 
 .site-page-hero__eyebrow {
@@ -168,6 +210,7 @@ body {
   display: grid;
   gap: var(--space-sm);
   margin-bottom: var(--space-3xl);
+  align-content: start;
 }
 
 .site-section-header__eyebrow {
@@ -227,6 +270,7 @@ body {
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: none;
   transition:
     background var(--transition-fast),
     color var(--transition-fast),
@@ -243,26 +287,32 @@ button.site-button {
   border-color: var(--color-primary);
   background: var(--color-primary);
   color: var(--site-on-inverse);
-  box-shadow: 0 0 0 0 var(--site-glow-primary);
+  box-shadow: var(--site-shadow-flat);
 }
 
 .site-button--primary:hover {
   border-color: color-mix(in srgb, var(--color-primary) 82%, var(--color-ink));
   background: color-mix(in srgb, var(--color-primary) 88%, var(--color-ink));
-  box-shadow: 0 14px 30px var(--site-glow-primary);
+  box-shadow: var(--site-shadow-raised);
   transform: var(--hover-lift);
 }
 
 .site-button--ghost {
   border-color: var(--site-border-default);
-  background: transparent;
+  background: color-mix(
+    in srgb,
+    var(--site-surface-default) 92%,
+    var(--site-surface-muted)
+  );
   color: var(--color-text-secondary);
+  box-shadow: var(--site-shadow-flat);
 }
 
 .site-button--ghost:hover {
   border-color: var(--site-border-accent);
   background: var(--site-surface-muted);
   color: var(--color-primary);
+  box-shadow: var(--site-shadow-raised);
   transform: var(--hover-lift);
 }
 
@@ -274,16 +324,12 @@ button.site-button {
 .site-button--glow {
   padding-inline: var(--space-xl);
   padding-block: calc(var(--space-sm) + var(--space-2xs));
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent),
-    0 20px 48px var(--site-glow-primary);
+  box-shadow: var(--site-shadow-raised);
 }
 
 .site-button--glow:hover {
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--color-primary) 24%, transparent),
-    0 24px 52px
-      color-mix(in srgb, var(--site-glow-primary) 84%, var(--site-glow-secondary));
+  box-shadow: var(--site-shadow-raised);
+  transform: var(--hover-lift);
 }
 
 .site-button--icon {
@@ -301,7 +347,7 @@ button.site-button {
 }
 
 .site-button--icon:hover {
-  box-shadow: 0 14px 30px var(--site-glow-secondary);
+  box-shadow: var(--site-shadow-raised);
 }
 
 .site-button--full {
@@ -323,7 +369,7 @@ button.site-button {
   padding: var(--space-lg);
   border: 1px solid var(--site-border-default);
   border-radius: var(--site-card-radius);
-  background: var(--site-surface-elevated);
+  background: var(--site-surface-default);
   box-shadow: var(--site-card-shadow);
 }
 
@@ -341,16 +387,27 @@ button.site-button {
 }
 
 .site-badge {
+  --site-badge-border: color-mix(
+    in srgb,
+    var(--color-text-muted) 18%,
+    var(--site-border-default)
+  );
+  --site-badge-background: color-mix(
+    in srgb,
+    var(--color-text-muted) 10%,
+    var(--color-paper)
+  );
+  --site-badge-color: var(--color-text-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: fit-content;
   min-height: 2rem;
   padding: 0 var(--space-sm);
-  border: 1px solid var(--site-border-default);
+  border: 1px solid var(--site-badge-border);
   border-radius: var(--radius-pill);
-  background: var(--site-surface-muted);
-  color: var(--color-text-secondary);
+  background: var(--site-badge-background);
+  color: var(--site-badge-color);
   font-size: var(--text-xs);
   font-weight: 600;
   line-height: 1;
@@ -358,38 +415,71 @@ button.site-button {
   white-space: nowrap;
 }
 
+.site-badge--neutral {
+  --site-badge-border: color-mix(
+    in srgb,
+    var(--color-text-muted) 18%,
+    var(--site-border-default)
+  );
+  --site-badge-background: color-mix(
+    in srgb,
+    var(--color-text-muted) 10%,
+    var(--color-paper)
+  );
+  --site-badge-color: var(--color-text-secondary);
+}
+
+.site-badge--domain-ai,
 .site-badge--primary {
-  border-color: color-mix(
+  --site-badge-border: color-mix(
     in srgb,
     var(--color-primary) 22%,
     var(--site-border-default)
   );
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
-  color: var(--color-primary);
+  --site-badge-background: color-mix(
+    in srgb,
+    var(--color-primary) 10%,
+    var(--color-paper)
+  );
+  --site-badge-color: var(--color-primary);
 }
 
-.site-badge--secondary {
-  border-color: color-mix(
+.site-badge--domain-construction {
+  --site-badge-border: color-mix(
+    in srgb,
+    var(--color-accent) 24%,
+    var(--site-border-default)
+  );
+  --site-badge-background: color-mix(
+    in srgb,
+    var(--color-accent) 10%,
+    var(--color-paper)
+  );
+  --site-badge-color: color-mix(
+    in srgb,
+    var(--color-accent) 56%,
+    var(--color-ink)
+  );
+}
+
+.site-badge--state,
+.site-badge--secondary,
+.site-badge--accent {
+  --site-badge-border: color-mix(
     in srgb,
     var(--color-secondary) 24%,
     var(--site-border-default)
   );
-  background: color-mix(
+  --site-badge-background: color-mix(
     in srgb,
     var(--color-secondary) 10%,
     var(--color-paper)
   );
-  color: var(--color-secondary);
-}
-
-.site-badge--accent {
-  border-color: color-mix(
+  --site-badge-color: color-mix(
     in srgb,
-    var(--color-accent) 32%,
-    var(--site-border-default)
+    var(--color-secondary) 62%,
+    var(--color-ink)
   );
-  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-paper));
-  color: color-mix(in srgb, var(--color-accent) 40%, var(--color-ink));
 }
 
 .site-form-field {
@@ -408,11 +498,12 @@ button.site-button {
   padding: var(--space-sm);
   border: 1px solid var(--site-border-default);
   border-radius: var(--radius-md);
-  background: var(--site-surface-elevated);
+  background: var(--site-surface-default);
   color: var(--color-text);
   font-family: inherit;
   font-size: var(--text-md);
   line-height: var(--line-height-body);
+  box-shadow: var(--site-shadow-flat);
   transition:
     border-color var(--transition-fast),
     box-shadow var(--transition-fast),
@@ -426,7 +517,7 @@ button.site-button {
 .site-form-field__control:focus-visible {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 var(--focus-ring-width) var(--site-glow-primary);
+  box-shadow: var(--site-shadow-focus);
 }
 
 textarea.site-form-field__control {
@@ -441,7 +532,12 @@ textarea.site-form-field__control {
   padding: var(--space-lg);
   border: 1px solid var(--site-border-default);
   border-radius: var(--site-card-radius);
-  background: var(--site-surface-muted);
+  background: color-mix(
+    in srgb,
+    var(--site-surface-muted) 78%,
+    var(--site-surface-default)
+  );
+  box-shadow: var(--site-shadow-flat);
 }
 
 .site-metadata-block__item {

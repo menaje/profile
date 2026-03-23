@@ -28,8 +28,8 @@ function domainDisplay(domain: string): string {
 
 function domainBadgeClass(domain: string): string {
   return toneForDomain(domain) === "construction-cm"
-    ? "site-badge site-badge--secondary"
-    : "site-badge site-badge--primary";
+    ? "site-badge site-badge--domain-construction"
+    : "site-badge site-badge--domain-ai";
 }
 
 const timelineItems = [
@@ -66,7 +66,7 @@ if (personalProjects.length > 0) {
     org: "",
     domainTone: "ai-it",
     domainDisplay: "AI / IT",
-    domainBadgeClass: "site-badge site-badge--primary",
+    domainBadgeClass: "site-badge site-badge--domain-ai",
     label: "",
     coreProjects: personalProjects,
     isCurrent: personalProjects.some(
@@ -99,17 +99,17 @@ if (personalProjects.length > 0) {
       </p>
       <ul class="site-about-hero__metrics" role="list" aria-label="경력 요약">
         <li>
-          <span class="site-badge site-badge--accent">
+          <span class="site-badge site-badge--neutral">
             총 경력 {careerSummary.totalCareer.label}
           </span>
         </li>
         <li>
-          <span class="site-badge site-badge--secondary">
+          <span class="site-badge site-badge--domain-construction">
             건설 CM {careerSummary.constructionCm.label}
           </span>
         </li>
         <li>
-          <span class="site-badge site-badge--primary">
+          <span class="site-badge site-badge--domain-ai">
             AI / IT {careerSummary.aiIt.label}
           </span>
         </li>
@@ -241,7 +241,7 @@ if (personalProjects.length > 0) {
                       {item.domainDisplay}
                     </span>
                     {item.isCurrent && (
-                      <span class="site-badge site-badge--accent site-about-timeline__badge">
+                      <span class="site-badge site-badge--state site-about-timeline__badge">
                         현재
                       </span>
                     )}
@@ -433,32 +433,12 @@ if (personalProjects.length > 0) {
     position: relative;
     overflow: hidden;
     padding: clamp(var(--space-xl), 4vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 72%,
-      var(--color-primary) 28%
-    );
-    background:
-      radial-gradient(
-        circle at top right,
-        color-mix(in srgb, var(--color-primary) 10%, transparent),
-        transparent 32%
-      ),
-      linear-gradient(
-        165deg,
-        color-mix(in srgb, var(--color-paper) 94%, var(--color-primary) 6%),
-        var(--site-surface-elevated)
-      );
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-about-block::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 6.5rem;
-    height: 1px;
-    background: linear-gradient(90deg, var(--color-primary), transparent);
-    opacity: 0.9;
+    display: none;
   }
 
   .site-about-block__number {
@@ -473,7 +453,7 @@ if (personalProjects.length > 0) {
     line-height: 0.82;
     letter-spacing: -0.08em;
     font-variant-numeric: tabular-nums;
-    color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: color-mix(in srgb, var(--color-text-muted) 18%, transparent);
     pointer-events: none;
     user-select: none;
   }
@@ -528,6 +508,7 @@ if (personalProjects.length > 0) {
 
   .site-about-quote {
     position: relative;
+    overflow: clip;
     padding: clamp(var(--space-2xl), 7vw, 5rem) 0;
   }
 
@@ -543,36 +524,13 @@ if (personalProjects.length > 0) {
 
   .site-about-quote::before {
     inset: 0 auto 0 50%;
-    border-block: 1px solid
-      color-mix(in srgb, var(--site-border-default) 76%, var(--color-primary));
-    background:
-      radial-gradient(
-        circle at 12% 0%,
-        var(--site-glow-secondary),
-        transparent 28%
-      ),
-      linear-gradient(
-        120deg,
-        color-mix(in srgb, var(--color-paper) 92%, var(--color-primary) 8%),
-        color-mix(
-          in srgb,
-          var(--site-surface-muted) 82%,
-          var(--color-secondary) 18%
-        )
-      );
+    border-block: 1px solid var(--site-border-default);
+    background: var(--site-surface-muted);
     z-index: 0;
   }
 
   .site-about-quote::after {
-    inset: 0 auto 0 50%;
-    background:
-      radial-gradient(
-        circle at 88% 76%,
-        color-mix(in srgb, var(--color-primary) 10%, transparent),
-        transparent 28%
-      );
-    opacity: 0.9;
-    z-index: 0;
+    display: none;
   }
 
   .site-about-quote__inner {
@@ -589,11 +547,7 @@ if (personalProjects.length > 0) {
     inset: 0 auto 0 0;
     width: 4px;
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      180deg,
-      var(--color-secondary),
-      var(--color-primary)
-    );
+    background: var(--color-secondary);
   }
 
   .site-about-quote__mark {
@@ -602,7 +556,7 @@ if (personalProjects.length > 0) {
     font-size: clamp(var(--text-6xl), 11vw, 7rem);
     line-height: 1;
     font-weight: 700;
-    color: color-mix(in srgb, var(--color-primary) 16%, transparent);
+    color: color-mix(in srgb, var(--color-text-muted) 20%, transparent);
     pointer-events: none;
     user-select: none;
   }
@@ -653,24 +607,11 @@ if (personalProjects.length > 0) {
     left: 0.625rem;
     width: 2px;
     border-radius: var(--radius-pill);
-    background: linear-gradient(
-      180deg,
-      color-mix(
-        in srgb,
-        var(--color-secondary) 28%,
-        var(--site-border-default)
-      ),
-      color-mix(
-        in srgb,
-        var(--color-primary) 28%,
-        var(--site-border-default)
-      )
-    );
+    background: var(--site-border-default);
   }
 
   .site-about-timeline__item {
     --site-about-timeline-accent: var(--color-primary);
-    --site-about-timeline-glow: var(--site-glow-primary);
     position: relative;
     display: grid;
     grid-template-columns: 1.25rem minmax(0, 1fr);
@@ -679,8 +620,7 @@ if (personalProjects.length > 0) {
   }
 
   .site-about-timeline__item[data-domain-tone="construction-cm"] {
-    --site-about-timeline-accent: var(--color-secondary);
-    --site-about-timeline-glow: var(--site-glow-secondary);
+    --site-about-timeline-accent: var(--color-accent);
   }
 
   .site-about-timeline__marker {
@@ -690,12 +630,8 @@ if (personalProjects.length > 0) {
     height: 1.25rem;
     margin-top: var(--space-lg);
     border-radius: 999px;
-    background: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 18%,
-      var(--color-paper)
-    );
-    box-shadow: 0 0 0 6px var(--stage-background);
+    background: var(--color-paper);
+    border: 2px solid var(--site-border-default);
   }
 
   .site-about-timeline__marker::after {
@@ -704,41 +640,21 @@ if (personalProjects.length > 0) {
     inset: 0.3125rem;
     border-radius: 999px;
     background: var(--site-about-timeline-accent);
-    transition:
-      transform var(--transition-base),
-      box-shadow var(--transition-base);
   }
 
   .site-about-timeline__item--current .site-about-timeline__marker::after {
     transform: scale(1.15);
-    box-shadow: 0 0 0 6px
-      color-mix(in srgb, var(--site-about-timeline-accent) 18%, transparent);
   }
 
   .site-about-timeline__card {
     min-width: 0;
     gap: var(--space-md);
-    border-color: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 22%,
-      var(--site-border-default)
-    );
-    background: linear-gradient(
-      160deg,
-      color-mix(
-        in srgb,
-        var(--color-paper) 95%,
-        var(--site-about-timeline-accent) 5%
-      ),
-      var(--site-surface-elevated)
-    );
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-about-timeline__item--current .site-about-timeline__card {
-    box-shadow:
-      0 0 0 1px
-        color-mix(in srgb, var(--site-about-timeline-accent) 16%, transparent),
-      0 20px 42px var(--site-about-timeline-glow);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-about-timeline__topline {
@@ -799,23 +715,10 @@ if (personalProjects.length > 0) {
     margin: 0;
     font-size: var(--text-xs);
     padding: var(--chip-padding-block) var(--chip-padding-inline);
-    border: 1px solid
-      color-mix(
-        in srgb,
-        var(--site-about-timeline-accent) 20%,
-        var(--site-border-default)
-      );
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-pill);
-    background: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 9%,
-      var(--site-surface-muted)
-    );
-    color: color-mix(
-      in srgb,
-      var(--site-about-timeline-accent) 72%,
-      var(--color-ink)
-    );
+    background: var(--site-surface-muted);
+    color: var(--color-text-secondary);
   }
 
   @media (min-width: 768px) {

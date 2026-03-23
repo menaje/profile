@@ -57,8 +57,8 @@ const highlightTiles = [
     value: profile.careerSummary.totalCareer.label,
     detail: "현장 운영과 시스템 설계를 한 흐름으로 압축했습니다.",
     badge: "Career",
-    badgeClass: "site-badge site-badge--accent",
-    tone: "accent",
+    badgeClass: "site-badge site-badge--neutral",
+    tone: "secondary",
   },
   {
     id: "construction-cm",
@@ -66,8 +66,8 @@ const highlightTiles = [
     value: profile.careerSummary.constructionCm.label,
     detail: "일정, 문서, 이해관계자 맥락을 읽는 기반 경험입니다.",
     badge: "Construction",
-    badgeClass: "site-badge site-badge--secondary",
-    tone: "secondary",
+    badgeClass: "site-badge site-badge--domain-construction",
+    tone: "accent",
   },
   {
     id: "ai-it",
@@ -75,7 +75,7 @@ const highlightTiles = [
     value: profile.careerSummary.aiIt.label,
     detail: "업무 맥락을 에이전트와 자동화 구조로 번역해 왔습니다.",
     badge: "AI / IT",
-    badgeClass: "site-badge site-badge--primary",
+    badgeClass: "site-badge site-badge--domain-ai",
     tone: "primary",
   },
   {
@@ -89,7 +89,7 @@ const highlightTiles = [
           ? "가용한 파일만 바로 다운로드할 수 있습니다."
           : "다운로드 파일을 준비 중입니다.",
     badge: "PDF",
-    badgeClass: "site-badge site-badge--primary",
+    badgeClass: "site-badge site-badge--neutral",
     tone: "primary-soft",
   },
 ];
@@ -141,7 +141,7 @@ const highlightTiles = [
 
       <aside class="site-card site-resume-hero__panel" data-reveal="slide-in-left">
         <div class="site-resume-hero__panel-header">
-          <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+          <span class="site-badge site-badge--state">{profile.currentStatus.label}</span>
           <p class="site-resume-hero__panel-kicker">Download Package</p>
           <h2 class="site-resume-hero__panel-title">
             상황에 맞는 문서를 빠르게 고를 수 있는 PDF 패키지
@@ -175,7 +175,9 @@ const highlightTiles = [
                 <span
                   class:list={[
                     "site-badge",
-                    document.available && "site-badge--secondary",
+                    document.available
+                      ? "site-badge--state"
+                      : "site-badge--neutral",
                   ]}
                 >
                   {document.available ? "다운로드 가능" : "준비 중"}
@@ -222,7 +224,7 @@ const highlightTiles = [
       <div class="site-resume-bento stagger-children" data-reveal="stagger-children">
         <article class="site-card site-resume-bento__featured">
           <div class="site-resume-bento__featured-head">
-            <span class="site-badge site-badge--accent">{profile.currentStatus.label}</span>
+            <span class="site-badge site-badge--state">{profile.currentStatus.label}</span>
             <p class="site-resume-bento__featured-kicker">Positioning</p>
           </div>
           <h3 class="site-resume-bento__featured-title">
@@ -368,7 +370,9 @@ const highlightTiles = [
                   <span
                     class:list={[
                       "site-badge",
-                      document.available ? "site-badge--secondary" : "site-badge--accent",
+                      document.available
+                        ? "site-badge--state"
+                        : "site-badge--neutral",
                     ]}
                   >
                     {document.available ? "다운로드 가능" : "준비 중"}
@@ -547,57 +551,8 @@ const highlightTiles = [
     padding:
       clamp(var(--space-4xl), 9vw, 6.5rem) var(--site-gutter)
       clamp(var(--space-3xl), 7vw, var(--space-5xl));
-    background:
-      radial-gradient(
-        circle at 16% 18%,
-        color-mix(in srgb, var(--site-glow-secondary) 82%, transparent),
-        transparent 36%
-      ),
-      radial-gradient(
-        circle at 84% 14%,
-        color-mix(in srgb, var(--site-glow-primary) 84%, transparent),
-        transparent 40%
-      ),
-      linear-gradient(
-        140deg,
-        color-mix(in srgb, var(--color-paper) 88%, var(--color-primary) 12%),
-        color-mix(in srgb, var(--site-surface-muted) 86%, var(--color-paper))
-      );
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--site-border-default) 72%, var(--color-primary) 28%);
-  }
-
-  .site-resume-hero::before,
-  .site-resume-hero::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(0.5rem);
-  }
-
-  .site-resume-hero::before {
-    top: -4rem;
-    right: -2rem;
-    width: 14rem;
-    height: 14rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--color-primary) 16%, transparent),
-      transparent 68%
-    );
-  }
-
-  .site-resume-hero::after {
-    bottom: -5rem;
-    left: -2rem;
-    width: 16rem;
-    height: 16rem;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--color-secondary) 18%, transparent),
-      transparent 70%
-    );
+    background: var(--color-paper);
+    border-bottom: 1px solid var(--site-border-default);
   }
 
   .site-resume-hero__inner,
@@ -650,36 +605,9 @@ const highlightTiles = [
     overflow: hidden;
     gap: var(--space-lg);
     padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 66%,
-      var(--color-secondary) 34%
-    );
-    background:
-      linear-gradient(
-        155deg,
-        color-mix(in srgb, var(--color-paper) 90%, var(--color-secondary) 10%),
-        color-mix(in srgb, var(--site-surface-elevated) 82%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 22px 56px
-        color-mix(in srgb, var(--site-glow-primary) 38%, var(--site-glow-secondary));
-  }
-
-  .site-resume-hero__panel::before {
-    content: "";
-    position: absolute;
-    inset: auto -8% -28% auto;
-    width: 10rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-primary) 76%, transparent),
-      transparent 72%
-    );
-    pointer-events: none;
+    border-color: var(--site-border-default);
+    background: var(--site-surface-default);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-resume-hero__panel-header,
@@ -748,14 +676,9 @@ const highlightTiles = [
     gap: var(--space-sm);
     align-items: center;
     padding: var(--space-sm) var(--space-md);
-    border: 1px solid
-      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
+    border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 78%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
   }
 
   .site-resume-hero__panel-item-copy {
@@ -792,11 +715,7 @@ const highlightTiles = [
   }
 
   .site-resume-hero__panel-item-icon {
-    background: color-mix(
-      in srgb,
-      var(--color-primary) 10%,
-      var(--site-surface-default)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -809,11 +728,7 @@ const highlightTiles = [
   }
 
   .site-resume-hero__metadata {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 72%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-section {
@@ -821,11 +736,7 @@ const highlightTiles = [
   }
 
   .site-resume-section--documents {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--site-surface-default) 72%, var(--color-paper)),
-      transparent 42%
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-section__header {
@@ -846,40 +757,9 @@ const highlightTiles = [
     overflow: hidden;
     gap: var(--space-lg);
     padding: clamp(var(--space-lg), 3vw, var(--space-2xl));
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 66%,
-      var(--color-primary) 34%
-    );
-    background:
-      radial-gradient(
-        circle at 90% 12%,
-        color-mix(in srgb, var(--site-glow-primary) 70%, transparent),
-        transparent 36%
-      ),
-      linear-gradient(
-        150deg,
-        color-mix(in srgb, var(--color-paper) 88%, var(--color-primary) 12%),
-        color-mix(in srgb, var(--site-surface-elevated) 82%, var(--color-paper))
-      );
-    box-shadow:
-      var(--site-card-shadow),
-      0 24px 60px color-mix(in srgb, var(--site-glow-primary) 28%, transparent);
-  }
-
-  .site-resume-bento__featured::before {
-    content: "";
-    position: absolute;
-    inset: auto auto -28% -10%;
-    width: 14rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--site-glow-secondary) 72%, transparent),
-      transparent 70%
-    );
-    pointer-events: none;
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
+    box-shadow: var(--site-shadow-flat);
   }
 
   .site-resume-bento__featured-head,
@@ -931,66 +811,27 @@ const highlightTiles = [
     color: var(--color-ink);
   }
 
-  .site-resume-highlight--accent {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 60%,
-      var(--color-accent) 40%
-    );
-    background: color-mix(in srgb, var(--color-accent) 7%, var(--site-surface-elevated));
+  .site-resume-highlight--accent,
+  .site-resume-highlight--secondary,
+  .site-resume-highlight--primary,
+  .site-resume-highlight--primary-soft {
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-resume-highlight--accent .site-resume-highlight__icon {
-    background: color-mix(in srgb, var(--color-accent) 14%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-accent);
   }
 
-  .site-resume-highlight--secondary {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-secondary) 42%
-    );
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 8%,
-      var(--site-surface-elevated)
-    );
-  }
-
   .site-resume-highlight--secondary .site-resume-highlight__icon {
-    background: color-mix(
-      in srgb,
-      var(--color-secondary) 14%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
     color: var(--color-secondary);
-  }
-
-  .site-resume-highlight--primary,
-  .site-resume-highlight--primary-soft {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-primary) 42%
-    );
-  }
-
-  .site-resume-highlight--primary {
-    background: color-mix(in srgb, var(--color-primary) 8%, var(--site-surface-elevated));
-  }
-
-  .site-resume-highlight--primary-soft {
-    background: linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--site-surface-muted) 84%, var(--color-paper)),
-      color-mix(in srgb, var(--color-primary) 6%, var(--site-surface-elevated))
-    );
   }
 
   .site-resume-highlight--primary .site-resume-highlight__icon,
   .site-resume-highlight--primary-soft .site-resume-highlight__icon {
-    background: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -1006,43 +847,12 @@ const highlightTiles = [
   }
 
   .site-resume-document::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 100%;
-    height: 0.25rem;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-accent) 30%, transparent),
-      color-mix(in srgb, var(--site-border-default) 86%, transparent)
-    );
+    display: none;
   }
 
   .site-resume-document--available {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 58%,
-      var(--color-primary) 42%
-    );
-    background:
-      radial-gradient(
-        circle at 100% 0%,
-        color-mix(in srgb, var(--site-glow-primary) 52%, transparent),
-        transparent 32%
-      ),
-      linear-gradient(
-        160deg,
-        color-mix(in srgb, var(--site-surface-elevated) 88%, var(--color-paper)),
-        color-mix(in srgb, var(--color-primary) 5%, var(--site-surface-default))
-      );
-  }
-
-  .site-resume-document--available::before {
-    background: linear-gradient(
-      90deg,
-      var(--color-primary),
-      color-mix(in srgb, var(--color-secondary) 70%, var(--color-primary))
-    );
+    border-color: var(--site-border-default);
+    background: var(--site-surface-elevated);
   }
 
   .site-resume-document__head,
@@ -1058,7 +868,7 @@ const highlightTiles = [
   }
 
   .site-resume-document__icon {
-    background: color-mix(in srgb, var(--color-primary) 12%, var(--color-paper));
+    background: var(--site-surface-muted);
     color: var(--color-primary);
   }
 
@@ -1114,11 +924,7 @@ const highlightTiles = [
   }
 
   .site-resume-panel__icon {
-    background: color-mix(
-      in srgb,
-      var(--site-surface-muted) 80%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-muted);
   }
 
   .site-resume-panel--education .site-resume-panel__icon {
@@ -1146,8 +952,7 @@ const highlightTiles = [
     display: grid;
     gap: var(--space-2xs);
     padding-bottom: var(--space-sm);
-    border-bottom: 1px solid
-      color-mix(in srgb, var(--site-border-default) 86%, var(--color-paper));
+    border-bottom: 1px solid var(--site-border-default);
   }
 
   .site-resume-panel li:last-child {
@@ -1167,27 +972,17 @@ const highlightTiles = [
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--site-border-default);
     border-radius: var(--radius-md);
-    background: color-mix(
-      in srgb,
-      var(--site-surface-default) 82%,
-      var(--color-paper)
-    );
+    background: var(--site-surface-default);
     color: var(--color-text);
     text-decoration: none;
     transition:
       border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
+      background var(--transition-fast);
   }
 
   .site-resume-links a:hover {
-    border-color: color-mix(
-      in srgb,
-      var(--site-border-default) 56%,
-      var(--color-primary) 44%
-    );
-    box-shadow: var(--site-card-shadow);
-    transform: var(--hover-lift);
+    border-color: var(--color-primary);
+    background: var(--site-surface-muted);
   }
 
   @media (min-width: 768px) {
