@@ -1,7 +1,4 @@
 ---
-import { existsSync } from "node:fs";
-import path from "node:path";
-
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPublicProfile } from "../lib/public-profile";
 
@@ -32,23 +29,9 @@ const documents = [
     description:
       "건설 CM에서 AI/IT로 이어진 전환 배경과 문제 해결 방식을 서사형으로 풀어낸 문서입니다.",
   },
-].map((document) => ({
-  ...document,
-  available: existsSync(
-    path.join(process.cwd(), "public", "downloads", document.fileName),
-  ),
-}));
+];
 
-const availableCount = documents.filter((document) => document.available).length;
-const primaryDocument = documents.find((document) => document.available) ?? null;
 const asOfDate = formatDate(profile.careerSummary.asOf);
-
-const documentsStatusMessage =
-  availableCount === documents.length
-    ? "세 문서 모두 최신 PDF로 동기화되어 있습니다."
-    : availableCount > 0
-      ? "동기화된 문서만 링크를 보여주고, 준비 중인 문서는 상태로 안내합니다."
-      : "현재 웹 다운로드용 PDF를 준비 중입니다. 빌드가 끝나면 링크가 나타납니다.";
 
 const highlightTiles = [
   {
@@ -78,20 +61,6 @@ const highlightTiles = [
     badgeClass: "site-badge site-badge--domain-ai",
     tone: "primary",
   },
-  {
-    id: "documents",
-    label: "동기화 문서",
-    value: `${availableCount}/${documents.length}`,
-    detail:
-      availableCount === documents.length
-        ? "세 문서를 즉시 내려받을 수 있습니다."
-        : availableCount > 0
-          ? "가용한 파일만 바로 다운로드할 수 있습니다."
-          : "다운로드 파일을 준비 중입니다.",
-    badge: "PDF",
-    badgeClass: "site-badge site-badge--neutral",
-    tone: "primary-soft",
-  },
 ];
 ---
 
@@ -115,24 +84,17 @@ const highlightTiles = [
           다운로드가 가능한 파일만 바로 연결합니다.
         </p>
         <p class="site-page-hero__meta site-resume-hero__meta">
-          업데이트 기준 {asOfDate} · 다운로드 가능 {availableCount}/{documents.length}
-          개
+          업데이트 기준 {asOfDate} · 다운로드 가능 {documents.length}개
         </p>
 
         <div class="site-resume-hero__actions">
-          {primaryDocument ? (
-            <a
-              href={primaryDocument.href}
-              download
-              class="site-button site-button--primary site-button--glow"
-            >
-              {primaryDocument.title} PDF 받기
-            </a>
-          ) : (
-            <a href="/contact" class="site-button site-button--primary site-button--glow">
-              문서 문의하기
-            </a>
-          )}
+          <a
+            href={documents[0].href}
+            download
+            class="site-button site-button--primary site-button--glow"
+          >
+            {documents[0].title} PDF 받기
+          </a>
           <a href="#resume-documents" class="site-button site-button--ghost">
             다운로드 카드 보기
           </a>
@@ -227,21 +189,6 @@ const highlightTiles = [
                       <path d="M17 12h4"></path>
                     </svg>
                   )}
-                  {item.id === "documents" && (
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
-                      <path d="M14 2v5h5"></path>
-                      <path d="M9 13h6"></path>
-                      <path d="M9 17h4"></path>
-                    </svg>
-                  )}
                 </span>
                 <span class={item.badgeClass}>{item.badge}</span>
               </div>
@@ -270,7 +217,7 @@ const highlightTiles = [
           실제로 바로 내려받을 수 있는 PDF 카드
         </h2>
         <p class="site-section-header__meta">
-          필요한 문서를 아래에서 바로 다운로드할 수 있습니다. {documentsStatusMessage}
+          필요한 문서를 아래에서 바로 다운로드할 수 있습니다. 세 문서 모두 최신 PDF로 동기화되어 있습니다.
         </p>
       </header>
 
@@ -278,12 +225,7 @@ const highlightTiles = [
         {
           documents.map((document) => (
             <article
-              class:list={[
-                "site-card",
-                "site-resume-document",
-                document.available && "site-card--interactive",
-                document.available && "site-resume-document--available",
-              ]}
+              class="site-card site-card--interactive site-resume-document site-resume-document--available"
             >
               <div class="site-resume-document__head">
                 <div class="site-resume-document__icon" aria-hidden="true">
@@ -303,16 +245,7 @@ const highlightTiles = [
                 </div>
                 <div class="site-resume-document__meta">
                   <p class="site-resume-document__file">{document.fileName}</p>
-                  <span
-                    class:list={[
-                      "site-badge",
-                      document.available
-                        ? "site-badge--state"
-                        : "site-badge--neutral",
-                    ]}
-                  >
-                    {document.available ? "다운로드 가능" : "준비 중"}
-                  </span>
+                  <span class="site-badge site-badge--state">다운로드 가능</span>
                 </div>
               </div>
 
@@ -322,31 +255,25 @@ const highlightTiles = [
               </div>
 
               <div class="site-resume-document__footer">
-                {document.available ? (
-                  <a
-                    class="site-button site-button--primary site-button--full site-resume-document__link"
-                    href={document.href}
-                    download
+                <a
+                  class="site-button site-button--primary site-button--full site-resume-document__link"
+                  href={document.href}
+                  download
+                >
+                  PDF 다운로드
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
                   >
-                    PDF 다운로드
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14"></path>
-                      <path d="m12 5 7 7-7 7"></path>
-                    </svg>
-                  </a>
-                ) : (
-                  <p class="site-resume-document__note">
-                    현재 내려받을 수 있는 파일이 없어 링크를 숨겼습니다.
-                  </p>
-                )}
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </a>
               </div>
             </article>
           ))
@@ -560,7 +487,6 @@ const highlightTiles = [
   .site-resume-bento__featured-note,
   .site-resume-highlight__detail,
   .site-resume-document p,
-  .site-resume-document__note,
   .site-resume-panel li,
   .site-resume-links a {
     margin: 0;
@@ -678,8 +604,7 @@ const highlightTiles = [
 
   .site-resume-highlight--accent,
   .site-resume-highlight--secondary,
-  .site-resume-highlight--primary,
-  .site-resume-highlight--primary-soft {
+  .site-resume-highlight--primary {
     border-color: var(--site-border-default);
     background: var(--site-surface-elevated);
   }
@@ -694,8 +619,7 @@ const highlightTiles = [
     color: var(--color-secondary);
   }
 
-  .site-resume-highlight--primary .site-resume-highlight__icon,
-  .site-resume-highlight--primary-soft .site-resume-highlight__icon {
+  .site-resume-highlight--primary .site-resume-highlight__icon {
     background: var(--site-surface-muted);
     color: var(--color-primary);
   }
@@ -867,12 +791,12 @@ const highlightTiles = [
 
   @media (min-width: 1024px) {
     .site-resume-bento {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .site-resume-bento__featured {
       grid-column: span 2;
-      grid-row: span 2;
+      grid-row: span 3;
       justify-content: space-between;
     }
 
