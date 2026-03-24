@@ -31,11 +31,15 @@ let syncedCount = 0;
 let missingCount = 0;
 
 for (const pdf of pdfTargets) {
-  const sourcePath = path.join(outputRoot, pdf.sourceName);
+  const sourcePath = path.join(outputRoot, pdf.sourceName).normalize("NFC");
   const destinationPath = path.join(downloadsRoot, pdf.outputName);
 
-  if (await fileExists(sourcePath)) {
-    await copyFile(sourcePath, destinationPath);
+  // Also try NFD variant (macOS decomposes Unicode filenames)
+  const sourcePathNFD = path.join(outputRoot, pdf.sourceName).normalize("NFD");
+
+  if (await fileExists(sourcePath) || await fileExists(sourcePathNFD)) {
+    const actualPath = (await fileExists(sourcePath)) ? sourcePath : sourcePathNFD;
+    await copyFile(actualPath, destinationPath);
     syncedCount += 1;
     console.log(`[sync-pdfs] synced ${pdf.label}: ${pdf.outputName}`);
     continue;
