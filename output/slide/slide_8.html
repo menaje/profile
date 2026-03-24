@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#0066FF",
+        "on-primary": "#ffffff",
+        "surface": "#F8FAFC",
+        "on-surface": "#0F172A",
+        "surface-variant": "#F1F5F9",
+        "on-surface-variant": "#475569",
+        "outline": "#CBD5E1",
+        "outline-variant": "#E2E8F0",
+        "secondary": "#0D9488",
+        "accent": "#6366F1",
+        "error": "#DC2626",
+        "warning": "#D97706",
+        "info": "#0891B2"
+      },
+      fontFamily: {
+        "headline": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "body": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "label": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"]
+      },
+      borderRadius: {
+        "DEFAULT": "4px",
+        "lg": "8px",
+        "xl": "12px",
+        "full": "9999px"
+      },
+    },
+  },
+}
+</script>
+<style>
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-regular-subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-semibold-subset.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-bold-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/20">
+<!-- 메인 콘텐츠 -->
+<main class="min-h-screen pt-16 pb-32 px-12 md:px-24 max-w-7xl mx-auto">
+
+  <!-- 헤더 섹션 -->
+  <header class="mb-16 text-center md:text-left">
+    <div class="inline-flex items-center px-3 py-1 mb-6 bg-primary/10 text-primary text-[10px] font-extrabold tracking-widest rounded">
+      업무 유형별 AI 전략
+    </div>
+    <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-8 leading-[1.1]">
+      설계와 CM은 공통적으로<br/>
+      <span class="text-primary">데이터 기반이 먼저 필요합니다.</span>
+    </h1>
+    <p class="text-on-surface-variant text-lg max-w-3xl leading-relaxed">
+      다만 그 위에서 AI에 기대하는 기능은 다릅니다. 설계는 초기 기획·검토와 실제 수행 단계에서 요구가 나뉘고, CM은 데이터 연결과 근거 재구성의 비중이 더 큽니다.
+    </p>
+  </header>
+
+  <!-- 2개 카드 비교 -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+
+    <!-- 카드 1: 설계 -->
+    <div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+      <div class="h-1.5 bg-primary w-full"></div>
+      <div class="p-5 flex flex-col flex-1">
+        <div class="flex items-center justify-between mb-4">
+          <span class="px-3 py-1 bg-primary/10 text-primary text-[11px] font-bold rounded-full">단계별 혼합형</span>
+          <span class="material-symbols-outlined text-primary/40 text-2xl">architecture</span>
+        </div>
+        <h3 class="text-xl font-bold font-headline text-on-surface mb-2">설계</h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+          설계는 데이터 기반이 전제되며, 초기 기획·검토 단계에서는 데이터 연결의 영향이 크고 실제 설계 수행 단계에서는 도구와 생성 성능의 영향이 더 크게 나타납니다.
+        </p>
+        <div class="space-y-2.5 mt-auto">
+          <div class="rounded-lg bg-surface-variant/70 p-3.5 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-primary shrink-0">업무 성격</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">초기 기획·검토와 실제 설계 수행이 이어지는 흐름</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-primary shrink-0">주요 산출물</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">설계도서, 대안안, 검토 결과물</p>
+            </div>
+          </div>
+          <div class="rounded-lg bg-surface-variant/70 p-3.5 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-primary shrink-0">AI 관점</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">기획·검토는 데이터 연결이 중요하고, 수행은 높은 생성 성능과 도구 활용성이 중요</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-primary shrink-0">핵심 포인트</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">데이터 기반은 공통 전제이고, 설계는 단계에 따라 데이터 연결과 도구·생성 성능의 비중이 달라집니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카드 2: CM -->
+    <div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+      <div class="h-1.5 bg-secondary w-full"></div>
+      <div class="p-5 flex flex-col flex-1">
+        <div class="flex items-center justify-between mb-4">
+          <span class="px-3 py-1 bg-secondary/10 text-secondary text-[11px] font-bold rounded-full">데이터 연결·근거 재구성형</span>
+          <span class="material-symbols-outlined text-secondary/40 text-2xl">description</span>
+        </div>
+        <h3 class="text-xl font-bold font-headline text-on-surface mb-2">CM</h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
+          CM 역시 데이터 기반이 전제되어야 하며, 공문·기술검토서 같은 작은 문서를 반복 생산하는 업무 특성상 데이터 연결과 근거 재구성 체계의 중요도가 더 높습니다.
+        </p>
+        <div class="space-y-2.5 mt-auto">
+          <div class="rounded-lg bg-surface-variant/70 p-3.5 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-secondary shrink-0">업무 성격</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">사안별 작은 문서를 반복 생산하는 흐름</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-secondary shrink-0">주요 산출물</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">공문, 기술검토서, 회의록, 변경·승인 기록</p>
+            </div>
+          </div>
+          <div class="rounded-lg bg-surface-variant/70 p-3.5 space-y-2">
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-secondary shrink-0">AI 관점</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">중급 모델이어도 데이터 관리 체계와 활용 전략이 더 중요</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[11px] font-bold text-secondary shrink-0">핵심 포인트</span>
+              <p class="text-sm text-on-surface-variant leading-relaxed">데이터 기반은 공통 전제이고, 문서·이슈·승인 데이터의 연결성이 문서화 품질을 좌우</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 하단 정리 -->
+  <div class="mt-8 bg-primary/5 border border-primary/15 rounded-xl p-6 flex items-center gap-4">
+    <span class="material-symbols-outlined text-primary text-2xl shrink-0">balance</span>
+    <p class="text-sm md:text-[15px] font-semibold text-on-surface leading-relaxed">
+      설계와 CM 모두 데이터 기반이 먼저 필요합니다. 다만 설계는 초기 기획·검토와 실제 수행 단계에 따라 데이터 연결과 도구·생성 성능의 비중이 달라지고, CM은 데이터 관리 체계와 근거 기반 문서화를 더 우선적으로 설계해야 합니다.
+    </p>
+  </div>
+
+</main>
+
+<script>
+function fitSlideToViewport() {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  document.body.style.margin = "0";
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
+  main.style.transform = "";
+  main.style.transformOrigin = "";
+  main.style.willChange = "transform";
+
+  const naturalHeight = Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+    Math.ceil(main.getBoundingClientRect().height),
+  );
+  const naturalWidth = Math.max(
+    document.documentElement.scrollWidth,
+    document.body.scrollWidth,
+    Math.ceil(main.getBoundingClientRect().width),
+  );
+  const scale = Math.min(1, window.innerHeight / naturalHeight, window.innerWidth / naturalWidth);
+
+  main.style.transformOrigin = "top center";
+  main.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener("load", () => {
+  fitSlideToViewport();
+  window.setTimeout(fitSlideToViewport, 120);
+  window.setTimeout(fitSlideToViewport, 400);
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => requestAnimationFrame(fitSlideToViewport));
+  }
+});
+
+window.addEventListener("resize", fitSlideToViewport);
+</script>
+</body>
+</html>

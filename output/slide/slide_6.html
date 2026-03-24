@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#0066FF",
+        "on-primary": "#ffffff",
+        "surface": "#F8FAFC",
+        "on-surface": "#0F172A",
+        "surface-variant": "#F1F5F9",
+        "on-surface-variant": "#475569",
+        "outline": "#CBD5E1",
+        "outline-variant": "#E2E8F0",
+        "secondary": "#0D9488",
+        "accent": "#6366F1",
+        "error": "#DC2626",
+        "warning": "#D97706",
+        "info": "#0891B2"
+      },
+      fontFamily: {
+        "headline": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "body": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "label": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"]
+      },
+      borderRadius: {
+        "DEFAULT": "4px",
+        "lg": "8px",
+        "xl": "12px",
+        "full": "9999px"
+      },
+    },
+  },
+}
+</script>
+<style>
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-regular-subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-semibold-subset.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-bold-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/20">
+<!-- 메인 콘텐츠 -->
+<main class="min-h-screen pt-16 pb-32 px-12 md:px-24 max-w-7xl mx-auto">
+
+  <!-- 헤더 섹션 -->
+  <header class="mb-16 text-center md:text-left">
+    <div class="inline-flex items-center px-3 py-1 mb-6 bg-primary/10 text-primary text-[10px] font-extrabold tracking-widest rounded">
+      데이터 전이 구조
+    </div>
+    <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-8 leading-[1.1]">
+      원문은 유지하고, 재사용 가능한<br/>
+      사실, 관계, 메타데이터만 <span class="text-primary">공통 레이어로 전이</span>한다.
+    </h1>
+    <p class="text-on-surface-variant text-lg max-w-3xl leading-relaxed">
+      모든 원문을 한곳에 모으는 것이 아니라, 재사용 가치가 있는 사실, 관계, 메타데이터를 추출해 회사 차원의 공통 지식 레이어로 옮기는 것입니다.
+    </p>
+  </header>
+
+  <!-- 4단계 흐름 (가로 그리드) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+
+    <!-- 연결선 (데스크톱) -->
+    <div class="hidden lg:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 -z-10"></div>
+
+    <!-- 단계 01: 원천 데이터 -->
+    <div class="group relative bg-white p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+      <div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+        <span class="material-symbols-outlined text-2xl text-primary group-hover:text-white">database</span>
+      </div>
+      <div class="mb-4">
+        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest">단계 01</span>
+        <h3 class="text-lg font-bold mt-1">원천 데이터</h3>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed">
+        PMIS, 문서, 회의록, 계약, 법령 — 실제 업무의 원문과 원본 시스템은 그대로 유지합니다.
+      </p>
+    </div>
+
+    <!-- 단계 02: 정제와 전이 -->
+    <div class="group relative bg-white p-8 rounded-xl shadow-md border-2 border-primary/10 hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center lg:scale-105 z-10">
+      <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
+        <span class="material-symbols-outlined text-2xl text-primary group-hover:text-white">auto_awesome</span>
+      </div>
+      <div class="mb-4">
+        <span class="text-[10px] font-bold text-primary tracking-widest">단계 02</span>
+        <h3 class="text-lg font-bold mt-1">정제와 전이</h3>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed">
+        재사용 가능한 판단 근거와 패턴만 구조화해 회사 차원의 공통 레이어로 전이합니다.
+      </p>
+    </div>
+
+    <!-- 단계 03: AI 접근 계층 -->
+    <div class="group relative bg-white p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+      <div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
+        <span class="material-symbols-outlined text-2xl text-accent group-hover:text-white">hub</span>
+      </div>
+      <div class="mb-4">
+        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest">단계 03</span>
+        <h3 class="text-lg font-bold mt-1">수집, 대조, 필터링, 설명</h3>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed">
+        AI는 원천 데이터와 정제 데이터를 함께 읽고 사용자 권한에 맞는 정보만 제공합니다.
+      </p>
+    </div>
+
+    <!-- 단계 04: 사람의 활용 -->
+    <div class="group relative bg-white p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center">
+      <div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center mb-6 group-hover:bg-secondary transition-colors duration-300">
+        <span class="material-symbols-outlined text-2xl text-secondary group-hover:text-white">insights</span>
+      </div>
+      <div class="mb-4">
+        <span class="text-[10px] font-bold text-on-surface-variant tracking-widest">단계 04</span>
+        <h3 class="text-lg font-bold mt-1">브리핑, 비교, 경고, 추천</h3>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed">
+        실무자는 원문 전체 대신 지금 필요한 맥락과 근거 위치부터 빠르게 확인합니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 하단 원칙 섹션 -->
+  <section class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-white p-8 rounded-xl border border-outline-variant">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">verified</span>
+        </div>
+        <div>
+          <h4 class="font-headline font-bold text-on-surface mb-2">출처와 이력 추적</h4>
+          <p class="text-sm text-on-surface-variant leading-relaxed">원문 기준의 출처와 시점을 추적 가능하게 남겨, 정제된 정보도 다시 근거로 돌아갈 수 있어야 합니다.</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white p-8 rounded-xl border border-outline-variant">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-secondary">recycling</span>
+        </div>
+        <div>
+          <h4 class="font-headline font-bold text-on-surface mb-2">회사 차원 반복 패턴 학습</h4>
+          <p class="text-sm text-on-surface-variant leading-relaxed">어떤 변경 이슈가 반복되는지, 설계에서 CM으로 무엇이 자주 누락되는지 같은 패턴을 회사 차원에서 다시 활용합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+function fitSlideToViewport() {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  document.body.style.margin = "0";
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
+  main.style.transform = "";
+  main.style.transformOrigin = "";
+  main.style.willChange = "transform";
+
+  const naturalHeight = Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+    Math.ceil(main.getBoundingClientRect().height),
+  );
+  const naturalWidth = Math.max(
+    document.documentElement.scrollWidth,
+    document.body.scrollWidth,
+    Math.ceil(main.getBoundingClientRect().width),
+  );
+  const scale = Math.min(1, window.innerHeight / naturalHeight, window.innerWidth / naturalWidth);
+
+  main.style.transformOrigin = "top center";
+  main.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener("load", () => {
+  fitSlideToViewport();
+  window.setTimeout(fitSlideToViewport, 120);
+  window.setTimeout(fitSlideToViewport, 400);
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => requestAnimationFrame(fitSlideToViewport));
+  }
+});
+
+window.addEventListener("resize", fitSlideToViewport);
+</script>
+</body>
+</html>

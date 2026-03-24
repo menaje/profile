@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#0066FF",
+        "on-primary": "#ffffff",
+        "surface": "#F8FAFC",
+        "on-surface": "#0F172A",
+        "surface-variant": "#F1F5F9",
+        "on-surface-variant": "#475569",
+        "outline": "#CBD5E1",
+        "outline-variant": "#E2E8F0",
+        "secondary": "#0D9488",
+        "accent": "#6366F1",
+        "error": "#DC2626",
+        "warning": "#D97706",
+        "info": "#0891B2"
+      },
+      fontFamily: {
+        "headline": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "body": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "label": ["Pretendard Slide", "Manrope", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"]
+      },
+      borderRadius: {
+        "DEFAULT": "4px",
+        "lg": "8px",
+        "xl": "12px",
+        "full": "9999px"
+      },
+    },
+  },
+}
+</script>
+<style>
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-regular-subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-semibold-subset.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard Slide";
+  src: url("../../public/fonts/pretendard-bold-subset.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/20">
+<!-- 메인 콘텐츠 -->
+<main class="min-h-screen pt-16 pb-32 px-12 md:px-24 max-w-7xl mx-auto">
+
+  <!-- 헤더 섹션 -->
+  <header class="mb-16 text-center md:text-left">
+    <div class="inline-flex items-center px-3 py-1 mb-6 bg-primary/10 text-primary text-[10px] font-extrabold tracking-widest rounded">
+      마치며
+    </div>
+    <h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-8 leading-[1.1]">
+      데이터는 연결되고,<br/>
+      AI는 그 연결을 <span class="text-primary">안전하게 돕는 구조</span>.
+    </h1>
+  </header>
+
+  <!-- 핵심 인용문 (다크 배경 큰 박스) -->
+  <div class="bg-on-surface text-white p-10 md:p-16 rounded-xl relative overflow-hidden mb-16">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+    <div class="absolute -top-8 -left-2 text-[120px] font-serif text-white/5 select-none leading-none">"</div>
+    <div class="relative z-10">
+      <p class="text-xl md:text-2xl font-headline font-semibold leading-relaxed">
+        부서는 각자의 시스템을 쓰되, 회사의 경험은 공통 데이터 기반 위에서 이어지고, AI는 그 연결을 안전하게 돕는 구조여야 한다.
+      </p>
+    </div>
+  </div>
+
+  <!-- 정리 요약 3카드 -->
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+
+    <!-- 카드 1 -->
+    <div class="bg-white p-8 rounded-xl border border-outline-variant hover:shadow-lg transition-all duration-300">
+      <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-primary">description</span>
+      </div>
+      <p class="text-on-surface-variant leading-relaxed">
+        영업·입찰·PQ·제안은 발주처 자료를 빠르게 구조화하고 회사 데이터를 보강하는 방식으로 활용하는 편이 더 현실적입니다.
+      </p>
+    </div>
+
+    <!-- 카드 2 -->
+    <div class="bg-white p-8 rounded-xl border border-outline-variant hover:shadow-lg transition-all duration-300">
+      <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-secondary">architecture</span>
+      </div>
+      <p class="text-on-surface-variant leading-relaxed">
+        설계는 초기 기획·검토와 환류에서는 데이터 연결의 영향이 크고, 실제 수행 단계에서는 도구와 생성 성능의 영향이 더 크게 나타납니다.
+      </p>
+    </div>
+
+    <!-- 카드 3 -->
+    <div class="bg-white p-8 rounded-xl border border-outline-variant hover:shadow-lg transition-all duration-300">
+      <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-accent">database</span>
+      </div>
+      <p class="text-on-surface-variant leading-relaxed">
+        이 모든 것은 공통 데이터 모델과 데이터 전이 구조가 있을 때만 가능합니다.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- 하단 마무리 인사이트 -->
+  <div class="p-8 rounded-xl glass-card border border-outline-variant flex items-center gap-6">
+    <div class="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
+      <span class="material-symbols-outlined text-secondary text-3xl">lightbulb</span>
+    </div>
+    <div>
+      <h4 class="font-headline font-bold text-lg mb-1 text-on-surface">핵심 인사이트</h4>
+      <p class="text-on-surface-variant text-[15px] leading-relaxed">
+        핵심은 새 PMIS를 하나 더 만드는 것이 아니라, 부서별 시스템을 공통 데이터 기반 위에 올리고 프로젝트에서 생성된 경험을 회사 차원의 자산으로 전이하는 것입니다.
+      </p>
+    </div>
+  </div>
+</main>
+
+<script>
+function fitSlideToViewport() {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  document.body.style.margin = "0";
+  document.body.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden";
+
+  main.style.transform = "";
+  main.style.transformOrigin = "";
+  main.style.willChange = "transform";
+
+  const naturalHeight = Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+    Math.ceil(main.getBoundingClientRect().height),
+  );
+  const naturalWidth = Math.max(
+    document.documentElement.scrollWidth,
+    document.body.scrollWidth,
+    Math.ceil(main.getBoundingClientRect().width),
+  );
+  const scale = Math.min(1, window.innerHeight / naturalHeight, window.innerWidth / naturalWidth);
+
+  main.style.transformOrigin = "top center";
+  main.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener("load", () => {
+  fitSlideToViewport();
+  window.setTimeout(fitSlideToViewport, 120);
+  window.setTimeout(fitSlideToViewport, 400);
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => requestAnimationFrame(fitSlideToViewport));
+  }
+});
+
+window.addEventListener("resize", fitSlideToViewport);
+</script>
+</body>
+</html>
