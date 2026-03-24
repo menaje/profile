@@ -1,0 +1,641 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "canonicalFile": "project/html/data/profile.normalized.json",
+    "basisDate": "2026-03-20",
+    "datePrecisionConvention": {
+      "year": "YYYY",
+      "month": "YYYY-MM",
+      "day": "YYYY-MM-DD"
+    },
+    "displayPeriodConvention": "Korean dotted format (YYYY.MM or YYYY.MM.DD) for downstream rendering",
+    "sourceDocuments": [
+      ".coni/objectives/OBJ-3.md",
+      "project/output/이력서_김성식.md",
+      "project/output/기술경력서_김성식.md",
+      "project/docs/분석/03_건설관련경력.md",
+      "project/docs/분석/04_IT_AI경력.md",
+      "project/docs/기초자료/README-coni.md",
+      "project/docs/기초자료/README-기술제안서 에이전트.md",
+      "project/docs/기초자료/README-mlx-serve.md",
+      "project/docs/기초자료/README-supamigrate.md"
+    ]
+  },
+  "profile": {
+    "name": {
+      "ko": "김성식"
+    },
+    "positioningTitle": "AI 네이티브 시스템 아키텍트",
+    "contacts": {
+      "email": "dshn21@naver.com",
+      "github": {
+        "username": "menaje",
+        "url": "https://github.com/menaje"
+      },
+      "linkedin": {
+        "url": "https://www.linkedin.com/in/성식-김-12b58b224/"
+      }
+    },
+    "sourceRefs": [
+      "project/output/이력서_김성식.md",
+      "project/output/기술경력서_김성식.md",
+      ".coni/objectives/OBJ-3.md"
+    ]
+  },
+  "careerSummary": {
+    "asOf": "2026-03-20",
+    "totalCareer": {
+      "label": "11년차",
+      "start": {
+        "value": "2015-07",
+        "precision": "month"
+      }
+    },
+    "constructionCm": {
+      "label": "8년 10개월",
+      "period": {
+        "start": {
+          "value": "2015-07",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2024-05",
+          "precision": "month"
+        },
+        "display": "2015.07 ~ 2024.05",
+        "dateKnown": true,
+        "ongoing": false
+      }
+    },
+    "aiIt": {
+      "label": "약 1년 8개월",
+      "period": {
+        "start": {
+          "value": "2024-05",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2025-12-31",
+          "precision": "day"
+        },
+        "display": "2024.05 ~ 2025.12.31",
+        "dateKnown": true,
+        "ongoing": false
+      }
+    },
+    "sourceRefs": [
+      ".coni/objectives/OBJ-3.md",
+      "project/output/이력서_김성식.md",
+      "project/output/기술경력서_김성식.md",
+      "project/docs/분석/03_건설관련경력.md",
+      "project/docs/분석/04_IT_AI경력.md"
+    ]
+  },
+  "currentStatus": {
+    "employmentState": "seeking",
+    "label": "구직 중",
+    "since": "2026-01-01",
+    "basisDate": "2026-03-20",
+    "display": "구직 중 (2026-03-20 기준)",
+    "notes": [
+      "희림 재직 중 또는 현재 역할이 희림인 현재형 표기로 되돌리지 않는다.",
+      "`무직` 표현은 사용하지 않는다."
+    ],
+    "sourceRefs": [".coni/objectives/OBJ-3.md"]
+  },
+  "organizations": [
+    {
+      "id": "junglim-cm",
+      "canonicalName": "정림CM",
+      "displayName": "(주)정림CM",
+      "aliases": ["정림CM"],
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md",
+        ".coni/objectives/OBJ-3.md"
+      ]
+    },
+    {
+      "id": "heerim",
+      "canonicalName": "희림종합건축사사무소",
+      "displayName": "(주)희림종합건축사사무소",
+      "aliases": ["희림", "희림종합건축사사무소"],
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/04_IT_AI경력.md",
+        ".coni/objectives/OBJ-3.md"
+      ]
+    }
+  ],
+  "employmentTimeline": [
+    {
+      "id": "junglim-cm-employment",
+      "organizationId": "junglim-cm",
+      "roleTitle": "건설사업관리(CM) 전문가",
+      "domain": "건설사업관리(CM)",
+      "period": {
+        "start": {
+          "value": "2015-07",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2024-05",
+          "precision": "month"
+        },
+        "display": "2015.07 ~ 2024.05",
+        "dateKnown": true,
+        "ongoing": false
+      },
+      "statusAtBasisDate": "completed",
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md",
+        ".coni/objectives/OBJ-3.md"
+      ]
+    },
+    {
+      "id": "heerim-employment",
+      "organizationId": "heerim",
+      "roleTitle": "AI 서비스 기획/개발",
+      "domain": "AI/IT",
+      "period": {
+        "start": {
+          "value": "2024-05",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2025-12-31",
+          "precision": "day"
+        },
+        "display": "2024.05 ~ 2025.12.31",
+        "dateKnown": true,
+        "ongoing": false
+      },
+      "statusAtBasisDate": "completed",
+      "sourceRefs": [
+        ".coni/objectives/OBJ-3.md",
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/04_IT_AI경력.md"
+      ]
+    }
+  ],
+  "projects": {
+    "core": [
+      {
+        "id": "coni",
+        "canonicalName": "CONI",
+        "aliases": ["WPM", "개발자 프로젝트 관리 도구"],
+        "classification": "personal",
+        "organizationId": null,
+        "role": "기획, 아키텍처 설계, 전체 개발",
+        "period": {
+          "start": {
+            "value": "2025-11",
+            "precision": "month"
+          },
+          "end": null,
+          "display": "2025.11 ~ 진행 중 (2026-03-20 기준)",
+          "dateKnown": true,
+          "ongoing": true,
+          "asOf": "2026-03-20"
+        },
+        "statusAtBasisDate": "ongoing",
+        "metrics": {
+          "anomalyDetectionTypes": {
+            "value": 6,
+            "label": "6가지 비정상 상태 자동 감지",
+            "sourceRefs": [
+              "project/output/기술경력서_김성식.md",
+              "project/docs/기초자료/README-coni.md"
+            ]
+          },
+          "pipelineStages": {
+            "value": 5,
+            "label": "5단계 작업 파이프라인 (idle→breakdown→execute→verify→complete)",
+            "sourceRefs": ["project/docs/기초자료/README-coni.md"]
+          },
+          "harnessAnalysisSteps": {
+            "value": 7,
+            "label": "7단계 하네스 엔지니어링 분석 프로세스",
+            "sourceRefs": ["project/docs/기초자료/README-coni.md"]
+          },
+          "dbBackends": {
+            "value": 2,
+            "label": "DB 이중화 (SQLite + Supabase)",
+            "sourceRefs": ["project/docs/기초자료/README-coni.md"]
+          }
+        },
+        "sourceRefs": [
+          ".coni/objectives/OBJ-3.md",
+          "project/output/이력서_김성식.md",
+          "project/output/기술경력서_김성식.md",
+          "project/docs/분석/04_IT_AI경력.md",
+          "project/docs/기초자료/README-coni.md"
+        ]
+      },
+      {
+        "id": "proposal-agent",
+        "canonicalName": "제안서 에이전트",
+        "aliases": [
+          "Proposal Agent",
+          "coni-multi",
+          "기술제안서 에이전트",
+          "다중 에이전트 오케스트레이션 시스템"
+        ],
+        "classification": "company",
+        "organizationId": "heerim",
+        "role": "기획 및 에이전트 개발",
+        "teamSize": 2,
+        "period": {
+          "start": {
+            "value": "2024-05",
+            "precision": "month"
+          },
+          "end": {
+            "value": "2025-11",
+            "precision": "month"
+          },
+          "display": "2024.05 ~ 2025.11",
+          "dateKnown": true,
+          "ongoing": false
+        },
+        "statusAtBasisDate": "completed",
+        "metrics": {
+          "apiEndpoints": {
+            "value": 26,
+            "label": "26개 API 엔드포인트",
+            "sourceRefs": [
+              "project/output/기술경력서_김성식.md",
+              "project/docs/기초자료/README-기술제안서 에이전트.md"
+            ]
+          },
+          "services": {
+            "value": 16,
+            "label": "16개 서비스",
+            "sourceRefs": [
+              "project/output/기술경력서_김성식.md",
+              "project/docs/기초자료/README-기술제안서 에이전트.md"
+            ]
+          },
+          "autoGeneratedDocTypes": {
+            "value": "20여 종",
+            "label": "20여 종의 보고서·슬라이드 자동 생성",
+            "sourceRefs": [
+              "project/output/이력서_김성식.md",
+              "project/output/기술경력서_김성식.md",
+              "project/docs/기초자료/README-기술제안서 에이전트.md"
+            ]
+          },
+          "dbTables": {
+            "value": 15,
+            "label": "15개 DB 테이블 기반 데이터 모델",
+            "sourceRefs": [
+              "project/docs/기초자료/README-기술제안서 에이전트.md"
+            ]
+          },
+          "assetTypes": {
+            "value": 3,
+            "label": "3종 자산 타입 (companyinfo, guideline, projectdata)",
+            "sourceRefs": [
+              "project/docs/기초자료/README-기술제안서 에이전트.md"
+            ]
+          }
+        },
+        "sourceRefs": [
+          ".coni/objectives/OBJ-3.md",
+          "project/output/이력서_김성식.md",
+          "project/output/기술경력서_김성식.md",
+          "project/docs/분석/04_IT_AI경력.md",
+          "project/docs/기초자료/README-기술제안서 에이전트.md"
+        ]
+      },
+      {
+        "id": "cm-work-management-system",
+        "canonicalName": "CM 업무관리 시스템",
+        "aliases": ["대전 5개현장 통합건설사업관리"],
+        "classification": "company",
+        "organizationId": "junglim-cm",
+        "role": "기획 및 개발",
+        "period": {
+          "start": {
+            "value": "2023-01",
+            "precision": "month"
+          },
+          "end": {
+            "value": "2024-05",
+            "precision": "month"
+          },
+          "display": "2023.01 ~ 2024.05",
+          "dateKnown": true,
+          "ongoing": false
+        },
+        "statusAtBasisDate": "completed",
+        "metrics": {
+          "siteCount": {
+            "value": 5,
+            "label": "대전 5개 현장 통합 관리",
+            "sourceRefs": [
+              "project/output/이력서_김성식.md",
+              "project/output/기술경력서_김성식.md",
+              "project/docs/분석/03_건설관련경력.md"
+            ]
+          },
+          "client": {
+            "value": "대전시청",
+            "label": "대전시청 발주 사업",
+            "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
+          }
+        },
+        "sourceRefs": [
+          "project/output/이력서_김성식.md",
+          "project/output/기술경력서_김성식.md",
+          "project/docs/분석/03_건설관련경력.md",
+          "project/docs/분석/04_IT_AI경력.md",
+          ".coni/objectives/OBJ-3.md"
+        ]
+      }
+    ],
+    "supporting": [
+      {
+        "id": "rag-system",
+        "canonicalName": "RAG 시스템",
+        "aliases": [],
+        "classification": "company-side-project",
+        "organizationId": "heerim",
+        "role": "법령 자동 수집, 기준 문서 구조화, 벡터 검색, 질의응답 흐름 설계·개발",
+        "period": {
+          "start": {
+            "value": "2024-05",
+            "precision": "month"
+          },
+          "end": {
+            "value": "2024-12",
+            "precision": "month"
+          },
+          "display": "2024.05 ~ 2024.12",
+          "dateKnown": true,
+          "ongoing": false
+        },
+        "statusAtBasisDate": "completed",
+        "metrics": {
+          "subProjectCount": {
+            "value": 4,
+            "label": "4개 서브프로젝트 (법령 수집, 기준 벡터 검색, LLM 데이터 추출, 자율 지식 생성)",
+            "sourceRefs": ["project/docs/분석/04_IT_AI경력.md"]
+          },
+          "externalApiIntegrations": {
+            "value": 2,
+            "label": "2개 공공 API 연동 (법제처, 국가기술표준)",
+            "sourceRefs": ["project/docs/분석/04_IT_AI경력.md"]
+          }
+        },
+        "sourceRefs": [
+          "project/output/기술경력서_김성식.md",
+          "project/docs/분석/04_IT_AI경력.md",
+          ".coni/objectives/OBJ-3.md"
+        ]
+      },
+      {
+        "id": "ve-automation",
+        "canonicalName": "VE 업무 자동화 시스템",
+        "aliases": ["VE 자동화"],
+        "classification": "company",
+        "organizationId": "junglim-cm",
+        "role": "VE 프로세스 표준화, 보고서 자동 생성, 아이디어 DB 구축",
+        "period": {
+          "start": {
+            "value": "2017",
+            "precision": "year"
+          },
+          "end": {
+            "value": "2019",
+            "precision": "year"
+          },
+          "display": "2017 ~ 2019",
+          "dateKnown": true,
+          "ongoing": false
+        },
+        "statusAtBasisDate": "completed",
+        "metrics": {
+          "appliedProjects": {
+            "value": 13,
+            "label": "13개 VE 프로젝트 적용",
+            "sourceRefs": [
+              "project/output/기술경력서_김성식.md",
+              "project/docs/분석/03_건설관련경력.md"
+            ]
+          }
+        },
+        "sourceRefs": [
+          "project/output/기술경력서_김성식.md",
+          "project/docs/분석/03_건설관련경력.md",
+          "project/docs/분석/04_IT_AI경력.md",
+          ".coni/objectives/OBJ-3.md"
+        ]
+      },
+      {
+        "id": "mlx-serve",
+        "canonicalName": "mlx-serve",
+        "aliases": [],
+        "classification": "open-source",
+        "organizationId": null,
+        "role": "MLX 기반 임베딩/리랭킹 서버를 OpenAI·Jina 호환 API 형태로 제공하는 도구 정리",
+        "period": {
+          "start": null,
+          "end": null,
+          "display": null,
+          "dateKnown": false,
+          "ongoing": null
+        },
+        "statusAtBasisDate": "unknown",
+        "metrics": {
+          "compatibleApis": {
+            "value": 3,
+            "label": "3종 호환 API (OpenAI, Jina, Ollama)",
+            "sourceRefs": ["project/docs/기초자료/README-mlx-serve.md"]
+          },
+          "distributionChannels": {
+            "value": 2,
+            "label": "2종 배포 채널 (Homebrew, pip)",
+            "sourceRefs": ["project/docs/기초자료/README-mlx-serve.md"]
+          }
+        },
+        "sourceRefs": [
+          "project/output/기술경력서_김성식.md",
+          "project/docs/기초자료/README-mlx-serve.md",
+          ".coni/objectives/OBJ-3.md"
+        ]
+      },
+      {
+        "id": "supamigrate",
+        "canonicalName": "supamigrate",
+        "aliases": [],
+        "classification": "open-source",
+        "organizationId": null,
+        "role": "마이그레이션 순서, FK 의존성 처리, 검증 로직을 포함한 이전 도구 설계",
+        "period": {
+          "start": null,
+          "end": null,
+          "display": null,
+          "dateKnown": false,
+          "ongoing": null
+        },
+        "statusAtBasisDate": "unknown",
+        "metrics": {
+          "migrationStages": {
+            "value": 8,
+            "label": "8단계 마이그레이션 (Schema→Functions→Triggers→Data→RLS→GRANTs→Storage→Verify)",
+            "sourceRefs": ["project/docs/기초자료/README-supamigrate.md"]
+          }
+        },
+        "sourceRefs": [
+          "project/output/기술경력서_김성식.md",
+          "project/docs/기초자료/README-supamigrate.md",
+          ".coni/objectives/OBJ-3.md"
+        ]
+      }
+    ]
+  },
+  "careerMetrics": {
+    "constructionCm": {
+      "structuralSupportProjects": {
+        "value": 47,
+        "label": "47개 신탁사업 구조분야 기술지원",
+        "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
+      },
+      "veExperienceYears": {
+        "value": 5,
+        "label": "VE 경험 5년",
+        "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
+      },
+      "structuralExperienceYears": {
+        "value": 5,
+        "label": "건축구조 경험 5년 (석사 포함)",
+        "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
+      },
+      "itToolAdoptions": {
+        "value": 3,
+        "label": "3건 IT 도구 현장 도입 (Trello→REDMINE→Obsidian)",
+        "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
+      }
+    }
+  },
+  "education": [
+    {
+      "id": "masters",
+      "degree": "석사",
+      "institution": "충북대학교",
+      "department": "건축공학과",
+      "major": "건축구조해석",
+      "period": {
+        "start": {
+          "value": "2011-03",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2013-02",
+          "precision": "month"
+        },
+        "display": "2011.03 ~ 2013.02",
+        "dateKnown": true,
+        "ongoing": false
+      },
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md"
+      ]
+    },
+    {
+      "id": "bachelors",
+      "degree": "학사",
+      "institution": "충북대학교",
+      "department": "건축공학과",
+      "major": "건축공학",
+      "period": {
+        "start": {
+          "value": "2005-03",
+          "precision": "month"
+        },
+        "end": {
+          "value": "2011-02",
+          "precision": "month"
+        },
+        "display": "2005.03 ~ 2011.02",
+        "dateKnown": true,
+        "ongoing": false
+      },
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "건축기사",
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md"
+      ]
+    },
+    {
+      "name": "VE 고급과정 이수",
+      "sourceRefs": [
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/03_건설관련경력.md"
+      ]
+    }
+  ],
+  "normalizationNotes": [
+    {
+      "id": "heerim-is-not-current-at-basis-date",
+      "decision": "희림 재직은 2025-12-31에 종료된 것으로 정규화한다.",
+      "impact": ["employmentTimeline", "currentStatus"],
+      "sourceRefs": [
+        ".coni/objectives/OBJ-3.md",
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md"
+      ]
+    },
+    {
+      "id": "proposal-agent-ended-in-2025-11",
+      "decision": "제안서 에이전트는 희림 재직 중 수행한 완료 프로젝트로 정규화하고 2025.11 이후 현재형으로 표기하지 않는다.",
+      "impact": ["projects.core"],
+      "sourceRefs": [
+        ".coni/objectives/OBJ-3.md",
+        "project/output/이력서_김성식.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/04_IT_AI경력.md"
+      ]
+    },
+    {
+      "id": "wpm-is-a-legacy-alias-of-coni",
+      "decision": "OBJ-3 산출물 기준으로 `WPM`과 `개발자 프로젝트 관리 도구`는 `CONI`의 legacy alias로 취급한다.",
+      "impact": ["projects.core"],
+      "sourceRefs": [
+        ".coni/objectives/OBJ-3.md",
+        "project/output/기술경력서_김성식.md",
+        "project/docs/분석/04_IT_AI경력.md",
+        "project/docs/기초자료/README-coni.md"
+      ]
+    },
+    {
+      "id": "open-source-project-dates-remain-unknown",
+      "decision": "mlx-serve와 supamigrate는 제공된 source 문서에 명시적 기간이 없어 기간 값을 추정하지 않는다.",
+      "impact": ["projects.supporting"],
+      "sourceRefs": [
+        "project/output/기술경력서_김성식.md",
+        "project/docs/기초자료/README-mlx-serve.md",
+        "project/docs/기초자료/README-supamigrate.md"
+      ]
+    }
+  ]
+}

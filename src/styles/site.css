@@ -3,9 +3,9 @@
    Import chain: tokens-base → tokens-screen → base
    ────────────────────────────────────────────────── */
 
-@import "@shared/tokens-base.css";
-@import "@shared/tokens-screen.css";
-@import "@shared/base.css";
+@import "./shared/tokens-base.css";
+@import "./shared/tokens-screen.css";
+@import "./shared/base.css";
 
 @font-face {
   font-family: "Pretendard Site";

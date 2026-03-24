@@ -1,5 +1,5 @@
 import { z } from "zod";
-import profileJson from "@data/profile.normalized.json";
+import profileJson from "../data/profile.normalized.json";
 
 // --- Sub-schemas ---
 

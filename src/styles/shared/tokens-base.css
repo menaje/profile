@@ -1,0 +1,135 @@
+:root {
+  color-scheme: light;
+
+  --font-family-sans:
+    "Pretendard", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic",
+    "Segoe UI", sans-serif;
+  --font-family-mono:
+    "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
+
+  --color-ink: #0f172a;
+  --color-text: var(--color-ink);
+  --color-text-secondary: #4a4a5a;
+  --color-text-muted: #667085;
+  --color-muted: var(--color-text-muted);
+  --color-primary: #0f4c81;
+  --color-secondary: #1d7874;
+  --color-accent: #c66b3d;
+  --color-paper: #ffffff;
+  --color-bg-page: #ffffff;
+  --color-bg-surface: #f4f1ea;
+  --color-bg-subtle: #faf8f5;
+  --color-surface: var(--color-bg-surface);
+  --color-subtle: var(--color-bg-subtle);
+  --color-line: #d4cfc7;
+  --color-line-strong: #a39e94;
+  --site-surface-default: var(--color-bg-page);
+  --site-surface-elevated: var(--color-bg-surface);
+  --site-surface-muted: var(--color-bg-subtle);
+  --site-on-default: var(--color-text);
+  --site-on-muted: var(--color-text-secondary);
+  --site-on-inverse: var(--color-paper);
+  --site-border-default: var(--color-line);
+  --site-border-strong: var(--color-line-strong);
+  --site-border-accent: color-mix(
+    in srgb,
+    var(--color-primary) 28%,
+    var(--color-line)
+  );
+  --site-glow-primary: color-mix(
+    in srgb,
+    var(--color-primary) 18%,
+    transparent
+  );
+  --site-glow-secondary: color-mix(
+    in srgb,
+    var(--color-secondary) 18%,
+    transparent
+  );
+  --site-glow-accent: color-mix(in srgb, var(--color-accent) 18%, transparent);
+
+  --font-weight-body: 400;
+  --font-weight-heading: 700;
+  --line-height-tight: 1.15;
+  --line-height-body: 1.6;
+  --line-height-relaxed: 1.72;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-pill: 999px;
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.25rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 2.5rem;
+  --space-4xl: 3.75rem;
+  --space-5xl: 5rem;
+
+  --section-gap: var(--space-2xl);
+  --stack-gap: var(--space-xl);
+  --cluster-gap: var(--space-sm);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
+  --text-5xl: 3.75rem;
+  --text-6xl: clamp(3.6rem, 2.8rem + 2.3vw, 4.5rem);
+  --text-7xl: clamp(4.25rem, 3rem + 4vw, 6rem);
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.1);
+  --shadow-page: var(--shadow-lg);
+  --page-rule: 1px solid rgba(15, 23, 42, 0.08);
+
+  --shell-screen-margin: var(--space-md);
+  --shell-screen-gutter: 2rem;
+  --page-shell-background: var(--color-bg-page);
+  --page-shell-border-color: rgba(15, 23, 42, 0.08);
+  --page-shell-shadow: var(--shadow-lg);
+  --page-shell-radius: var(--radius-xl);
+  --page-shell-margin: var(--space-4xl);
+
+  --panel-padding: var(--space-lg);
+  --panel-radius: var(--radius-lg);
+  --panel-border-color: var(--color-line);
+  --panel-background: var(--color-bg-page);
+  --panel-tint-background: var(--color-bg-surface);
+  --panel-shadow: none;
+  --rail-panel-accent: var(--color-primary);
+  --rail-panel-background: transparent;
+
+  --chip-gap: var(--space-2xs);
+  --chip-padding-block: 0.4rem;
+  --chip-padding-inline: 0.75rem;
+  --chip-border-color: rgba(15, 76, 129, 0.14);
+  --chip-background: rgba(15, 76, 129, 0.06);
+  --chip-color: var(--color-primary);
+  --status-chip-border-color: rgba(198, 107, 61, 0.24);
+  --status-chip-background: rgba(198, 107, 61, 0.12);
+  --status-chip-color: #a0563c;
+
+  --eyebrow-color: var(--color-text-muted);
+  --section-title-color: var(--color-text);
+  --section-lead-color: var(--color-text-secondary);
+  --accent-rule-width: 3rem;
+  --accent-rule-height: 0.24rem;
+  --accent-rule-background: var(--color-primary);
+
+  --opener-band-background: var(--color-bg-subtle);
+  --chapter-divider-color: rgba(15, 23, 42, 0.12);
+  --editorial-break-background: rgba(244, 241, 234, 0.72);
+  --timeline-rail-line: var(--color-line);
+  --timeline-rail-marker: var(--color-primary);
+}

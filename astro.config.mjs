@@ -4,11 +4,6 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import markdoc from "@astrojs/markdoc";
 import keystatic from "@keystatic/astro";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 const isKeystatic = !process.argv.includes("build");
 const DEFAULT_SITE_URL = "https://coni-example.vercel.app";
 const EXCLUDED_SITEMAP_PATHS = new Set([
@@ -84,12 +79,4 @@ export default defineConfig({
     mdx(),
     ...(isKeystatic ? [keystatic()] : []),
   ],
-  vite: {
-    resolve: {
-      alias: {
-        "@shared": path.resolve(__dirname, "./html/shared"),
-        "@data": path.resolve(__dirname, "./html/data"),
-      },
-    },
-  },
 });
