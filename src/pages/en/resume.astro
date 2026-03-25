@@ -1,0 +1,157 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublicProfile } from "../../lib/public-profile";
+import { buildBreadcrumbStructuredData } from "../../lib/structured-data";
+import { getFallbackSiteUrl } from "../../lib/site";
+
+const data = getPublicProfile();
+const { careerSummary, employmentTimeline, organizations } = data;
+const site = Astro.site ?? getFallbackSiteUrl();
+const pageTitle = "Resume — Seongsik Kim";
+const pageDescription =
+  "AI-native system architect with construction CM and AI/IT experience. Career timeline and skills overview.";
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "Home", path: "/en/" },
+    { name: "Resume", path: "/en/resume/" },
+  ],
+});
+
+function orgName(orgId: string | null): string {
+  if (!orgId) return "Personal";
+  const org = organizations.find((o) => o.id === orgId);
+  return org ? org.displayName : orgId;
+}
+
+function domainLabel(domain: string): string {
+  return domain.toLowerCase().includes("construction") || domain === "건설사업관리(CM)"
+    ? "Construction CM"
+    : "AI / IT";
+}
+---
+
+<BaseLayout lang="en" title={pageTitle} description={pageDescription} structuredData={structuredData}>
+  <div class="en-page" style="max-width: var(--site-content-max-width); margin: 0 auto;">
+    <section class="en-page__hero site-page-hero">
+      <p class="site-page-hero__eyebrow">Resume</p>
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h1 class="site-page-hero__title">Seongsik Kim</h1>
+      <p class="site-page-hero__lead">{data.profile.positioningTitle}</p>
+      <p class="site-page-hero__meta">
+        Total {careerSummary.totalCareer.label} &middot; Construction CM {careerSummary.constructionCm.label}
+        &middot; AI/IT {careerSummary.aiIt.label}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="en-resume__section-title">Experience</h2>
+      <div class="en-resume__timeline">
+        {employmentTimeline.map((emp) => (
+          <article class="en-resume__entry site-card">
+            <div class="en-resume__entry-header">
+              <span class="en-resume__period">{emp.period.display}</span>
+              <span class="site-badge site-badge--neutral">{domainLabel(emp.domain)}</span>
+            </div>
+            <h3 class="en-resume__role">{emp.roleTitle}</h3>
+            <p class="en-resume__org">{orgName(emp.organizationId)}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2 class="en-resume__section-title">Skills</h2>
+      <div class="en-resume__skills">
+        <div class="en-resume__skill-group">
+          <h3>Domain</h3>
+          <p>Construction Project Management, Value Engineering, Document Management Systems, Stakeholder Coordination</p>
+        </div>
+        <div class="en-resume__skill-group">
+          <h3>Technical</h3>
+          <p>TypeScript, Python, Astro, Node.js, AI/LLM Integration, System Architecture, Knowledge Graph Design</p>
+        </div>
+        <div class="en-resume__skill-group">
+          <h3>Methodology</h3>
+          <p>AI-Native Development, Agent Orchestration, Domain-Driven Design, Workflow Automation</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .en-page {
+    padding: clamp(var(--space-3xl), 8vw, var(--space-5xl)) var(--site-gutter)
+      clamp(var(--space-4xl), 10vw, 6rem);
+    display: grid;
+    gap: var(--space-3xl);
+  }
+
+  .en-page__hero {
+    margin-bottom: 0;
+  }
+
+  .en-resume__section-title {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .en-resume__timeline {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .en-resume__entry {
+    gap: var(--space-xs);
+  }
+
+  .en-resume__entry-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .en-resume__period {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .en-resume__role {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .en-resume__org {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .en-resume__skills {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .en-resume__skills {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .en-resume__skill-group h3 {
+    font-size: var(--text-md);
+    margin: 0 0 var(--space-xs);
+  }
+
+  .en-resume__skill-group p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-body);
+    color: var(--color-text-secondary);
+  }
+</style>

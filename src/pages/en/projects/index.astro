@@ -1,0 +1,126 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPublicProfile } from "../../../lib/public-profile";
+import { withBase } from "../../../lib/site";
+import { buildBreadcrumbStructuredData } from "../../../lib/structured-data";
+import { getFallbackSiteUrl } from "../../../lib/site";
+
+const data = getPublicProfile();
+const site = Astro.site ?? getFallbackSiteUrl();
+const pageTitle = "Projects — Seongsik Kim";
+const pageDescription = "AI collaboration systems and construction management solutions.";
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "Home", path: "/en/" },
+    { name: "Projects", path: "/en/projects/" },
+  ],
+});
+
+// Map project to its employment domain via organizationId
+const employments = data.employmentTimeline;
+function getDomain(orgId: string | null): string {
+  if (!orgId) return "ai-it";
+  const emp = employments.find((e) => e.organizationId === orgId);
+  if (!emp) return "ai-it";
+  return emp.domain.toLowerCase().includes("construction") || emp.domain === "건설사업관리(CM)"
+    ? "construction-cm"
+    : "ai-it";
+}
+
+function domainLabel(orgId: string | null): string {
+  return getDomain(orgId) === "construction-cm" ? "Construction CM" : "AI / IT";
+}
+
+function domainBadge(orgId: string | null): string {
+  return getDomain(orgId) === "construction-cm"
+    ? "site-badge--domain-construction"
+    : "site-badge--domain-ai";
+}
+---
+
+<BaseLayout lang="en" title={pageTitle} description={pageDescription} structuredData={structuredData}>
+  <div class="en-page" style="max-width: var(--site-content-max-width); margin: 0 auto;">
+    <section class="en-page__hero site-page-hero">
+      <p class="site-page-hero__eyebrow">Projects</p>
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h1 class="site-page-hero__title">Selected Work</h1>
+      <p class="site-page-hero__lead">
+        Key projects spanning construction management and AI system design.
+      </p>
+    </section>
+
+    <div class="en-projects__grid">
+      {data.projects.core.map((project) => (
+        <article class="site-card site-card--interactive en-projects__card">
+          <div class="en-projects__meta">
+            <span class={`site-badge ${domainBadge(project.organizationId)}`}>
+              {domainLabel(project.organizationId)}
+            </span>
+            {project.period.display && (
+              <span class="en-projects__period">{project.period.display}</span>
+            )}
+          </div>
+          <h2 class="en-projects__title">{project.canonicalName}</h2>
+          <p class="en-projects__desc">{project.role}</p>
+          {project.statusAtBasisDate === "ongoing" && (
+            <span class="site-badge site-badge--state">Ongoing</span>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .en-page {
+    padding: clamp(var(--space-3xl), 8vw, var(--space-5xl)) var(--site-gutter)
+      clamp(var(--space-4xl), 10vw, 6rem);
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .en-page__hero {
+    margin-bottom: 0;
+  }
+
+  .en-projects__grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .en-projects__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .en-projects__card {
+    gap: var(--space-sm);
+  }
+
+  .en-projects__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .en-projects__period {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .en-projects__title {
+    margin: 0;
+    font-size: var(--text-xl);
+    line-height: var(--line-height-tight);
+  }
+
+  .en-projects__desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-body);
+    color: var(--color-text-secondary);
+  }
+</style>

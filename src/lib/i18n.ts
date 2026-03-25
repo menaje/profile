@@ -24,14 +24,9 @@ export function getAlternateLocales(currentLocale: string): Locale[] {
   return SUPPORTED_LOCALES.filter((l) => l !== currentLocale);
 }
 
-/**
- * 현재 공개된 경로 기준으로 인덱싱 가능한 locale 집합을 반환
- *
- * 현 시점에는 영문 페이지가 `/en/` placeholder(noindex)만 존재하므로,
- * SEO용 hreflang은 한국어 공개 경로에만 노출한다.
- */
+/** 인덱싱 가능한 locale 집합 — 영문 페이지가 활성화되어 양방향 hreflang 지원 */
 export function getIndexableLocalesForPath(_pathname: string): Locale[] {
-  return [DEFAULT_LOCALE];
+  return [...SUPPORTED_LOCALES];
 }
 
 /** 기본 로케일 여부 확인 */

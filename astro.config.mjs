@@ -10,8 +10,6 @@ const DEFAULT_SITE_URL = "https://menaje.github.io";
 const EXCLUDED_SITEMAP_PATHS = new Set([
   "/404",
   "/404/",
-  "/en",
-  "/en/",
   "/keystatic",
   "/keystatic/",
   "/robots.txt",
@@ -65,6 +63,7 @@ export default defineConfig({
   site: siteUrl.toString(),
   base: SITE_BASE_PATH,
   outDir: "./dist",
+  prefetch: false,
   i18n: {
     defaultLocale: "ko",
     locales: ["ko", "en"],
