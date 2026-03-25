@@ -98,6 +98,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
             </p>
           </div>
 
+          <h2 class="site-projects__sr-only">프로젝트 목록</h2>
           <div class="site-projects__grid stagger-children" data-reveal="stagger-children">
             {projects.map((entry: ProjectEntry) => (
               <article
@@ -339,6 +340,18 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     margin: 0;
     font-size: var(--text-sm);
     color: var(--color-text-muted);
+  }
+
+  .site-projects__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .site-projects__grid {
