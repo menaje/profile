@@ -2,14 +2,12 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "../../lib/site";
 
 type ProjectEntry = CollectionEntry<"case-studies">;
 type ProjectDomain = ProjectEntry["data"]["domain"];
 
-const allProjects = await getCollection(
-  "case-studies",
-  (entry: ProjectEntry) => !entry.data.draft,
-);
+const allProjects = await getCollection("case-studies", (entry: ProjectEntry) => !entry.data.draft);
 
 const projects = allProjects.sort((a: ProjectEntry, b: ProjectEntry) => {
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
@@ -65,8 +63,8 @@ function filterLabel(domain: ProjectDomain | "all"): string {
       <p class="site-page-hero__eyebrow">Projects</p>
       <h1 class="site-page-hero__title">현장의 문제를 시스템 설계로 바꾼 프로젝트</h1>
       <p class="site-page-hero__lead">
-        건설사업관리와 AI/IT 사이를 오가며, 복잡한 운영 맥락을 실제로
-        작동하는 협업 시스템과 자동화 흐름으로 풀어낸 사례를 모았습니다.
+        건설사업관리와 AI/IT 사이를 오가며, 복잡한 운영 맥락을 실제로 작동하는 협업 시스템과 자동화
+        흐름으로 풀어낸 사례를 모았습니다.
       </p>
       <p class="site-page-hero__meta">
         공개된 케이스 스터디 {projects.length}건
@@ -77,11 +75,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
       projects.length > 0 ? (
         <>
           <div class="site-projects__controls-bar" data-reveal="slide-up">
-            <div
-              class="site-projects__segment"
-              role="group"
-              aria-label="도메인 필터"
-            >
+            <div class="site-projects__segment" role="group" aria-label="도메인 필터">
               {(["all", "construction-cm", "ai-it"] as const).map((filter) => (
                 <button
                   type="button"
@@ -99,10 +93,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
             </p>
           </div>
 
-          <div
-            class="site-projects__grid stagger-children"
-            data-reveal="stagger-children"
-          >
+          <div class="site-projects__grid stagger-children" data-reveal="stagger-children">
             {projects.map((entry: ProjectEntry) => (
               <article
                 class:list={[
@@ -117,9 +108,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
                 <div class="site-projects__item-head">
                   <div class="site-projects__item-badges">
                     {allDomains(entry).map((d) => (
-                      <span class={domainBadgeClass(d)}>
-                        {domainLabel(d)}
-                      </span>
+                      <span class={domainBadgeClass(d)}>{domainLabel(d)}</span>
                     ))}
                     {!entry.data.period.end && (
                       <span class="site-badge site-badge--state site-projects__state-badge site-projects__state-badge--ongoing">
@@ -134,11 +123,9 @@ function filterLabel(domain: ProjectDomain | "all"): string {
 
                 <div class="site-projects__item-body">
                   <h3 class="site-projects__item-title">
-                    <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+                    <a href={withBase(`/projects/${entry.id}/`)}>{entry.data.title}</a>
                   </h3>
-                  <p class="site-projects__item-description">
-                    {entry.data.description}
-                  </p>
+                  <p class="site-projects__item-description">{entry.data.description}</p>
                 </div>
 
                 <dl class="site-projects__item-meta site-metadata-block">
@@ -162,11 +149,13 @@ function filterLabel(domain: ProjectDomain | "all"): string {
 
                 <div class="site-projects__item-footer">
                   <a
-                    href={`/projects/${entry.id}/`}
+                    href={withBase(`/projects/${entry.id}/`)}
                     class="site-projects__cta site-button site-button--ghost site-button--quiet"
                   >
                     <span>자세히 보기</span>
-                    <span class="site-projects__cta-icon" aria-hidden="true">→</span>
+                    <span class="site-projects__cta-icon" aria-hidden="true">
+                      →
+                    </span>
                   </a>
                 </div>
               </article>
@@ -188,11 +177,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
                 전체 보기로 돌아가거나 다른 도메인을 선택해 보세요.
               </p>
             </div>
-            <button
-              type="button"
-              class="site-button site-button--primary"
-              data-filter-reset
-            >
+            <button type="button" class="site-button site-button--primary" data-filter-reset>
               전체 보기
             </button>
           </article>
@@ -200,9 +185,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
       ) : (
         <article class="site-projects__empty site-card" data-reveal="slide-up">
           <div class="site-projects__placeholder-copy">
-            <h2 class="site-projects__placeholder-title">
-              아직 공개된 프로젝트가 없습니다.
-            </h2>
+            <h2 class="site-projects__placeholder-title">아직 공개된 프로젝트가 없습니다.</h2>
             <p class="site-projects__placeholder-text">
               프로젝트 데이터가 준비되면 이 페이지에 공개할 예정입니다.
             </p>
@@ -218,9 +201,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
     const buttons = Array.from(
       document.querySelectorAll<HTMLButtonElement>("[data-project-filter]"),
     );
-    const cards = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-project-card]"),
-    );
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-project-card]"));
     const summary = document.querySelector<HTMLElement>("[data-filter-summary]");
     const noResults = document.querySelector<HTMLElement>("[data-no-results]");
     const resetButtons = Array.from(
@@ -242,9 +223,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
         if (matches) visibleCount += 1;
       });
 
-      const activeButton = buttons.find(
-        (button) => button.dataset.projectFilter === nextFilter,
-      );
+      const activeButton = buttons.find((button) => button.dataset.projectFilter === nextFilter);
       const label = activeButton?.dataset.filterLabel ?? "전체";
 
       if (summary) {

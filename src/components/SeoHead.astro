@@ -6,6 +6,7 @@ import {
   getAlternateLocales,
   getIndexableLocalesForPath,
 } from "../lib/i18n";
+import { ensureBasePath, withBase } from "../lib/site";
 
 interface Props {
   title: string;
@@ -22,7 +23,9 @@ const pathWithoutLocale = Astro.url.pathname.replace(/^\/en(\/|$)/, "/");
 const {
   title,
   description,
-  canonicalUrl = new URL(Astro.url.pathname, Astro.site).href,
+  canonicalUrl = Astro.site
+    ? new URL(ensureBasePath(Astro.url.pathname), Astro.site).href
+    : Astro.url.href,
   ogImage,
   ogType = "website",
   noindex = false,
@@ -37,7 +40,7 @@ const hreflangEntries = indexableLocales.map((locale) => ({
   href: getAbsoluteLocaleUrl(locale, pathWithoutLocale),
 }));
 const shouldExposeAlternates = !noindex && indexableLocales.length > 1;
-const rssUrl = Astro.site ? new URL("/rss.xml", Astro.site).href : undefined;
+const rssUrl = Astro.site ? new URL(withBase("/rss.xml"), Astro.site).href : undefined;
 ---
 
 <title>{title}</title>
@@ -61,12 +64,7 @@ const rssUrl = Astro.site ? new URL("/rss.xml", Astro.site).href : undefined;
 }
 {
   !noindex && rssUrl && (
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="김성식 블로그 RSS"
-      href={rssUrl}
-    />
+    <link rel="alternate" type="application/rss+xml" title="김성식 블로그 RSS" href={rssUrl} />
   )
 }
 <meta property="og:title" content={title} />

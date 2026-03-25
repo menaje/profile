@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "../../lib/site";
 
 const allPosts = await getCollection("blog", (entry: CollectionEntry<"blog">) => {
   return import.meta.env.PROD ? entry.data.draft !== true : true;
@@ -40,192 +41,171 @@ function getDateBlockParts(date: Date) {
       <p class="site-page-hero__eyebrow">Writing & Notes</p>
       <h1 class="site-page-hero__title">블로그</h1>
       <p class="site-page-hero__lead">
-        도메인 전환 과정에서 정리한 문제 해결 방식, 시스템 설계 관점, 그리고
-        현장에서 얻은 인사이트를 기록합니다.
+        도메인 전환 과정에서 정리한 문제 해결 방식, 시스템 설계 관점, 그리고 현장에서 얻은
+        인사이트를 기록합니다.
       </p>
       <p class="site-page-hero__meta">
-        {posts.length > 0
-          ? `현재 ${posts.length}개의 글이 있으며, 가장 최근 글부터 읽기 좋게 재구성했습니다.`
-          : "첫 글을 준비 중입니다. 구조와 톤을 먼저 정리해 두었습니다."}
+        {
+          posts.length > 0
+            ? `현재 ${posts.length}개의 글이 있으며, 가장 최근 글부터 읽기 좋게 재구성했습니다.`
+            : "첫 글을 준비 중입니다. 구조와 톤을 먼저 정리해 두었습니다."
+        }
       </p>
     </div>
 
     {
       posts.length > 0 ? (
         <div class="site-blog-index__stack">
-          {
-            featuredPost && (
-              <section
-                class="site-blog-index__section"
-                aria-labelledby="blog-featured-heading"
-                data-reveal="slide-up"
-              >
-                <div class="site-section-header site-blog-index__section-header">
-                  <p class="site-section-header__eyebrow">Latest Note</p>
-                  <div class="site-section-header__rule" aria-hidden="true"></div>
-                  <h2
-                    id="blog-featured-heading"
-                    class="site-section-header__title"
-                  >
-                    최근 글
-                  </h2>
-                  <p class="site-section-header__lead">
-                    가장 최근에 정리한 생각과 기술 기록을 먼저 읽을 수 있게
-                    배치했습니다.
-                  </p>
-                </div>
+          {featuredPost && (
+            <section
+              class="site-blog-index__section"
+              aria-labelledby="blog-featured-heading"
+              data-reveal="slide-up"
+            >
+              <div class="site-section-header site-blog-index__section-header">
+                <p class="site-section-header__eyebrow">Latest Note</p>
+                <div class="site-section-header__rule" aria-hidden="true" />
+                <h2 id="blog-featured-heading" class="site-section-header__title">
+                  최근 글
+                </h2>
+                <p class="site-section-header__lead">
+                  가장 최근에 정리한 생각과 기술 기록을 먼저 읽을 수 있게 배치했습니다.
+                </p>
+              </div>
 
-                <article
-                  class="site-blog-card site-blog-card--featured site-card site-card--interactive"
+              <article class="site-blog-card site-blog-card--featured site-card site-card--interactive">
+                <a
+                  href={withBase(`/blog/${featuredPost.id}/`)}
+                  class="site-blog-card__link"
+                  aria-label={`${featuredPost.data.title} 읽기`}
                 >
-                  <a
-                    href={`/blog/${featuredPost.id}/`}
-                    class="site-blog-card__link"
-                    aria-label={`${featuredPost.data.title} 읽기`}
+                  <time
+                    class="site-blog-card__date-block"
+                    datetime={featuredPost.data.publishedDate.toISOString()}
+                    aria-label={formatDate(featuredPost.data.publishedDate)}
+                    style={`view-transition-name: blog-post-date-${featuredPost.id}`}
                   >
-                    <time
-                      class="site-blog-card__date-block"
-                      datetime={featuredPost.data.publishedDate.toISOString()}
-                      aria-label={formatDate(featuredPost.data.publishedDate)}
-                      style={`view-transition-name: blog-post-date-${featuredPost.id}`}
-                    >
-                      <span class="site-blog-card__date-month">
-                        {getDateBlockParts(featuredPost.data.publishedDate).month}
-                      </span>
-                      <strong class="site-blog-card__date-day">
-                        {getDateBlockParts(featuredPost.data.publishedDate).day}
-                      </strong>
-                      <span class="site-blog-card__date-year">
-                        {getDateBlockParts(featuredPost.data.publishedDate).year}
-                      </span>
-                    </time>
+                    <span class="site-blog-card__date-month">
+                      {getDateBlockParts(featuredPost.data.publishedDate).month}
+                    </span>
+                    <strong class="site-blog-card__date-day">
+                      {getDateBlockParts(featuredPost.data.publishedDate).day}
+                    </strong>
+                    <span class="site-blog-card__date-year">
+                      {getDateBlockParts(featuredPost.data.publishedDate).year}
+                    </span>
+                  </time>
 
-                    <div class="site-blog-card__content">
-                      <div class="site-blog-card__meta">
-                        <span class="site-badge site-badge--state">Latest</span>
-                        <span class="site-blog-card__full-date">
-                          {formatDate(featuredPost.data.publishedDate)}
-                        </span>
-                      </div>
-                      <h3
-                        class="site-blog-card__title"
-                        style={`view-transition-name: blog-post-title-${featuredPost.id}`}
-                      >
-                        {featuredPost.data.title}
-                      </h3>
-                      <p class="site-blog-card__description">
-                        {featuredPost.data.description}
-                      </p>
-                      {
-                        featuredPost.data.tags.length > 0 && (
-                          <ul class="site-blog-card__tags" aria-label="태그">
-                            {featuredPost.data.tags.map((tag: string) => (
-                              <li>
-                                <span class="site-badge site-badge--neutral">
-                                  {tag}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      }
-                      <span class="site-blog-card__cta" aria-hidden="true">
-                        <span>글 읽기</span>
-                        <span class="site-blog-card__cta-icon">→</span>
+                  <div class="site-blog-card__content">
+                    <div class="site-blog-card__meta">
+                      <span class="site-badge site-badge--state">Latest</span>
+                      <span class="site-blog-card__full-date">
+                        {formatDate(featuredPost.data.publishedDate)}
                       </span>
                     </div>
-                  </a>
-                </article>
-              </section>
-            )
-          }
+                    <h3
+                      class="site-blog-card__title"
+                      style={`view-transition-name: blog-post-title-${featuredPost.id}`}
+                    >
+                      {featuredPost.data.title}
+                    </h3>
+                    <p class="site-blog-card__description">{featuredPost.data.description}</p>
+                    {featuredPost.data.tags.length > 0 && (
+                      <ul class="site-blog-card__tags" aria-label="태그">
+                        {featuredPost.data.tags.map((tag: string) => (
+                          <li>
+                            <span class="site-badge site-badge--neutral">{tag}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <span class="site-blog-card__cta" aria-hidden="true">
+                      <span>글 읽기</span>
+                      <span class="site-blog-card__cta-icon">→</span>
+                    </span>
+                  </div>
+                </a>
+              </article>
+            </section>
+          )}
 
-          {
-            recentPosts.length > 0 && (
-              <section
-                class="site-blog-index__section"
-                aria-labelledby="blog-archive-heading"
-                data-reveal="slide-up"
-              >
-                <div class="site-section-header site-blog-index__section-header">
-                  <p class="site-section-header__eyebrow">Archive</p>
-                  <div class="site-section-header__rule" aria-hidden="true"></div>
-                  <h2
-                    id="blog-archive-heading"
-                    class="site-section-header__title"
-                  >
-                    이전 글
-                  </h2>
-                  <p class="site-section-header__lead">
-                    날짜 블록과 요약을 기준으로 빠르게 훑을 수 있게 정리했습니다.
-                  </p>
-                </div>
+          {recentPosts.length > 0 && (
+            <section
+              class="site-blog-index__section"
+              aria-labelledby="blog-archive-heading"
+              data-reveal="slide-up"
+            >
+              <div class="site-section-header site-blog-index__section-header">
+                <p class="site-section-header__eyebrow">Archive</p>
+                <div class="site-section-header__rule" aria-hidden="true" />
+                <h2 id="blog-archive-heading" class="site-section-header__title">
+                  이전 글
+                </h2>
+                <p class="site-section-header__lead">
+                  날짜 블록과 요약을 기준으로 빠르게 훑을 수 있게 정리했습니다.
+                </p>
+              </div>
 
-                <ul class="site-blog-index__list stagger-children">
-                  {recentPosts.map((post: CollectionEntry<"blog">) => (
-                    <li class="site-blog-index__list-item">
-                      <article class="site-blog-card site-card site-card--interactive">
-                        <a
-                          href={`/blog/${post.id}/`}
-                          class="site-blog-card__link"
-                          aria-label={`${post.data.title} 읽기`}
+              <ul class="site-blog-index__list stagger-children">
+                {recentPosts.map((post: CollectionEntry<"blog">) => (
+                  <li class="site-blog-index__list-item">
+                    <article class="site-blog-card site-card site-card--interactive">
+                      <a
+                        href={withBase(`/blog/${post.id}/`)}
+                        class="site-blog-card__link"
+                        aria-label={`${post.data.title} 읽기`}
+                      >
+                        <time
+                          class="site-blog-card__date-block"
+                          datetime={post.data.publishedDate.toISOString()}
+                          aria-label={formatDate(post.data.publishedDate)}
+                          style={`view-transition-name: blog-post-date-${post.id}`}
                         >
-                          <time
-                            class="site-blog-card__date-block"
-                            datetime={post.data.publishedDate.toISOString()}
-                            aria-label={formatDate(post.data.publishedDate)}
-                            style={`view-transition-name: blog-post-date-${post.id}`}
-                          >
-                            <span class="site-blog-card__date-month">
-                              {getDateBlockParts(post.data.publishedDate).month}
-                            </span>
-                            <strong class="site-blog-card__date-day">
-                              {getDateBlockParts(post.data.publishedDate).day}
-                            </strong>
-                            <span class="site-blog-card__date-year">
-                              {getDateBlockParts(post.data.publishedDate).year}
-                            </span>
-                          </time>
+                          <span class="site-blog-card__date-month">
+                            {getDateBlockParts(post.data.publishedDate).month}
+                          </span>
+                          <strong class="site-blog-card__date-day">
+                            {getDateBlockParts(post.data.publishedDate).day}
+                          </strong>
+                          <span class="site-blog-card__date-year">
+                            {getDateBlockParts(post.data.publishedDate).year}
+                          </span>
+                        </time>
 
-                          <div class="site-blog-card__content">
-                            <div class="site-blog-card__meta">
-                              <span class="site-blog-card__full-date">
-                                {formatDate(post.data.publishedDate)}
-                              </span>
-                            </div>
-                            <h3
-                              class="site-blog-card__title"
-                              style={`view-transition-name: blog-post-title-${post.id}`}
-                            >
-                              {post.data.title}
-                            </h3>
-                            <p class="site-blog-card__description">
-                              {post.data.description}
-                            </p>
-                            {
-                              post.data.tags.length > 0 && (
-                                <ul class="site-blog-card__tags" aria-label="태그">
-                                  {post.data.tags.map((tag: string) => (
-                                    <li>
-                                      <span class="site-badge">{tag}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )
-                            }
-                            <span class="site-blog-card__cta" aria-hidden="true">
-                              <span>더 읽기</span>
-                              <span class="site-blog-card__cta-icon">→</span>
+                        <div class="site-blog-card__content">
+                          <div class="site-blog-card__meta">
+                            <span class="site-blog-card__full-date">
+                              {formatDate(post.data.publishedDate)}
                             </span>
                           </div>
-                        </a>
-                      </article>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )
-          }
+                          <h3
+                            class="site-blog-card__title"
+                            style={`view-transition-name: blog-post-title-${post.id}`}
+                          >
+                            {post.data.title}
+                          </h3>
+                          <p class="site-blog-card__description">{post.data.description}</p>
+                          {post.data.tags.length > 0 && (
+                            <ul class="site-blog-card__tags" aria-label="태그">
+                              {post.data.tags.map((tag: string) => (
+                                <li>
+                                  <span class="site-badge">{tag}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          <span class="site-blog-card__cta" aria-hidden="true">
+                            <span>더 읽기</span>
+                            <span class="site-blog-card__cta-icon">→</span>
+                          </span>
+                        </div>
+                      </a>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       ) : (
         <div class="site-blog-index__empty site-card" data-reveal="fade-in">
@@ -248,8 +228,8 @@ function getDateBlockParts(date: Date) {
           <div class="site-blog-index__empty-copy">
             <h2 class="site-blog-index__empty-title">첫 글을 준비하고 있습니다</h2>
             <p class="site-blog-index__empty-text">
-              도메인 전환, 시스템 설계, 프로젝트 회고를 차례로 쌓아갈 예정입니다.
-              준비되는 즉시 가장 최근 글부터 이곳에 정리됩니다.
+              도메인 전환, 시스템 설계, 프로젝트 회고를 차례로 쌓아갈 예정입니다. 준비되는 즉시 가장
+              최근 글부터 이곳에 정리됩니다.
             </p>
           </div>
         </div>
@@ -262,8 +242,7 @@ function getDateBlockParts(date: Date) {
   .site-blog-index {
     max-width: var(--site-content-max-width);
     margin: 0 auto;
-    padding: clamp(var(--space-2xl), 6vw, var(--space-4xl)) var(--site-gutter)
-      var(--space-4xl);
+    padding: clamp(var(--space-2xl), 6vw, var(--space-4xl)) var(--site-gutter) var(--space-4xl);
   }
 
   .site-blog-index__hero {
@@ -410,13 +389,11 @@ function getDateBlockParts(date: Date) {
       color var(--transition-fast);
   }
 
-  :where(.site-blog-card:hover, .site-blog-card:focus-within)
-    .site-blog-card__date-block {
+  :where(.site-blog-card:hover, .site-blog-card:focus-within) .site-blog-card__date-block {
     border-color: var(--color-primary);
   }
 
-  :where(.site-blog-card:hover, .site-blog-card:focus-within)
-    .site-blog-card__cta-icon {
+  :where(.site-blog-card:hover, .site-blog-card:focus-within) .site-blog-card__cta-icon {
     transform: translateX(0.18rem);
   }
 

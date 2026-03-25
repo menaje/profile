@@ -1,9 +1,11 @@
 ---
+import { withBase } from "../lib/site";
+
 const navItems = [
-  { label: "소개", href: "/about" },
-  { label: "프로젝트", href: "/projects" },
-  { label: "이력서", href: "/resume" },
-  { label: "블로그", href: "/blog" },
+  { label: "소개", href: withBase("/about/") },
+  { label: "프로젝트", href: withBase("/projects/") },
+  { label: "이력서", href: withBase("/resume/") },
+  { label: "블로그", href: withBase("/blog/") },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -12,7 +14,7 @@ const currentPath = Astro.url.pathname;
 <header class="site-header">
   <nav class="site-nav" aria-label="메인 내비게이션">
     <div class="site-nav__bar">
-      <a href="/" class="site-nav__logo" aria-label="홈으로 이동">
+      <a href={withBase("/")} class="site-nav__logo" aria-label="홈으로 이동">
         <span class="site-nav__logo-mark" aria-hidden="true">KS</span>
         <span class="site-nav__logo-name">김성식</span>
       </a>
@@ -67,8 +69,7 @@ const currentPath = Astro.url.pathname;
                     href={item.href}
                     class="site-nav__link"
                     aria-current={
-                      currentPath === item.href ||
-                      currentPath.startsWith(item.href + "/")
+                      currentPath === item.href || currentPath.startsWith(item.href)
                         ? "page"
                         : undefined
                     }

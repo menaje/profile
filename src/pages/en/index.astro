@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBase } from "../../lib/site";
 ---
 
 <BaseLayout
@@ -10,7 +11,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   <section class="coming-soon">
     <h1>Coming Soon</h1>
     <p>The English version of this site is currently being prepared.</p>
-    <a href="/">한국어 사이트로 이동</a>
+    <a href={withBase("/")}>한국어 사이트로 이동</a>
   </section>
 </BaseLayout>
 

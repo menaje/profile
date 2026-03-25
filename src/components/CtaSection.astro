@@ -1,5 +1,6 @@
 ---
 import type { PublicProfile, PublicCurrentStatus } from "../lib/public-profile";
+import { withBase } from "../lib/site";
 
 interface Props {
   profile: PublicProfile;
@@ -27,7 +28,7 @@ const ctaCopy =
 
     <div class="site-cta__actions">
       <a
-        href="/contact"
+        href={withBase("/contact/")}
         class="site-cta__button site-button site-button--primary site-button--glow"
       >
         연락하기

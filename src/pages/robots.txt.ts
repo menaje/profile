@@ -1,18 +1,17 @@
 import type { APIRoute } from "astro";
-
-const FALLBACK_SITE_URL = "https://coni-example.vercel.app";
+import { getFallbackSiteUrl, withBase } from "../lib/site";
 
 export const prerender = true;
 
 export const GET: APIRoute = ({ site }) => {
-  const origin = site ?? new URL(FALLBACK_SITE_URL);
+  const origin = site ?? getFallbackSiteUrl();
   const body = [
     "User-agent: *",
-    "Allow: /",
-    "Disallow: /404",
-    "Disallow: /404/",
-    "Disallow: /keystatic/",
-    `Sitemap: ${new URL("/sitemap.xml", origin).href}`,
+    `Allow: ${withBase("/")}`,
+    `Disallow: ${withBase("/404")}`,
+    `Disallow: ${withBase("/404/")}`,
+    `Disallow: ${withBase("/keystatic/")}`,
+    `Sitemap: ${new URL(withBase("/sitemap.xml"), origin).href}`,
   ].join("\n");
 
   return new Response(body, {

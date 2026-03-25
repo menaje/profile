@@ -1,5 +1,6 @@
 ---
 import type { PublicProfile, PublicCurrentStatus } from "../lib/public-profile";
+import { withBase } from "../lib/site";
 
 interface Props {
   profile: PublicProfile;
@@ -36,28 +37,20 @@ const bridgeDomains = [
         <h1 id="hero-heading" class="site-page-hero__title site-hero__name">
           {profile.name.ko}
         </h1>
-        <p class="site-hero__headline site-hero__headline--accent">
-          AI 협업 시스템으로 번역합니다
-        </p>
+        <p class="site-hero__headline site-hero__headline--accent">AI 협업 시스템으로 번역합니다</p>
       </div>
       <p class="site-page-hero__lead site-hero__lead">
-        도메인 맥락, 문서 흐름, 이해관계자의 요구를 읽고 실제 업무가 굴러가는
-        협업 구조와 자동화 가능한 시스템으로 연결합니다.
+        도메인 맥락, 문서 흐름, 이해관계자의 요구를 읽고 실제 업무가 굴러가는 협업 구조와 자동화
+        가능한 시스템으로 연결합니다.
       </p>
       <div class="site-hero__status-inline">
         <span class="site-badge site-badge--state">{currentStatus.label}</span>
       </div>
       <div class="site-hero__actions">
-        <a
-          href="/contact"
-          class="site-hero__cta site-button site-button--primary"
-        >
+        <a href={withBase("/contact/")} class="site-hero__cta site-button site-button--primary">
           연락하기
         </a>
-        <a
-          href="/projects"
-          class="site-hero__link site-button site-button--ghost"
-        >
+        <a href={withBase("/projects/")} class="site-hero__link site-button site-button--ghost">
           프로젝트 보기
         </a>
       </div>
@@ -77,40 +70,32 @@ const bridgeDomains = [
         >
           <path
             class="site-hero__diagram-line site-hero__diagram-line--cm"
-            d="M110 100C160 120 200 170 234 240"
-          ></path>
+            d="M110 100C160 120 200 170 234 240"></path>
           <path
             class="site-hero__diagram-line site-hero__diagram-line--ai"
-            d="M380 120C330 140 280 190 250 240"
-          ></path>
-          <path
-            class="site-hero__diagram-line site-hero__diagram-line--bridge"
-            d="M240 270V330"
+            d="M380 120C330 140 280 190 250 240"></path>
+          <path class="site-hero__diagram-line site-hero__diagram-line--bridge" d="M240 270V330"
           ></path>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--cm"
             cx="110"
             cy="100"
-            r="10"
-          ></circle>
+            r="10"></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--hub"
             cx="240"
             cy="250"
-            r="16"
-          ></circle>
+            r="16"></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--ai"
             cx="380"
             cy="120"
-            r="10"
-          ></circle>
+            r="10"></circle>
           <circle
             class="site-hero__diagram-point site-hero__diagram-point--status"
             cx="240"
             cy="330"
-            r="10"
-          ></circle>
+            r="10"></circle>
         </svg>
 
         {
@@ -122,12 +107,12 @@ const bridgeDomains = [
                 `site-hero__domain-card--${domain.id}`,
               ]}
             >
-              <span class:list={["site-badge", domain.badgeClass]}>
-                {domain.label}
-              </span>
+              <span class:list={["site-badge", domain.badgeClass]}>{domain.label}</span>
               <p class="site-hero__domain-title">{domain.title}</p>
               <ul class="site-hero__domain-list">
-                {domain.items.map((item) => <li>{item}</li>)}
+                {domain.items.map((item) => (
+                  <li>{item}</li>
+                ))}
               </ul>
             </div>
           ))
@@ -160,8 +145,7 @@ const bridgeDomains = [
 
 <style>
   .site-hero {
-    padding:
-      clamp(var(--space-4xl), 8vw, 6.5rem) var(--site-gutter)
+    padding: clamp(var(--space-4xl), 8vw, 6.5rem) var(--site-gutter)
       clamp(var(--space-4xl), 7vw, var(--space-5xl));
   }
 
