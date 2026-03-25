@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { withBase } from "../../../lib/site";
+import { buildBreadcrumbStructuredData } from "../../../lib/structured-data";
+import { getFallbackSiteUrl } from "../../../lib/site";
+
+const site = Astro.site ?? getFallbackSiteUrl();
+const pageTitle = "Blog — Seongsik Kim";
+const pageDescription = "Insights on AI systems, construction management, and domain-driven development.";
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "Home", path: "/en/" },
+    { name: "Blog", path: "/en/blog/" },
+  ],
+});
+
+const allPosts = await getCollection("blog", ({ data }: { data: { draft: boolean } }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a: { data: { publishedDate: Date } }, b: { data: { publishedDate: Date } }) =>
+    b.data.publishedDate.getTime() - a.data.publishedDate.getTime(),
+);
+---
+
+<BaseLayout lang="en" title={pageTitle} description={pageDescription} structuredData={structuredData}>
+  <div class="en-page" style="max-width: var(--site-content-max-width); margin: 0 auto;">
+    <section class="en-page__hero site-page-hero">
+      <p class="site-page-hero__eyebrow">Blog</p>
+      <div class="site-section-header__rule" aria-hidden="true"></div>
+      <h1 class="site-page-hero__title">Writing</h1>
+      <p class="site-page-hero__lead">
+        Thoughts on bridging domain expertise with AI systems.
+        Posts are primarily in Korean with English summaries where available.
+      </p>
+    </section>
+
+    <div class="en-blog__list">
+      {sortedPosts.map((post: any) => (
+        <article class="en-blog__post site-card site-card--interactive">
+          <a href={withBase(`/blog/${post.id}/`)} class="en-blog__link">
+            <div class="en-blog__meta">
+              <time datetime={post.data.publishedDate.toISOString()}>
+                {post.data.publishedDate.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </time>
+              {post.data.tags.length > 0 && (
+                <div class="en-blog__tags">
+                  {post.data.tags.map((tag: string) => (
+                    <span class="site-badge site-badge--neutral">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <h2 class="en-blog__title">{post.data.title}</h2>
+            <p class="en-blog__desc">{post.data.description}</p>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    {sortedPosts.length === 0 && (
+      <p class="en-blog__empty">No posts yet. Check back soon.</p>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .en-page {
+    padding: clamp(var(--space-3xl), 8vw, var(--space-5xl)) var(--site-gutter)
+      clamp(var(--space-4xl), 10vw, 6rem);
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .en-page__hero {
+    margin-bottom: 0;
+  }
+
+  .en-blog__list {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .en-blog__post {
+    padding: 0;
+  }
+
+  .en-blog__link {
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .en-blog__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .en-blog__meta time {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .en-blog__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .en-blog__title {
+    margin: 0;
+    font-size: var(--text-xl);
+    line-height: var(--line-height-tight);
+  }
+
+  .en-blog__desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: var(--line-height-body);
+    color: var(--color-text-secondary);
+  }
+
+  .en-blog__empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: var(--space-3xl);
+  }
+</style>

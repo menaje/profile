@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import type { PublicProject, PublicOrganization } from "../lib/public-profile";
+import { withBase } from "../lib/site";
 
 interface Props {
   projects: PublicProject[];
@@ -31,7 +32,7 @@ const caseStudies = await getCollection(
 const caseStudyById = new Map<string, CollectionEntry<"case-studies">>(
   caseStudies.map((entry: CollectionEntry<"case-studies">) => [entry.id, entry]),
 );
-const projectsIndexHref = "/projects/";
+const projectsIndexHref = withBase("/projects/");
 
 function getOrgName(orgId: string | null): string {
   if (!orgId) return "개인 프로젝트";
@@ -72,10 +73,7 @@ function inferProjectDomain(project: PublicProject): ProjectDomain {
     return caseStudyDomain;
   }
 
-  if (
-    project.id === "cm-work-management-system" ||
-    project.organizationId === "junglim-cm"
-  ) {
+  if (project.id === "cm-work-management-system" || project.organizationId === "junglim-cm") {
     return "construction-cm";
   }
 
@@ -88,7 +86,7 @@ function domainLabel(domain: ProjectDomain): string {
 
 function getProjectHref(project: PublicProject): string {
   const caseStudy = caseStudyById.get(project.id);
-  return caseStudy ? `/projects/${caseStudy.id}/` : projectsIndexHref;
+  return caseStudy ? withBase(`/projects/${caseStudy.id}/`) : projectsIndexHref;
 }
 
 function getDestination(project: PublicProject): ProjectDestination {
@@ -100,9 +98,7 @@ function ctaLabel(destination: ProjectDestination): string {
 }
 
 function destinationLabel(destination: ProjectDestination): string {
-  return destination === "case-study"
-    ? "케이스 스터디 제공"
-    : "프로젝트 목록에서 이어보기";
+  return destination === "case-study" ? "케이스 스터디 제공" : "프로젝트 목록에서 이어보기";
 }
 
 const projectCards: ProjectCardViewModel[] = projects.map((project) => {
@@ -127,9 +123,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
   <div class="site-work__inner">
     <div class="site-work__header site-section-header">
       <div class="site-section-header__rule" aria-hidden="true"></div>
-      <h2 id="work-heading" class="site-work__title site-section-header__title">
-        대표 프로젝트
-      </h2>
+      <h2 id="work-heading" class="site-work__title site-section-header__title">대표 프로젝트</h2>
       <p class="site-work__lead site-section-header__lead">
         건설 현장과 AI 기술을 잇는 시스템을 기획하고 만들었습니다.
       </p>
@@ -181,9 +175,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
 
             <div class="site-work__card-meta">
               <span class="site-work__card-org">{card.orgName}</span>
-              <span class="site-work__card-period">
-                {card.project.period.display}
-              </span>
+              <span class="site-work__card-period">{card.project.period.display}</span>
             </div>
 
             <div class="site-work__card-footer">
@@ -194,7 +186,9 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
                 class="site-work__card-cta site-button site-button--ghost site-button--quiet"
               >
                 <span>{card.ctaLabel}</span>
-                <span class="site-work__card-cta-icon" aria-hidden="true">→</span>
+                <span class="site-work__card-cta-icon" aria-hidden="true">
+                  →
+                </span>
               </a>
             </div>
           </article>
@@ -228,7 +222,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
     background: var(--site-surface-elevated);
     border: 1px solid var(--color-line);
     border-top: 3px solid var(--site-work-card-accent);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--site-card-shadow);
     transition:
       transform var(--transition-base),
       box-shadow var(--transition-base);
@@ -236,7 +230,7 @@ const projectCards: ProjectCardViewModel[] = projects.map((project) => {
 
   .site-work__card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--site-card-shadow-hover);
   }
 
   .site-work__card--construction {

@@ -1,29 +1,41 @@
 # Deployment
 
-This repository uses Vercel Git integration for production and preview deployments, and GitHub Actions for build verification.
+This repository deploys to GitHub Pages via GitHub Actions. The authoritative public URL is `https://menaje.github.io/profile/`.
 
-## Current status
+## Origin contract
 
-As of 2026-03-21, the repository has no existing GitHub Actions workflows on GitHub and `https://coni-example.vercel.app` returns `DEPLOYMENT_NOT_FOUND`. The first Vercel import still needs to be completed in the Vercel dashboard before preview and production deployments can be observed.
+- Public origin host: `https://menaje.github.io`
+- Base path: `/profile/`
+- Final production URL: `https://menaje.github.io/profile/`
+- Env precedence: `SITE_URL` -> `PUBLIC_SITE_URL` -> fallback `https://menaje.github.io`
+- Custom domain migration rule: change `SITE_URL` and `astro.config.mjs` `base` together
 
-## One-time Vercel setup
+## One-time GitHub setup
 
-1. Import `menaje/coni-example` into Vercel from GitHub.
-2. Use the repository root as the project root.
-3. Confirm these project settings:
-   - Install Command: `npm ci`
-   - Build Command: `npm run site:build`
-   - Output Directory: `dist`
-4. Set the Production Branch to `main`.
-5. Keep Preview Deployments enabled so pull requests receive preview URLs automatically.
+1. Rename the GitHub repository to `profile` if it is still using the old `coni-example` name.
+2. Ensure the repository is public.
+3. In `Settings > Pages`, set the build source to `GitHub Actions`.
+4. Keep the default branch as `main`.
 
-No GitHub repository secrets or variables are required for deployment when Vercel Git integration is used.
+No repository secret is required for the default Pages deployment flow.
 
-## Expected flow
+## Workflow behavior
 
-- Pull request to `main`: GitHub Actions runs the `Site Build` workflow (`npm run site:check` + `npm run site:build`).
-- Pull request to `main`: Vercel creates a preview deployment and adds the preview URL to the pull request.
-- Push to `main`: Vercel creates the production deployment automatically.
+- Pull request to `main`: GitHub Actions runs `npm ci` -> `npm run site:check` -> `npm run site:build`.
+- Push to `main`: the same workflow uploads `dist/` as a GitHub Pages artifact and deploys it with `actions/deploy-pages`.
+- `workflow_dispatch`: manual rebuild + redeploy through the same pipeline.
+
+GitHub Pages does not provide Vercel-style PR preview URLs for this project-page setup.
+
+## Environment variables
+
+Use `project/.env.example` as the source of truth for local setup.
+
+- `SITE_URL`: server-side authoritative origin override
+- `PUBLIC_SITE_URL`: client-readable fallback when `SITE_URL` is not set
+- `PUBLIC_FORMSPREE_ID`: contact form integration id
+
+The base path is not environment-driven in this workplan. It stays fixed at `/profile/`.
 
 ## Local verification
 
@@ -32,9 +44,11 @@ npm run site:check
 npm run site:build
 ```
 
-## Handoff checklist
+## Smoke checklist
 
-- Vercel project is connected to `menaje/coni-example`
-- Production branch is `main`
-- A pull request to `main` shows both the `Site Build` check and a Vercel preview deployment
-- A merge or direct push to `main` triggers a production deployment
+- The `Site Build` workflow is green on `main`
+- The `github-pages` environment shows the latest successful deployment
+- `https://menaje.github.io/profile/` returns `200`
+- `https://menaje.github.io/profile/robots.txt` resolves and references the same sitemap origin
+- `https://menaje.github.io/profile/sitemap.xml` resolves
+- `https://menaje.github.io/profile/rss.xml` resolves

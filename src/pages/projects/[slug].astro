@@ -7,6 +7,11 @@ import {
   getAnonymizedOrgName,
   getAnonymizedClient,
 } from "../../lib/public-profile";
+import {
+  buildBreadcrumbStructuredData,
+  buildCreativeWorkStructuredData,
+} from "../../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
 type CaseStudyEntry = CollectionEntry<"case-studies">;
 type CaseStudyDomain = CaseStudyEntry["data"]["domain"];
@@ -54,9 +59,7 @@ function domainBadgeClass(domain: CaseStudyDomain): string {
 }
 
 function pageDomainClass(domain: CaseStudyDomain): string {
-  return domain === "construction-cm"
-    ? "site-case-study--construction"
-    : "site-case-study--ai";
+  return domain === "construction-cm" ? "site-case-study--construction" : "site-case-study--ai";
 }
 
 function pagerDomainClass(domain: CaseStudyDomain): string {
@@ -88,29 +91,26 @@ const project = [...profile.projects.core, ...profile.projects.supporting].find(
 );
 
 const publishedEntries = (
-  await getCollection(
-    "case-studies",
-    (candidate: CaseStudyEntry) => !candidate.data.draft,
-  )
+  await getCollection("case-studies", (candidate: CaseStudyEntry) => !candidate.data.draft)
 ).sort(sortCaseStudies);
 
 const currentIndex = publishedEntries.findIndex(
   (candidate: CaseStudyEntry) => candidate.id === entry.id,
 );
-const previousEntry =
-  currentIndex > 0 ? publishedEntries[currentIndex - 1] : undefined;
+const previousEntry = currentIndex > 0 ? publishedEntries[currentIndex - 1] : undefined;
 const nextEntry =
   currentIndex >= 0 && currentIndex < publishedEntries.length - 1
     ? publishedEntries[currentIndex + 1]
     : undefined;
 
-const orgName = project?.organizationId
-  ? getAnonymizedOrgName(project.organizationId)
-  : "";
+const orgName = project?.organizationId ? getAnonymizedOrgName(project.organizationId) : "";
 const clientName = getAnonymizedClient(entry.id, entry.data.client);
 
 const metadataItems: MetaItem[] = [
-  { label: "Domain", value: [entry.data.domain, ...entry.data.extraDomains].map(domainLabel).join(" · ") },
+  {
+    label: "Domain",
+    value: [entry.data.domain, ...entry.data.extraDomains].map(domainLabel).join(" · "),
+  },
   { label: "Period", value: formatPeriod(entry.data.period) },
   { label: "Role", value: entry.data.role },
   ...(clientName ? [{ label: "Client", value: clientName }] : []),
@@ -125,63 +125,101 @@ const heroMeta = [
 ]
   .filter(Boolean)
   .join(" · ");
+const pagePath = `/projects/${entry.id}/`;
+const pageTitle = `${entry.data.title} — 프로젝트`;
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = [
+  buildBreadcrumbStructuredData({
+    site,
+    items: [
+      { name: "홈", path: "/" },
+      { name: "프로젝트", path: "/projects/" },
+      { name: entry.data.title, path: pagePath },
+    ],
+  }),
+  buildCreativeWorkStructuredData({
+    site,
+    path: pagePath,
+    profile: profile.profile,
+    title: entry.data.title,
+    description: entry.data.description,
+    dateCreated: entry.data.period.start,
+    dateModified: entry.data.period.end,
+    genre: domainLabel(entry.data.domain),
+    ogImage: entry.data.ogImage,
+    tags: entry.data.tags,
+    abstractText: [entry.data.role, domainLabel(entry.data.domain), orgName, clientName]
+      .filter(Boolean)
+      .join(" · "),
+  }),
+];
 ---
 
-<BaseLayout title={`${entry.data.title} — 프로젝트`} description={entry.data.description}>
+<BaseLayout title={pageTitle} description={entry.data.description} structuredData={structuredData}>
   <article class:list={["site-case-study", pageDomainClass(entry.data.domain)]}>
     <section class="site-case-study__hero-shell" data-reveal="slide-up">
       <header class="site-case-study__hero site-card">
         <div class="site-case-study__hero-top">
           <nav class="site-case-study__breadcrumb" aria-label="Breadcrumb">
-            <a href="/projects/">프로젝트</a>
+            <a href={withBase("/projects/")}>프로젝트</a>
             <span aria-hidden="true">/</span>
             <span aria-current="page">{entry.data.title}</span>
           </nav>
 
           <div class="site-case-study__hero-badges">
-            {[entry.data.domain, ...entry.data.extraDomains].map((d) => (
-              <span class={domainBadgeClass(d)}>
-                {domainLabel(d)}
-              </span>
-            ))}
-            {entry.data.featured && (
-              <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--featured">
-                Featured
-              </span>
-            )}
-            {!entry.data.period.end && (
-              <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--ongoing">
-                진행 중
-              </span>
-            )}
+            {
+              [entry.data.domain, ...entry.data.extraDomains].map((d) => (
+                <span class={domainBadgeClass(d)}>{domainLabel(d)}</span>
+              ))
+            }
+            {
+              entry.data.featured && (
+                <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--featured">
+                  Featured
+                </span>
+              )
+            }
+            {
+              !entry.data.period.end && (
+                <span class="site-badge site-badge--state site-case-study__state-badge site-case-study__state-badge--ongoing">
+                  진행 중
+                </span>
+              )
+            }
           </div>
         </div>
 
         <div class="site-page-hero site-case-study__hero-copy">
-          <p class="site-page-hero__eyebrow">{[entry.data.domain, ...entry.data.extraDomains].map(domainEyebrow).join(" · ")}</p>
+          <p class="site-page-hero__eyebrow">
+            {[entry.data.domain, ...entry.data.extraDomains].map(domainEyebrow).join(" · ")}
+          </p>
           <h1 class="site-page-hero__title site-case-study__title">{entry.data.title}</h1>
           <p class="site-page-hero__lead">{entry.data.description}</p>
           <p class="site-page-hero__meta">{heroMeta}</p>
         </div>
 
         <dl class="site-case-study__metadata site-metadata-block">
-          {metadataItems.map((item: MetaItem) => (
-            <div class="site-metadata-block__item">
-              <dt>{item.label}</dt>
-              <dd>{item.value}</dd>
-            </div>
-          ))}
+          {
+            metadataItems.map((item: MetaItem) => (
+              <div class="site-metadata-block__item">
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))
+          }
         </dl>
 
-        {entry.data.tags.length > 0 && (
-          <ul class="site-case-study__tags" role="list" aria-label="기술 태그">
-            {entry.data.tags.map((tag: string) => (
-              <li>
-                <span class="site-case-study__tag site-badge">{tag}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        {
+          entry.data.tags.length > 0 && (
+            <ul class="site-case-study__tags" role="list" aria-label="기술 태그">
+              {entry.data.tags.map((tag: string) => (
+                <li>
+                  <span class="site-case-study__tag site-badge">{tag}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
       </header>
     </section>
 
@@ -201,82 +239,78 @@ const heroMeta = [
             공개된 프로젝트 흐름을 바로 이어서 탐색할 수 있습니다.
           </h2>
           <p class="site-case-study__footer-text">
-            이전과 다음 프로젝트를 살펴보거나, 전체 목록으로 돌아가 같은 시각
-            시스템 안에서 사례를 비교해 볼 수 있습니다.
+            이전과 다음 프로젝트를 살펴보거나, 전체 목록으로 돌아가 같은 시각 시스템 안에서 사례를
+            비교해 볼 수 있습니다.
           </p>
         </div>
 
-        <a href="/projects/" class="site-button site-button--primary">
+        <a href={withBase("/projects/")} class="site-button site-button--primary">
           프로젝트 목록 보기
         </a>
       </div>
 
-      <nav
-        class="site-case-study__pager"
-        aria-label="프로젝트 이동"
-        data-reveal="stagger-children"
-      >
-        {previousEntry ? (
-          <a
-            href={`/projects/${previousEntry.id}/`}
-            class:list={[
-              "site-case-study__pager-card",
-              "site-case-study__pager-link",
-              "site-card",
-              "site-card--interactive",
-              pagerDomainClass(previousEntry.data.domain),
-            ]}
-          >
-            <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
-            <h3 class="site-case-study__pager-title">{previousEntry.data.title}</h3>
-            <p class="site-case-study__pager-description">
-              {previousEntry.data.description}
-            </p>
-            <div class="site-case-study__pager-meta">
-              <span class={domainBadgeClass(previousEntry.data.domain)}>
-                {domainLabel(previousEntry.data.domain)}
-              </span>
-              <span>{formatPeriod(previousEntry.data.period)}</span>
-            </div>
-          </a>
-        ) : (
-          <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
-            <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
-            <h3 class="site-case-study__pager-title">첫 번째 공개 프로젝트</h3>
-            <p class="site-case-study__pager-description">
-              {relationFallback("previous")}
-            </p>
-          </article>
-        )}
+      <nav class="site-case-study__pager" aria-label="프로젝트 이동" data-reveal="stagger-children">
+        {
+          previousEntry ? (
+            <a
+              href={withBase(`/projects/${previousEntry.id}/`)}
+              class:list={[
+                "site-case-study__pager-card",
+                "site-case-study__pager-link",
+                "site-card",
+                "site-card--interactive",
+                pagerDomainClass(previousEntry.data.domain),
+              ]}
+            >
+              <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
+              <h3 class="site-case-study__pager-title">{previousEntry.data.title}</h3>
+              <p class="site-case-study__pager-description">{previousEntry.data.description}</p>
+              <div class="site-case-study__pager-meta">
+                <span class={domainBadgeClass(previousEntry.data.domain)}>
+                  {domainLabel(previousEntry.data.domain)}
+                </span>
+                <span>{formatPeriod(previousEntry.data.period)}</span>
+              </div>
+            </a>
+          ) : (
+            <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
+              <p class="site-case-study__pager-label">{relationLabel("previous")}</p>
+              <h3 class="site-case-study__pager-title">첫 번째 공개 프로젝트</h3>
+              <p class="site-case-study__pager-description">{relationFallback("previous")}</p>
+            </article>
+          )
+        }
 
-        {nextEntry ? (
-          <a
-            href={`/projects/${nextEntry.id}/`}
-            class:list={[
-              "site-case-study__pager-card",
-              "site-case-study__pager-link",
-              "site-card",
-              "site-card--interactive",
-              pagerDomainClass(nextEntry.data.domain),
-            ]}
-          >
-            <p class="site-case-study__pager-label">{relationLabel("next")}</p>
-            <h3 class="site-case-study__pager-title">{nextEntry.data.title}</h3>
-            <p class="site-case-study__pager-description">{nextEntry.data.description}</p>
-            <div class="site-case-study__pager-meta">
-              <span class={domainBadgeClass(nextEntry.data.domain)}>
-                {domainLabel(nextEntry.data.domain)}
-              </span>
-              <span>{formatPeriod(nextEntry.data.period)}</span>
-            </div>
-          </a>
-        ) : (
-          <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
-            <p class="site-case-study__pager-label">{relationLabel("next")}</p>
-            <h3 class="site-case-study__pager-title">다음 프로젝트 준비 중</h3>
-            <p class="site-case-study__pager-description">{relationFallback("next")}</p>
-          </article>
-        )}
+        {
+          nextEntry ? (
+            <a
+              href={withBase(`/projects/${nextEntry.id}/`)}
+              class:list={[
+                "site-case-study__pager-card",
+                "site-case-study__pager-link",
+                "site-card",
+                "site-card--interactive",
+                pagerDomainClass(nextEntry.data.domain),
+              ]}
+            >
+              <p class="site-case-study__pager-label">{relationLabel("next")}</p>
+              <h3 class="site-case-study__pager-title">{nextEntry.data.title}</h3>
+              <p class="site-case-study__pager-description">{nextEntry.data.description}</p>
+              <div class="site-case-study__pager-meta">
+                <span class={domainBadgeClass(nextEntry.data.domain)}>
+                  {domainLabel(nextEntry.data.domain)}
+                </span>
+                <span>{formatPeriod(nextEntry.data.period)}</span>
+              </div>
+            </a>
+          ) : (
+            <article class="site-case-study__pager-card site-case-study__pager-card--placeholder site-card">
+              <p class="site-case-study__pager-label">{relationLabel("next")}</p>
+              <h3 class="site-case-study__pager-title">다음 프로젝트 준비 중</h3>
+              <p class="site-case-study__pager-description">{relationFallback("next")}</p>
+            </article>
+          )
+        }
       </nav>
     </footer>
   </article>
@@ -461,8 +495,7 @@ const heroMeta = [
   .site-case-study__content :global(blockquote) {
     position: relative;
     max-width: 70ch;
-    padding: var(--space-lg) var(--space-xl) var(--space-lg)
-      calc(var(--space-xl) + var(--space-xs));
+    padding: var(--space-lg) var(--space-xl) var(--space-lg) calc(var(--space-xl) + var(--space-xs));
     border: 1px solid var(--site-border-default);
     border-left: 4px solid var(--site-case-study-accent);
     border-radius: var(--site-card-radius);

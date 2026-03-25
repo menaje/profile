@@ -5,12 +5,11 @@ import react from "@astrojs/react";
 import markdoc from "@astrojs/markdoc";
 import keystatic from "@keystatic/astro";
 const isKeystatic = !process.argv.includes("build");
-const DEFAULT_SITE_URL = "https://coni-example.vercel.app";
+const SITE_BASE_PATH = "/profile/";
+const DEFAULT_SITE_URL = "https://menaje.github.io";
 const EXCLUDED_SITEMAP_PATHS = new Set([
   "/404",
   "/404/",
-  "/en",
-  "/en/",
   "/keystatic",
   "/keystatic/",
   "/robots.txt",
@@ -23,26 +22,29 @@ function normalizeSiteUrl(candidate) {
     return null;
   }
 
-  const withProtocol = /^https?:\/\//.test(candidate)
-    ? candidate
-    : `https://${candidate}`;
+  const withProtocol = /^https?:\/\//.test(candidate) ? candidate : `https://${candidate}`;
 
   try {
-    return new URL(withProtocol);
+    const url = new URL(withProtocol);
+    url.pathname = "/";
+    url.search = "";
+    url.hash = "";
+    return url;
   } catch {
     return null;
   }
 }
 
+function stripBasePath(pathname) {
+  if (pathname === SITE_BASE_PATH.slice(0, -1) || pathname.startsWith(SITE_BASE_PATH)) {
+    return pathname.slice(SITE_BASE_PATH.length - 1) || "/";
+  }
+
+  return pathname;
+}
+
 function getSiteUrl() {
-  const candidates = [
-    process.env.SITE_URL,
-    process.env.PUBLIC_SITE_URL,
-    process.env.URL,
-    process.env.DEPLOY_PRIME_URL,
-    process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    process.env.VERCEL_URL,
-  ];
+  const candidates = [process.env.SITE_URL, process.env.PUBLIC_SITE_URL];
 
   for (const candidate of candidates) {
     const url = normalizeSiteUrl(candidate);
@@ -59,7 +61,9 @@ const siteUrl = getSiteUrl();
 
 export default defineConfig({
   site: siteUrl.toString(),
+  base: SITE_BASE_PATH,
   outDir: "./dist",
+  prefetch: false,
   i18n: {
     defaultLocale: "ko",
     locales: ["ko", "en"],
@@ -71,7 +75,7 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const { pathname } = new URL(page, siteUrl);
-        return !EXCLUDED_SITEMAP_PATHS.has(pathname);
+        return !EXCLUDED_SITEMAP_PATHS.has(stripBasePath(pathname));
       },
     }),
     react(),

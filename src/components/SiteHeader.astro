@@ -1,29 +1,47 @@
 ---
+import { withBase } from "../lib/site";
+import { useTranslations } from "../lib/translations";
+import type { Locale } from "../lib/i18n";
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = (Astro.currentLocale as Locale) ?? "ko" } = Astro.props;
+const tr = useTranslations(lang);
+
 const navItems = [
-  { label: "소개", href: "/about" },
-  { label: "프로젝트", href: "/projects" },
-  { label: "이력서", href: "/resume" },
-  { label: "블로그", href: "/blog" },
+  { label: tr("nav", "about"), href: withBase("/about/") },
+  { label: tr("nav", "projects"), href: withBase("/projects/") },
+  { label: tr("nav", "resume"), href: withBase("/resume/") },
+  { label: tr("nav", "blog"), href: withBase("/blog/") },
 ];
 
 const currentPath = Astro.url.pathname;
+const displayName = lang === "en" ? "Seongsik Kim" : "김성식";
 ---
 
 <header class="site-header">
-  <nav class="site-nav" aria-label="메인 내비게이션">
+  <nav class="site-nav" aria-label={tr("nav", "mainNav")}>
     <div class="site-nav__bar">
-      <a href="/" class="site-nav__logo" aria-label="홈으로 이동">
+      <a href={withBase("/")} class="site-nav__logo">
         <span class="site-nav__logo-mark" aria-hidden="true">KS</span>
-        <span class="site-nav__logo-name">김성식</span>
+        <span class="site-nav__logo-name">{displayName}</span>
+        <span class="site-nav__sr-only">{tr("nav", "goHome")}</span>
       </a>
 
-      <button
-        type="button"
-        class="site-nav__toggle"
-        aria-expanded="false"
-        aria-controls="site-nav-menu"
-        aria-label="메뉴 열기"
-      >
+      <div class="site-nav__actions">
+        <ThemeToggle lang={lang} />
+        <button
+          type="button"
+          class="site-nav__toggle"
+          aria-expanded="false"
+          aria-controls="site-nav-menu"
+          aria-label={tr("nav", "menuOpen")}
+          data-label-open={tr("nav", "menuOpen")}
+          data-label-close={tr("nav", "menuClose")}
+        >
         <svg
           class="site-nav__icon site-nav__icon--open"
           width="24"
@@ -56,6 +74,7 @@ const currentPath = Astro.url.pathname;
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
+      </div>
 
       <div id="site-nav-menu" class="site-nav__panel">
         <div class="site-nav__panel-inner">
@@ -67,8 +86,7 @@ const currentPath = Astro.url.pathname;
                     href={item.href}
                     class="site-nav__link"
                     aria-current={
-                      currentPath === item.href ||
-                      currentPath.startsWith(item.href + "/")
+                      currentPath === item.href || currentPath.startsWith(item.href)
                         ? "page"
                         : undefined
                     }
@@ -101,7 +119,9 @@ const currentPath = Astro.url.pathname;
   if (toggle && menu instanceof HTMLElement) {
     const setMenuOpen = (open: boolean) => {
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+      const closeLabel = toggle.dataset.labelClose ?? "메뉴 닫기";
+      const openLabel = toggle.dataset.labelOpen ?? "메뉴 열기";
+      toggle.setAttribute("aria-label", open ? closeLabel : openLabel);
       menu.classList.toggle("site-nav__panel--open", open);
 
       if (header) {
@@ -147,6 +167,12 @@ const currentPath = Astro.url.pathname;
   .site-nav {
     max-width: var(--site-max-width);
     margin: 0 auto;
+  }
+
+  .site-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
   }
 
   .site-nav__bar {
@@ -205,6 +231,18 @@ const currentPath = Astro.url.pathname;
     font-size: var(--text-md);
     font-weight: 700;
     letter-spacing: -0.02em;
+  }
+
+  .site-nav__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .site-nav__logo:hover .site-nav__logo-mark,
@@ -344,12 +382,16 @@ const currentPath = Astro.url.pathname;
     }
 
     .site-nav__bar {
-      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-columns: auto minmax(0, 1fr) auto;
       padding-inline: var(--space-sm);
     }
 
     .site-nav__toggle {
       display: none;
+    }
+
+    .site-nav__actions {
+      order: 3;
     }
 
     .site-nav__panel {

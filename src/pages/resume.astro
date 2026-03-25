@@ -1,8 +1,21 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPublicProfile } from "../lib/public-profile";
+import { buildBreadcrumbStructuredData } from "../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../lib/site";
 
 const profile = getPublicProfile();
+const pageTitle = "이력서 다운로드 | 김성식";
+const pageDescription =
+  "김성식의 이력서, 기술경력서, 자기소개서 PDF를 상황에 맞게 내려받을 수 있는 페이지입니다.";
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "홈", path: "/" },
+    { name: "이력서", path: "/resume/" },
+  ],
+});
 
 function formatDate(value: string): string {
   return value.replaceAll("-", ".");
@@ -12,20 +25,20 @@ const documents = [
   {
     title: "이력서",
     fileName: "resume-ko.pdf",
-    href: "/downloads/resume-ko.pdf",
+    href: withBase("/downloads/resume-ko.pdf"),
     description: "핵심 경력, 포지셔닝, 현재 상태를 빠르게 검토할 수 있는 압축본입니다.",
   },
   {
     title: "기술경력서",
     fileName: "technical-career-ko.pdf",
-    href: "/downloads/technical-career-ko.pdf",
+    href: withBase("/downloads/technical-career-ko.pdf"),
     description:
       "프로젝트별 Problem, Role, Stack, Outcome 흐름을 중심으로 정리한 상세 경력 문서입니다.",
   },
   {
     title: "자기소개서",
     fileName: "personal-statement-ko.pdf",
-    href: "/downloads/personal-statement-ko.pdf",
+    href: withBase("/downloads/personal-statement-ko.pdf"),
     description:
       "건설 CM에서 AI/IT로 이어진 전환 배경과 문제 해결 방식을 서사형으로 풀어낸 문서입니다.",
   },
@@ -64,24 +77,19 @@ const highlightTiles = [
 ];
 ---
 
-<BaseLayout
-  title="이력서 다운로드 | 김성식"
-  description="김성식의 이력서, 기술경력서, 자기소개서 PDF를 상황에 맞게 내려받을 수 있는 페이지입니다."
->
+<BaseLayout title={pageTitle} description={pageDescription} structuredData={structuredData}>
   <section class="site-resume-hero" aria-labelledby="resume-hero-title">
     <div class="site-resume-hero__inner">
       <div class="site-page-hero site-resume-hero__content" data-reveal="slide-up">
-        <p class="site-page-hero__eyebrow site-resume-hero__eyebrow">
-          Resume & Downloads
-        </p>
+        <p class="site-page-hero__eyebrow site-resume-hero__eyebrow">Resume & Downloads</p>
         <div class="site-section-header__rule" aria-hidden="true"></div>
         <h1 id="resume-hero-title" class="site-page-hero__title site-resume-hero__title">
           경력의 요점을 먼저 훑고, 필요한 PDF만 바로 꺼낼 수 있게 정리했습니다.
         </h1>
         <p class="site-page-hero__lead site-resume-hero__lead">
           {profile.profile.name.ko} · {profile.profile.positioningTitle}.{" "}
-          {profile.currentStatus.display} 기준으로 공개 가능한 문서를 추려 두었고,
-          다운로드가 가능한 파일만 바로 연결합니다.
+          {profile.currentStatus.display} 기준으로 공개 가능한 문서를 추려 두었고, 다운로드가 가능한 파일만
+          바로 연결합니다.
         </p>
         <p class="site-page-hero__meta site-resume-hero__meta">
           업데이트 기준 {asOfDate} · 다운로드 가능 {documents.length}개
@@ -112,8 +120,8 @@ const highlightTiles = [
           포지셔닝과 경력 축을 한 화면에서 먼저 훑을 수 있습니다.
         </h2>
         <p class="site-section-header__lead">
-          채용 담당자가 PDF를 열기 전에 현재 상태, 경력의 무게중심, 다운로드
-          준비 상태를 빠르게 스캔할 수 있게 정리했습니다.
+          채용 담당자가 PDF를 열기 전에 현재 상태, 경력의 무게중심, 다운로드 준비 상태를 빠르게
+          스캔할 수 있게 정리했습니다.
         </p>
       </header>
 
@@ -127,8 +135,8 @@ const highlightTiles = [
             {profile.profile.positioningTitle}
           </h3>
           <p class="site-resume-bento__featured-copy">
-            건설 CM에서 익힌 현장 해석력과 이해관계자 조율 경험을, AI 협업
-            시스템과 자동화 설계로 이어가고 있습니다.
+            건설 CM에서 익힌 현장 해석력과 이해관계자 조율 경험을, AI 협업 시스템과 자동화 설계로
+            이어가고 있습니다.
           </p>
           <p class="site-resume-bento__featured-note">
             {profile.currentStatus.display}
@@ -155,8 +163,8 @@ const highlightTiles = [
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M12 8v5l3 2"></path>
-                      <circle cx="12" cy="12" r="9"></circle>
+                      <path d="M12 8v5l3 2" />
+                      <circle cx="12" cy="12" r="9" />
                     </svg>
                   )}
                   {item.id === "construction-cm" && (
@@ -168,9 +176,9 @@ const highlightTiles = [
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M3 21h18"></path>
-                      <path d="M5 21V11l7-4 7 4v10"></path>
-                      <path d="M9 21v-5h6v5"></path>
+                      <path d="M3 21h18" />
+                      <path d="M5 21V11l7-4 7 4v10" />
+                      <path d="M9 21v-5h6v5" />
                     </svg>
                   )}
                   {item.id === "ai-it" && (
@@ -182,11 +190,11 @@ const highlightTiles = [
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <rect x="7" y="7" width="10" height="10" rx="2"></rect>
-                      <path d="M12 3v4"></path>
-                      <path d="M12 17v4"></path>
-                      <path d="M3 12h4"></path>
-                      <path d="M17 12h4"></path>
+                      <rect x="7" y="7" width="10" height="10" rx="2" />
+                      <path d="M12 3v4" />
+                      <path d="M12 17v4" />
+                      <path d="M3 12h4" />
+                      <path d="M17 12h4" />
                     </svg>
                   )}
                 </span>
@@ -217,16 +225,15 @@ const highlightTiles = [
           실제로 바로 내려받을 수 있는 PDF 카드
         </h2>
         <p class="site-section-header__meta">
-          필요한 문서를 아래에서 바로 다운로드할 수 있습니다. 세 문서 모두 최신 PDF로 동기화되어 있습니다.
+          필요한 문서를 아래에서 바로 다운로드할 수 있습니다. 세 문서 모두 최신 PDF로 동기화되어
+          있습니다.
         </p>
       </header>
 
       <div class="site-resume-documents stagger-children" data-reveal="stagger-children">
         {
           documents.map((document) => (
-            <article
-              class="site-card site-card--interactive site-resume-document site-resume-document--available"
-            >
+            <article class="site-card site-card--interactive site-resume-document site-resume-document--available">
               <div class="site-resume-document__head">
                 <div class="site-resume-document__icon" aria-hidden="true">
                   <svg
@@ -237,10 +244,10 @@ const highlightTiles = [
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path>
-                    <path d="M14 2v5h5"></path>
-                    <path d="M12 18v-6"></path>
-                    <path d="m9 15 3 3 3-3"></path>
+                    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z" />
+                    <path d="M14 2v5h5" />
+                    <path d="M12 18v-6" />
+                    <path d="m9 15 3 3 3-3" />
                   </svg>
                 </div>
                 <div class="site-resume-document__meta">
@@ -270,8 +277,8 @@ const highlightTiles = [
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M5 12h14"></path>
-                    <path d="m12 5 7 7-7 7"></path>
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
                   </svg>
                 </a>
               </div>
@@ -282,7 +289,10 @@ const highlightTiles = [
     </div>
   </section>
 
-  <section class="site-resume-section site-resume-section--details" aria-labelledby="resume-details-title">
+  <section
+    class="site-resume-section site-resume-section--details"
+    aria-labelledby="resume-details-title"
+  >
     <div class="site-resume-section__inner">
       <header class="site-section-header site-resume-section__header" data-reveal="slide-up">
         <p class="site-section-header__eyebrow">Profile Snapshot</p>
@@ -371,7 +381,9 @@ const highlightTiles = [
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                ></path>
                 <rect width="4" height="12" x="2" y="9"></rect>
                 <circle cx="4" cy="4" r="2"></circle>
               </svg>
@@ -383,20 +395,12 @@ const highlightTiles = [
           </div>
           <ul class="site-resume-links">
             <li>
-              <a
-                href={profile.profile.contacts.github.url}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={profile.profile.contacts.github.url} target="_blank" rel="noreferrer">
                 GitHub · {profile.profile.contacts.github.username}
               </a>
             </li>
             <li>
-              <a
-                href={profile.profile.contacts.linkedin.url}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={profile.profile.contacts.linkedin.url} target="_blank" rel="noreferrer">
                 LinkedIn 프로필 보기
               </a>
             </li>
@@ -411,8 +415,7 @@ const highlightTiles = [
   .site-resume-hero {
     position: relative;
     overflow: hidden;
-    padding:
-      clamp(var(--space-4xl), 9vw, 6.5rem) var(--site-gutter)
+    padding: clamp(var(--space-4xl), 9vw, 6.5rem) var(--site-gutter)
       clamp(var(--space-3xl), 7vw, var(--space-5xl));
     background: var(--color-paper);
     border-bottom: 1px solid var(--site-border-default);

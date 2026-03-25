@@ -1,12 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getPublicProfile } from "../lib/public-profile";
+import { buildBreadcrumbStructuredData } from "../lib/structured-data";
+import { getFallbackSiteUrl } from "../lib/site";
 
 const data = getPublicProfile();
 const { currentStatus } = data;
 const { name, positioningTitle, contacts } = data.profile;
 const { github, linkedin } = contacts;
 const formspreeId = import.meta.env.PUBLIC_FORMSPREE_ID ?? "";
+const pageTitle = "연락처 — 김성식";
+const pageDescription = "김성식에게 연락하기. 문의 폼 또는 GitHub, LinkedIn을 통해 연결하세요.";
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "홈", path: "/" },
+    { name: "연락처", path: "/contact/" },
+  ],
+});
 
 const contactMetadata = [
   {
@@ -20,21 +32,17 @@ const contactMetadata = [
 ];
 ---
 
-<BaseLayout
-  title="연락처 — 김성식"
-  description="김성식에게 연락하기. 문의 폼 또는 GitHub, LinkedIn을 통해 연결하세요."
->
+<BaseLayout title={pageTitle} description={pageDescription} structuredData={structuredData}>
   <section class="site-contact">
     <header class="site-contact__hero site-page-hero" data-reveal="slide-up">
       <p class="site-page-hero__eyebrow">Contact</p>
       <h1 class="site-contact__title site-page-hero__title">연락처</h1>
       <p class="site-contact__intro site-page-hero__lead">
-        프로젝트 협업, 채용 문의, 혹은 시스템 설계와 자동화에 대한 이야기가
-        필요하시면 아래 폼으로 편하게 메시지를 보내주세요.
+        프로젝트 협업, 채용 문의, 혹은 시스템 설계와 자동화에 대한 이야기가 필요하시면 아래 폼으로
+        편하게 메시지를 보내주세요.
       </p>
       <p class="site-contact__meta site-page-hero__meta">
-        문의 폼이 준비되지 않은 환경에서는 GitHub 또는 LinkedIn으로 바로 연결할 수
-        있습니다.
+        문의 폼이 준비되지 않은 환경에서는 GitHub 또는 LinkedIn으로 바로 연결할 수 있습니다.
       </p>
     </header>
 
@@ -45,13 +53,9 @@ const contactMetadata = [
         style="--site-reveal-delay: 90ms;"
       >
         <div class="site-contact__form-header site-section-header">
-          <p class="site-contact__form-eyebrow site-section-header__eyebrow">
-            Message
-          </p>
+          <p class="site-contact__form-eyebrow site-section-header__eyebrow">Message</p>
           <div class="site-section-header__rule" aria-hidden="true"></div>
-          <h2 class="site-contact__form-title site-section-header__title">
-            메시지 보내기
-          </h2>
+          <h2 class="site-contact__form-title site-section-header__title">메시지 보내기</h2>
           <p class="site-contact__form-lead site-section-header__lead">
             간단한 소개와 함께 필요한 맥락을 남겨주시면 확인 후 답변드리겠습니다.
           </p>
@@ -76,9 +80,7 @@ const contactMetadata = [
           </div>
 
           <div class="site-contact__field site-form-field">
-            <label for="contact-email" class="site-form-field__label">
-              이메일
-            </label>
+            <label for="contact-email" class="site-form-field__label"> 이메일 </label>
             <input
               class="site-form-field__control"
               type="email"
@@ -90,9 +92,7 @@ const contactMetadata = [
           </div>
 
           <div class="site-contact__field site-form-field">
-            <label for="contact-message" class="site-form-field__label">
-              메시지
-            </label>
+            <label for="contact-message" class="site-form-field__label"> 메시지 </label>
             <textarea
               class="site-form-field__control"
               id="contact-message"
@@ -102,13 +102,7 @@ const contactMetadata = [
           </div>
 
           <!-- Honeypot spam prevention -->
-          <input
-            type="text"
-            name="_gotcha"
-            style="display:none"
-            tabindex="-1"
-            autocomplete="off"
-          />
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
 
           <button
             type="submit"
@@ -171,8 +165,8 @@ const contactMetadata = [
           </div>
 
           <p class="site-contact__profile-copy">
-            건설 현장의 맥락을 읽고, 실제 업무가 굴러가는 흐름을 AI 협업 시스템과
-            자동화 구조로 번역하는 일을 합니다.
+            건설 현장의 맥락을 읽고, 실제 업무가 굴러가는 흐름을 AI 협업 시스템과 자동화 구조로
+            번역하는 일을 합니다.
           </p>
 
           <dl class="site-contact__metadata site-metadata-block">
@@ -257,18 +251,12 @@ const contactMetadata = [
 
 <script>
   const form = document.querySelector<HTMLFormElement>(".site-contact__form");
-  const feedback = document.querySelector<HTMLDivElement>(
-    ".site-contact__feedback",
-  );
+  const feedback = document.querySelector<HTMLDivElement>(".site-contact__feedback");
   const feedbackTitle = document.querySelector<HTMLParagraphElement>(
     ".site-contact__feedback-title",
   );
-  const feedbackText = document.querySelector<HTMLParagraphElement>(
-    ".site-contact__feedback-text",
-  );
-  const submitBtn = document.querySelector<HTMLButtonElement>(
-    ".site-contact__submit",
-  );
+  const feedbackText = document.querySelector<HTMLParagraphElement>(".site-contact__feedback-text");
+  const submitBtn = document.querySelector<HTMLButtonElement>(".site-contact__submit");
 
   if (form && feedback && feedbackTitle && feedbackText && submitBtn) {
     const originalText = submitBtn.textContent?.trim() ?? "메시지 보내기";
@@ -317,8 +305,7 @@ const contactMetadata = [
         showFeedback({
           state: "error",
           title: "폼 미설정",
-          message:
-            "폼이 아직 설정되지 않았습니다. GitHub 또는 LinkedIn으로 연락해주세요.",
+          message: "폼이 아직 설정되지 않았습니다. GitHub 또는 LinkedIn으로 연락해주세요.",
           autoHide: false,
         });
         return;
@@ -367,8 +354,7 @@ const contactMetadata = [
   .site-contact {
     max-width: var(--site-content-max-width);
     margin: 0 auto;
-    padding:
-      clamp(var(--space-3xl), 7vw, var(--space-4xl)) var(--site-gutter)
+    padding: clamp(var(--space-3xl), 7vw, var(--space-4xl)) var(--site-gutter)
       clamp(var(--space-4xl), 8vw, var(--space-5xl));
   }
 
@@ -522,10 +508,8 @@ const contactMetadata = [
     height: 1.2rem;
   }
 
-  .site-contact__feedback[data-state="success"]
-    .site-contact__feedback-symbol--success,
-  .site-contact__feedback[data-state="error"]
-    .site-contact__feedback-symbol--error {
+  .site-contact__feedback[data-state="success"] .site-contact__feedback-symbol--success,
+  .site-contact__feedback[data-state="error"] .site-contact__feedback-symbol--error {
     display: block;
   }
 

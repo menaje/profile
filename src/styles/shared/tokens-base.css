@@ -2,10 +2,8 @@
   color-scheme: light;
 
   --font-family-sans:
-    "Pretendard", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic",
-    "Segoe UI", sans-serif;
-  --font-family-mono:
-    "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
+    "Pretendard", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+  --font-family-mono: "SFMono-Regular", "JetBrains Mono", "Menlo", "Consolas", monospace;
 
   --color-ink: #0f172a;
   --color-text: var(--color-ink);
@@ -31,21 +29,9 @@
   --site-on-inverse: var(--color-paper);
   --site-border-default: var(--color-line);
   --site-border-strong: var(--color-line-strong);
-  --site-border-accent: color-mix(
-    in srgb,
-    var(--color-primary) 28%,
-    var(--color-line)
-  );
-  --site-glow-primary: color-mix(
-    in srgb,
-    var(--color-primary) 18%,
-    transparent
-  );
-  --site-glow-secondary: color-mix(
-    in srgb,
-    var(--color-secondary) 18%,
-    transparent
-  );
+  --site-border-accent: color-mix(in srgb, var(--color-primary) 28%, var(--color-line));
+  --site-glow-primary: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --site-glow-secondary: color-mix(in srgb, var(--color-secondary) 18%, transparent);
   --site-glow-accent: color-mix(in srgb, var(--color-accent) 18%, transparent);
 
   --font-weight-body: 400;
@@ -87,16 +73,22 @@
   --text-6xl: clamp(3.6rem, 2.8rem + 2.3vw, 4.5rem);
   --text-7xl: clamp(4.25rem, 3rem + 4vw, 6rem);
 
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.1);
+  --shadow-rgb: 15 23 42;
+  --shadow-color-soft: rgb(var(--shadow-rgb) / 0.06);
+  --shadow-color-default: rgb(var(--shadow-rgb) / 0.08);
+  --shadow-color-strong: rgb(var(--shadow-rgb) / 0.1);
+  --shadow-color-elevated: rgb(var(--shadow-rgb) / 0.12);
+  --shadow-sm: 0 1px 3px var(--shadow-color-soft);
+  --shadow-md: 0 8px 24px var(--shadow-color-default);
+  --shadow-lg: 0 20px 48px var(--shadow-color-strong);
   --shadow-page: var(--shadow-lg);
-  --page-rule: 1px solid rgba(15, 23, 42, 0.08);
+  --page-rule-color: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  --page-rule: 1px solid var(--page-rule-color);
 
   --shell-screen-margin: var(--space-md);
   --shell-screen-gutter: 2rem;
   --page-shell-background: var(--color-bg-page);
-  --page-shell-border-color: rgba(15, 23, 42, 0.08);
+  --page-shell-border-color: var(--page-rule-color);
   --page-shell-shadow: var(--shadow-lg);
   --page-shell-radius: var(--radius-xl);
   --page-shell-margin: var(--space-4xl);
@@ -106,6 +98,7 @@
   --panel-border-color: var(--color-line);
   --panel-background: var(--color-bg-page);
   --panel-tint-background: var(--color-bg-surface);
+  --panel-tint-border-color: color-mix(in srgb, var(--color-ink) 6%, transparent);
   --panel-shadow: none;
   --rail-panel-accent: var(--color-primary);
   --rail-panel-background: transparent;
@@ -113,12 +106,14 @@
   --chip-gap: var(--space-2xs);
   --chip-padding-block: 0.4rem;
   --chip-padding-inline: 0.75rem;
-  --chip-border-color: rgba(15, 76, 129, 0.14);
-  --chip-background: rgba(15, 76, 129, 0.06);
+  --chip-border-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  --chip-background: color-mix(in srgb, var(--color-primary) 6%, var(--color-bg-page));
   --chip-color: var(--color-primary);
-  --status-chip-border-color: rgba(198, 107, 61, 0.24);
-  --status-chip-background: rgba(198, 107, 61, 0.12);
-  --status-chip-color: #a0563c;
+  --status-chip-border-color: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  --status-chip-background: color-mix(in srgb, var(--color-accent) 12%, var(--color-bg-page));
+  --status-chip-color: color-mix(in srgb, var(--color-accent) 74%, var(--color-ink));
+  --link-underline-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --swatch-foreground-color: var(--site-on-inverse);
 
   --eyebrow-color: var(--color-text-muted);
   --section-title-color: var(--color-text);
@@ -128,8 +123,9 @@
   --accent-rule-background: var(--color-primary);
 
   --opener-band-background: var(--color-bg-subtle);
-  --chapter-divider-color: rgba(15, 23, 42, 0.12);
-  --editorial-break-background: rgba(244, 241, 234, 0.72);
+  --chapter-divider-color: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  --editorial-break-background: color-mix(in srgb, var(--color-bg-surface) 72%, transparent);
   --timeline-rail-line: var(--color-line);
   --timeline-rail-marker: var(--color-primary);
+  --timeline-marker-ring-shadow: 0 0 0 0.3rem var(--page-shell-background, var(--color-paper));
 }
