@@ -1,34 +1,46 @@
 ---
 import { withBase } from "../lib/site";
+import { useTranslations } from "../lib/translations";
+import type { Locale } from "../lib/i18n";
 import ThemeToggle from "./ThemeToggle.astro";
 
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = (Astro.currentLocale as Locale) ?? "ko" } = Astro.props;
+const tr = useTranslations(lang);
+
 const navItems = [
-  { label: "소개", href: withBase("/about/") },
-  { label: "프로젝트", href: withBase("/projects/") },
-  { label: "이력서", href: withBase("/resume/") },
-  { label: "블로그", href: withBase("/blog/") },
+  { label: tr("nav", "about"), href: withBase("/about/") },
+  { label: tr("nav", "projects"), href: withBase("/projects/") },
+  { label: tr("nav", "resume"), href: withBase("/resume/") },
+  { label: tr("nav", "blog"), href: withBase("/blog/") },
 ];
 
 const currentPath = Astro.url.pathname;
+const displayName = lang === "en" ? "Seongsik Kim" : "김성식";
 ---
 
 <header class="site-header">
-  <nav class="site-nav" aria-label="메인 내비게이션">
+  <nav class="site-nav" aria-label={tr("nav", "mainNav")}>
     <div class="site-nav__bar">
       <a href={withBase("/")} class="site-nav__logo">
         <span class="site-nav__logo-mark" aria-hidden="true">KS</span>
-        <span class="site-nav__logo-name">김성식</span>
-        <span class="site-nav__sr-only">홈으로 이동</span>
+        <span class="site-nav__logo-name">{displayName}</span>
+        <span class="site-nav__sr-only">{tr("nav", "goHome")}</span>
       </a>
 
       <div class="site-nav__actions">
-        <ThemeToggle />
+        <ThemeToggle lang={lang} />
         <button
           type="button"
           class="site-nav__toggle"
           aria-expanded="false"
           aria-controls="site-nav-menu"
-          aria-label="메뉴 열기"
+          aria-label={tr("nav", "menuOpen")}
+          data-label-open={tr("nav", "menuOpen")}
+          data-label-close={tr("nav", "menuClose")}
         >
         <svg
           class="site-nav__icon site-nav__icon--open"
@@ -107,7 +119,9 @@ const currentPath = Astro.url.pathname;
   if (toggle && menu instanceof HTMLElement) {
     const setMenuOpen = (open: boolean) => {
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
+      const closeLabel = toggle.dataset.labelClose ?? "메뉴 닫기";
+      const openLabel = toggle.dataset.labelOpen ?? "메뉴 열기";
+      toggle.setAttribute("aria-label", open ? closeLabel : openLabel);
       menu.classList.toggle("site-nav__panel--open", open);
 
       if (header) {

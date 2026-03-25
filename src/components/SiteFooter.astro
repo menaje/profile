@@ -1,18 +1,28 @@
 ---
 import { getPublicProfile } from "../lib/public-profile";
 import { withBase } from "../lib/site";
+import { useTranslations } from "../lib/translations";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = (Astro.currentLocale as Locale) ?? "ko" } = Astro.props;
+const tr = useTranslations(lang);
 
 const navItems = [
-  { label: "소개", href: withBase("/about/") },
-  { label: "프로젝트", href: withBase("/projects/") },
-  { label: "이력서", href: withBase("/resume/") },
-  { label: "블로그", href: withBase("/blog/") },
-  { label: "연락처", href: withBase("/contact/") },
+  { label: tr("nav", "about"), href: withBase("/about/") },
+  { label: tr("nav", "projects"), href: withBase("/projects/") },
+  { label: tr("nav", "resume"), href: withBase("/resume/") },
+  { label: tr("nav", "blog"), href: withBase("/blog/") },
+  { label: tr("nav", "contact"), href: withBase("/contact/") },
 ];
 
 const profile = getPublicProfile();
 const { github, linkedin } = profile.profile.contacts;
 const { name, positioningTitle } = profile.profile;
+const displayName = lang === "en" ? "Seongsik Kim" : name.ko;
 const currentYear = new Date().getFullYear();
 ---
 
@@ -20,14 +30,14 @@ const currentYear = new Date().getFullYear();
   <div class="site-footer__inner">
     <div class="site-footer__brand">
       <a href={withBase("/")} class="site-footer__brand-link">
-        <span class="site-footer__name">{name.ko}</span>
+        <span class="site-footer__name">{displayName}</span>
         <span class="site-footer__tagline">{positioningTitle}</span>
       </a>
-      <p class="site-footer__copyright">&copy; {currentYear} {name.ko}</p>
+      <p class="site-footer__copyright">&copy; {currentYear} {displayName}</p>
     </div>
 
-    <nav class="site-footer__nav" aria-label="푸터 내비게이션">
-      <p class="site-footer__label">둘러보기</p>
+    <nav class="site-footer__nav" aria-label={tr("nav", "footerNav")}>
+      <p class="site-footer__label">{tr("nav", "browse")}</p>
       <ul class="site-footer__nav-list">
         {
           navItems.map((item) => (
@@ -42,7 +52,7 @@ const currentYear = new Date().getFullYear();
     </nav>
 
     <div class="site-footer__social">
-      <p class="site-footer__label">소셜</p>
+      <p class="site-footer__label">{tr("nav", "social")}</p>
       <div class="site-footer__social-links">
         <a
           href={github.url}

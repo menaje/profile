@@ -5,9 +5,11 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import type { StructuredDataInput } from "../lib/structured-data";
 import { withBase } from "../lib/site";
+import { useTranslations } from "../lib/translations";
+import type { Locale } from "../lib/i18n";
 
 interface Props {
-  lang?: string;
+  lang?: Locale;
   title: string;
   description: string;
   ogImage?: string;
@@ -17,7 +19,7 @@ interface Props {
 }
 
 const {
-  lang = Astro.currentLocale ?? "ko",
+  lang = (Astro.currentLocale as Locale) ?? "ko",
   title,
   description,
   ogImage,
@@ -25,6 +27,8 @@ const {
   noindex,
   structuredData,
 } = Astro.props;
+
+const tr = useTranslations(lang);
 
 const preloadFonts = [
   withBase("/fonts/pretendard-regular-subset.woff2"),
@@ -67,12 +71,12 @@ const faviconHref =
     </script>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">본문으로 건너뛰기</a>
-    <SiteHeader />
+    <a href="#main-content" class="skip-link">{tr("a11y", "skipToContent")}</a>
+    <SiteHeader lang={lang} />
     <main id="main-content">
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter lang={lang} />
     <script>
       import "../scripts/reveal.ts";
       import "../scripts/theme.ts";

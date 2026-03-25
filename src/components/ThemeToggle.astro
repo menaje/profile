@@ -3,15 +3,24 @@
  * 3-state theme toggle: Light / System / Dark
  * Uses data-theme-toggle attribute for delegation in theme.ts
  */
+import { useTranslations } from "../lib/translations";
+import type { Locale } from "../lib/i18n";
+
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = (Astro.currentLocale as Locale) ?? "ko" } = Astro.props;
+const tr = useTranslations(lang);
 ---
 
-<div class="site-theme-toggle" role="radiogroup" aria-label="테마 선택">
+<div class="site-theme-toggle" role="radiogroup" aria-label={tr("theme", "label")}>
   <button
     type="button"
     class="site-theme-toggle__btn"
     data-theme-toggle="light"
     aria-pressed="false"
-    aria-label="라이트 모드"
+    aria-label={tr("theme", "light")}
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="5"></circle>
@@ -30,7 +39,7 @@
     class="site-theme-toggle__btn"
     data-theme-toggle="system"
     aria-pressed="true"
-    aria-label="시스템 설정 따르기"
+    aria-label={tr("theme", "system")}
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -43,7 +52,7 @@
     class="site-theme-toggle__btn"
     data-theme-toggle="dark"
     aria-pressed="false"
-    aria-label="다크 모드"
+    aria-label={tr("theme", "dark")}
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
