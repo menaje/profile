@@ -20,7 +20,11 @@ interface Props {
 }
 
 const currentLocale = Astro.currentLocale ?? DEFAULT_LOCALE;
-const pathWithoutLocale = Astro.url.pathname.replace(/^\/en(\/|$)/, "/");
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const pathWithoutBase = Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname.slice(basePath.length) || "/"
+  : Astro.url.pathname;
+const pathWithoutLocale = pathWithoutBase.replace(/^\/en(\/|$)/, "/");
 
 const {
   title,
