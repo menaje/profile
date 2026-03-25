@@ -2,7 +2,12 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { withBase } from "../../lib/site";
+import { getPublicProfile } from "../../lib/public-profile";
+import {
+  buildBlogPostingStructuredData,
+  buildBreadcrumbStructuredData,
+} from "../../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", (entry: CollectionEntry<"blog">) => {
@@ -19,6 +24,30 @@ const { post } = Astro.props as { post: CollectionEntry<"blog"> };
 const { Content } = await render(post);
 const titleTransitionName = `blog-post-title-${post.id}`;
 const dateTransitionName = `blog-post-date-${post.id}`;
+const authorProfile = getPublicProfile().profile;
+const pagePath = `/blog/${post.id}/`;
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = [
+  buildBreadcrumbStructuredData({
+    site,
+    items: [
+      { name: "홈", path: "/" },
+      { name: "블로그", path: "/blog/" },
+      { name: post.data.title, path: pagePath },
+    ],
+  }),
+  buildBlogPostingStructuredData({
+    site,
+    path: pagePath,
+    profile: authorProfile,
+    title: post.data.title,
+    description: post.data.description,
+    publishedDate: post.data.publishedDate,
+    updatedDate: post.data.updatedDate,
+    ogImage: post.data.ogImage,
+    tags: post.data.tags,
+  }),
+];
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("ko-KR", {
@@ -42,6 +71,7 @@ function getDateBlockParts(date: Date) {
   description={post.data.description}
   ogType="article"
   ogImage={post.data.ogImage}
+  structuredData={structuredData}
 >
   <article class="site-blog-post">
     <section class="site-blog-post__hero">

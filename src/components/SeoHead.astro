@@ -6,6 +6,7 @@ import {
   getAlternateLocales,
   getIndexableLocalesForPath,
 } from "../lib/i18n";
+import { serializeStructuredData, type StructuredDataInput } from "../lib/structured-data";
 import { ensureBasePath, withBase } from "../lib/site";
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   noindex?: boolean;
+  structuredData?: StructuredDataInput;
 }
 
 const currentLocale = Astro.currentLocale ?? DEFAULT_LOCALE;
@@ -29,6 +31,7 @@ const {
   ogImage,
   ogType = "website",
   noindex = false,
+  structuredData,
 } = Astro.props;
 
 const indexableLocales = getIndexableLocalesForPath(pathWithoutLocale);
@@ -41,6 +44,11 @@ const hreflangEntries = indexableLocales.map((locale) => ({
 }));
 const shouldExposeAlternates = !noindex && indexableLocales.length > 1;
 const rssUrl = Astro.site ? new URL(withBase("/rss.xml"), Astro.site).href : undefined;
+const structuredDataItems = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
 ---
 
 <title>{title}</title>
@@ -66,6 +74,11 @@ const rssUrl = Astro.site ? new URL(withBase("/rss.xml"), Astro.site).href : und
   !noindex && rssUrl && (
     <link rel="alternate" type="application/rss+xml" title="김성식 블로그 RSS" href={rssUrl} />
   )
+}
+{
+  structuredDataItems.map((item) => (
+    <script is:inline type="application/ld+json" set:html={serializeStructuredData(item)} />
+  ))
 }
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

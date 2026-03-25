@@ -2,7 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { withBase } from "../../lib/site";
+import { buildBreadcrumbStructuredData } from "../../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
 const allPosts = await getCollection("blog", (entry: CollectionEntry<"blog">) => {
   return import.meta.env.PROD ? entry.data.draft !== true : true;
@@ -14,6 +15,17 @@ const posts = allPosts.sort(
 );
 const featuredPost = posts[0] ?? null;
 const recentPosts = posts.slice(1);
+const pageTitle = "블로그";
+const pageDescription =
+  "건설CM에서 AI 시스템 아키텍트로의 여정, 기술 인사이트, 프로젝트 회고를 공유합니다.";
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "홈", path: "/" },
+    { name: "블로그", path: "/blog/" },
+  ],
+});
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString("ko-KR", {
@@ -32,10 +44,7 @@ function getDateBlockParts(date: Date) {
 }
 ---
 
-<BaseLayout
-  title="블로그"
-  description="건설CM에서 AI 시스템 아키텍트로의 여정, 기술 인사이트, 프로젝트 회고를 공유합니다."
->
+<BaseLayout title={pageTitle} description={pageDescription} structuredData={structuredData}>
   <section class="site-blog-index">
     <div class="site-page-hero site-blog-index__hero" data-reveal="slide-up">
       <p class="site-page-hero__eyebrow">Writing & Notes</p>

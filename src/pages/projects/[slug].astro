@@ -7,7 +7,11 @@ import {
   getAnonymizedOrgName,
   getAnonymizedClient,
 } from "../../lib/public-profile";
-import { withBase } from "../../lib/site";
+import {
+  buildBreadcrumbStructuredData,
+  buildCreativeWorkStructuredData,
+} from "../../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
 type CaseStudyEntry = CollectionEntry<"case-studies">;
 type CaseStudyDomain = CaseStudyEntry["data"]["domain"];
@@ -121,9 +125,37 @@ const heroMeta = [
 ]
   .filter(Boolean)
   .join(" · ");
+const pagePath = `/projects/${entry.id}/`;
+const pageTitle = `${entry.data.title} — 프로젝트`;
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = [
+  buildBreadcrumbStructuredData({
+    site,
+    items: [
+      { name: "홈", path: "/" },
+      { name: "프로젝트", path: "/projects/" },
+      { name: entry.data.title, path: pagePath },
+    ],
+  }),
+  buildCreativeWorkStructuredData({
+    site,
+    path: pagePath,
+    profile: profile.profile,
+    title: entry.data.title,
+    description: entry.data.description,
+    dateCreated: entry.data.period.start,
+    dateModified: entry.data.period.end,
+    genre: domainLabel(entry.data.domain),
+    ogImage: entry.data.ogImage,
+    tags: entry.data.tags,
+    abstractText: [entry.data.role, domainLabel(entry.data.domain), orgName, clientName]
+      .filter(Boolean)
+      .join(" · "),
+  }),
+];
 ---
 
-<BaseLayout title={`${entry.data.title} — 프로젝트`} description={entry.data.description}>
+<BaseLayout title={pageTitle} description={entry.data.description} structuredData={structuredData}>
   <article class:list={["site-case-study", pageDomainClass(entry.data.domain)]}>
     <section class="site-case-study__hero-shell" data-reveal="slide-up">
       <header class="site-case-study__hero site-card">

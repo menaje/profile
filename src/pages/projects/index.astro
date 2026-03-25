@@ -2,7 +2,8 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { withBase } from "../../lib/site";
+import { buildBreadcrumbStructuredData } from "../../lib/structured-data";
+import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
 type ProjectEntry = CollectionEntry<"case-studies">;
 type ProjectDomain = ProjectEntry["data"]["domain"];
@@ -13,6 +14,17 @@ const projects = allProjects.sort((a: ProjectEntry, b: ProjectEntry) => {
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
   return b.data.period.start.localeCompare(a.data.period.start);
 });
+const pageTitle = "프로젝트";
+const pageDescription =
+  "건설 현장의 실제 문제를 시스템으로 번역한 케이스 스터디와 AI/IT 프로젝트를 소개합니다.";
+const site = Astro.site ?? getFallbackSiteUrl();
+const structuredData = buildBreadcrumbStructuredData({
+  site,
+  items: [
+    { name: "홈", path: "/" },
+    { name: "프로젝트", path: "/projects/" },
+  ],
+});
 
 function allDomains(entry: ProjectEntry): ProjectDomain[] {
   return [entry.data.domain, ...entry.data.extraDomains];
@@ -20,10 +32,6 @@ function allDomains(entry: ProjectEntry): ProjectDomain[] {
 
 function domainLabel(domain: ProjectDomain): string {
   return domain === "construction-cm" ? "건설사업관리" : "AI/IT";
-}
-
-function domainEyebrow(domain: ProjectDomain): string {
-  return domain === "construction-cm" ? "Construction CM" : "AI Systems";
 }
 
 function domainBadgeClass(domain: ProjectDomain): string {
@@ -54,10 +62,7 @@ function filterLabel(domain: ProjectDomain | "all"): string {
 }
 ---
 
-<BaseLayout
-  title="프로젝트"
-  description="건설 현장의 실제 문제를 시스템으로 번역한 케이스 스터디와 AI/IT 프로젝트를 소개합니다."
->
+<BaseLayout title={pageTitle} description={pageDescription} structuredData={structuredData}>
   <section class="site-projects">
     <header class="site-projects__hero site-page-hero" data-reveal="slide-up">
       <p class="site-page-hero__eyebrow">Projects</p>
