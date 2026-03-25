@@ -47,6 +47,18 @@ jobs:
       - name: Build Astro site
         run: npm run site:build
 
+      - name: Run Lighthouse CI
+        run: npx @lhci/cli@0.15.1 autorun
+
+      - name: Upload Lighthouse CI artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouseci-reports
+          path: ./.lighthouseci
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Upload GitHub Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
