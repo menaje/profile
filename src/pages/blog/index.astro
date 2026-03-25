@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getBlogTagDescriptor } from "../../lib/blog-tags";
 import { buildBreadcrumbStructuredData } from "../../lib/structured-data";
 import { getFallbackSiteUrl, withBase } from "../../lib/site";
 
@@ -119,21 +120,30 @@ function getDateBlockParts(date: Date) {
                       {featuredPost.data.title}
                     </h3>
                     <p class="site-blog-card__description">{featuredPost.data.description}</p>
-                    {featuredPost.data.tags.length > 0 && (
-                      <ul class="site-blog-card__tags" aria-label="태그">
-                        {featuredPost.data.tags.map((tag: string) => (
-                          <li>
-                            <span class="site-badge site-badge--neutral">{tag}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                     <span class="site-blog-card__cta" aria-hidden="true">
                       <span>글 읽기</span>
                       <span class="site-blog-card__cta-icon">→</span>
                     </span>
                   </div>
                 </a>
+                {featuredPost.data.tags.length > 0 && (
+                  <ul class="site-blog-card__tag-links" aria-label="태그">
+                    {featuredPost.data.tags.map((tag: string) => {
+                      const tagLink = getBlogTagDescriptor(tag);
+
+                      return (
+                        <li>
+                          <a
+                            href={tagLink.href}
+                            class="site-blog-card__tag-link site-badge site-badge--neutral"
+                          >
+                            {tagLink.label}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </article>
             </section>
           )}
@@ -194,21 +204,27 @@ function getDateBlockParts(date: Date) {
                             {post.data.title}
                           </h3>
                           <p class="site-blog-card__description">{post.data.description}</p>
-                          {post.data.tags.length > 0 && (
-                            <ul class="site-blog-card__tags" aria-label="태그">
-                              {post.data.tags.map((tag: string) => (
-                                <li>
-                                  <span class="site-badge">{tag}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
                           <span class="site-blog-card__cta" aria-hidden="true">
                             <span>더 읽기</span>
                             <span class="site-blog-card__cta-icon">→</span>
                           </span>
                         </div>
                       </a>
+                      {post.data.tags.length > 0 && (
+                        <ul class="site-blog-card__tag-links" aria-label="태그">
+                          {post.data.tags.map((tag: string) => {
+                            const tagLink = getBlogTagDescriptor(tag);
+
+                            return (
+                              <li>
+                                <a href={tagLink.href} class="site-blog-card__tag-link site-badge">
+                                  {tagLink.label}
+                                </a>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
                     </article>
                   </li>
                 ))}
@@ -280,7 +296,9 @@ function getDateBlockParts(date: Date) {
   }
 
   .site-blog-card {
+    --site-blog-card-padding: var(--space-lg);
     position: relative;
+    display: grid;
     gap: 0;
     padding: 0;
     overflow: hidden;
@@ -297,7 +315,7 @@ function getDateBlockParts(date: Date) {
     gap: var(--space-md);
     align-items: stretch;
     min-width: 0;
-    padding: var(--space-lg);
+    padding: var(--site-blog-card-padding);
     color: inherit;
     text-decoration: none;
   }
@@ -381,6 +399,15 @@ function getDateBlockParts(date: Date) {
     gap: var(--space-xs);
   }
 
+  .site-blog-card__tag-links {
+    list-style: none;
+    margin: 0 var(--site-blog-card-padding) var(--site-blog-card-padding);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
   .site-blog-card__cta {
     display: inline-flex;
     align-items: center;
@@ -398,6 +425,15 @@ function getDateBlockParts(date: Date) {
       color var(--transition-fast);
   }
 
+  .site-blog-card__tag-link {
+    text-decoration: none;
+  }
+
+  .site-blog-card__tag-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
   :where(.site-blog-card:hover, .site-blog-card:focus-within) .site-blog-card__date-block {
     border-color: var(--color-primary);
   }
@@ -407,11 +443,12 @@ function getDateBlockParts(date: Date) {
   }
 
   .site-blog-card--featured {
+    --site-blog-card-padding: clamp(var(--space-lg), 3vw, var(--space-xl));
     background: var(--site-surface-elevated);
   }
 
   .site-blog-card--featured .site-blog-card__link {
-    padding-block: clamp(var(--space-lg), 3vw, var(--space-xl));
+    padding-block: var(--site-blog-card-padding);
   }
 
   .site-blog-index__empty {
@@ -458,10 +495,13 @@ function getDateBlockParts(date: Date) {
   }
 
   @media (min-width: 768px) {
+    .site-blog-card {
+      --site-blog-card-padding: var(--space-xl);
+    }
+
     .site-blog-card__link {
       grid-template-columns: minmax(5.5rem, 6rem) minmax(0, 1fr);
       gap: var(--space-lg);
-      padding: var(--space-xl);
     }
 
     .site-blog-card--featured .site-blog-card__link {
