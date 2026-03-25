@@ -6,10 +6,7 @@
 
 html {
   font-size: 16px;
-  background: var(
-    --stage-background,
-    var(--color-bg-subtle, var(--color-surface))
-  );
+  background: var(--stage-background, var(--color-bg-subtle, var(--color-surface)));
 }
 
 body {
@@ -19,10 +16,7 @@ body {
   font-size: var(--text-md);
   line-height: var(--line-height-body, 1.6);
   color: var(--color-text, var(--color-ink));
-  background: var(
-    --stage-background,
-    var(--color-bg-subtle, var(--color-surface))
-  );
+  background: var(--stage-background, var(--color-bg-subtle, var(--color-surface)));
   word-break: keep-all;
   overflow-wrap: break-word;
   text-rendering: optimizeLegibility;
@@ -50,7 +44,7 @@ svg {
 
 a {
   color: var(--link-color, inherit);
-  text-decoration-color: rgba(15, 76, 129, 0.28);
+  text-decoration-color: var(--link-underline-color, currentColor);
   text-underline-offset: 0.18em;
 }
 
@@ -107,10 +101,7 @@ dd,
 blockquote {
   font-size: var(--body-copy-size, var(--text-sm, var(--text-md)));
   line-height: var(--body-copy-line-height, 1.65);
-  color: var(
-    --body-copy-color,
-    var(--color-text-secondary, var(--color-muted))
-  );
+  color: var(--body-copy-color, var(--color-text-secondary, var(--color-muted)));
 }
 
 dt {
@@ -128,15 +119,12 @@ blockquote {
 
 .page-shell {
   position: relative;
-  inline-size: min(
-    calc(100% - var(--shell-screen-gutter, 2rem)),
-    var(--page-width, 78rem)
-  );
+  inline-size: min(calc(100% - var(--shell-screen-gutter, 2rem)), var(--page-width, 78rem));
   min-block-size: var(--page-height, auto);
   margin: var(--page-shell-margin, var(--space-4xl, var(--space-3xl))) auto;
   padding: var(--page-shell-padding, var(--page-margin, var(--space-3xl)));
   background: var(--page-shell-background, var(--color-paper));
-  border: 1px solid var(--page-shell-border-color, rgba(15, 23, 42, 0.08));
+  border: 1px solid var(--page-shell-border-color, var(--page-rule-color, var(--color-line)));
   border-radius: var(--page-shell-radius, var(--radius-xl, var(--radius-lg)));
   box-shadow: var(--page-shell-shadow, var(--shadow-page));
 }
@@ -196,7 +184,7 @@ blockquote {
 .panel-tint,
 .panel_tint {
   padding: var(--panel-padding, var(--space-lg));
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border: 1px solid var(--panel-tint-border-color, var(--page-rule-color, var(--color-line)));
   border-radius: var(--panel-radius, var(--radius-lg));
   background: var(--panel-tint-background, var(--color-surface));
   box-shadow: var(--panel-shadow, none);
@@ -207,8 +195,7 @@ blockquote {
   padding: var(--panel-padding, var(--space-lg));
   padding-inline-start: calc(var(--panel-padding, var(--space-lg)) - 0.25rem);
   border: none;
-  border-inline-start: 0.25rem solid
-    var(--rail-panel-accent, var(--color-primary));
+  border-inline-start: 0.25rem solid var(--rail-panel-accent, var(--color-primary));
   border-radius: var(--panel-radius, var(--radius-lg));
   background: var(--rail-panel-background, transparent);
   box-shadow: var(--panel-shadow, none);
@@ -233,10 +220,7 @@ blockquote {
 .section-lead {
   max-width: 56ch;
   font-size: var(--section-lead-size, var(--text-md));
-  color: var(
-    --section-lead-color,
-    var(--color-text-secondary, var(--color-muted))
-  );
+  color: var(--section-lead-color, var(--color-text-secondary, var(--color-muted)));
 }
 
 .accent-rule {
@@ -254,11 +238,10 @@ blockquote {
   display: inline-flex;
   align-items: center;
   gap: var(--chip-gap, var(--space-2xs));
-  padding: var(--chip-padding-block, 0.375rem)
-    var(--chip-padding-inline, 0.875rem);
-  border: 1px solid var(--chip-border-color, rgba(15, 76, 129, 0.12));
+  padding: var(--chip-padding-block, 0.375rem) var(--chip-padding-inline, 0.875rem);
+  border: 1px solid var(--chip-border-color, var(--color-line));
   border-radius: var(--radius-pill);
-  background: var(--chip-background, rgba(15, 76, 129, 0.05));
+  background: var(--chip-background, var(--color-bg-surface));
   color: var(--chip-color, var(--color-primary));
   font-size: var(--text-sm);
   font-weight: 600;
@@ -303,7 +286,7 @@ blockquote {
   gap: var(--space-xs);
   padding: var(--space-lg);
   border-radius: var(--radius-md);
-  color: #ffffff;
+  color: var(--swatch-foreground-color, var(--site-on-inverse, var(--color-paper)));
 }
 
 .opener-band,
@@ -373,7 +356,10 @@ blockquote {
   height: 0.75rem;
   border-radius: 50%;
   background: var(--timeline-rail-marker, var(--color-primary));
-  box-shadow: 0 0 0 0.3rem var(--page-shell-background, var(--color-paper));
+  box-shadow: var(
+    --timeline-marker-ring-shadow,
+    0 0 0 0.3rem var(--page-shell-background, var(--color-paper))
+  );
 }
 
 @media (max-width: 1024px) {

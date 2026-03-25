@@ -49,9 +49,10 @@
 
 /* ── Site-specific component tokens ── */
 :root {
+  color-scheme: light;
   --font-family-sans:
-    "Pretendard Site", "Noto Sans CJK KR Site", "Apple SD Gothic Neo",
-    "Malgun Gothic", "Segoe UI", sans-serif;
+    "Pretendard Site", "Noto Sans CJK KR Site", "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI",
+    sans-serif;
   --color-ink: #111827;
   --color-text: var(--color-ink);
   --color-text-secondary: #4b5563;
@@ -68,69 +69,59 @@
   --color-subtle: var(--color-bg-subtle);
   --color-line: #e5e7eb;
   --color-line-strong: #d1d5db;
-  --shadow-sm: 0 1px 3px rgba(17, 24, 39, 0.08);
-  --shadow-md: 0 4px 12px rgba(17, 24, 39, 0.08);
-  --shadow-lg: 0 12px 28px rgba(17, 24, 39, 0.1);
-  --shadow-page: 0 16px 40px rgba(17, 24, 39, 0.1);
-  --page-rule: 1px solid rgba(17, 24, 39, 0.08);
+  --site-on-default: var(--color-text);
+  --site-on-muted: var(--color-text-secondary);
+  --site-on-inverse: #ffffff;
+  --shadow-rgb: 17 24 39;
+  --shadow-color-soft: rgb(var(--shadow-rgb) / 0.06);
+  --shadow-color-default: rgb(var(--shadow-rgb) / 0.08);
+  --shadow-color-strong: rgb(var(--shadow-rgb) / 0.1);
+  --shadow-color-elevated: rgb(var(--shadow-rgb) / 0.12);
+  --shadow-sm: 0 1px 3px var(--shadow-color-default);
+  --shadow-md: 0 4px 12px var(--shadow-color-default);
+  --shadow-lg: 0 12px 28px var(--shadow-color-strong);
+  --shadow-page: 0 16px 40px var(--shadow-color-strong);
+  --page-rule-color: rgb(var(--shadow-rgb) / 0.08);
+  --page-rule: 1px solid var(--page-rule-color);
   --site-surface-default: var(--color-paper);
-  --site-surface-elevated: color-mix(
-    in srgb,
-    var(--color-paper) 94%,
-    var(--color-bg-subtle)
-  );
+  --site-surface-elevated: color-mix(in srgb, var(--color-paper) 94%, var(--color-bg-subtle));
   --site-surface-muted: var(--color-bg-surface);
   --site-border-default: var(--color-line);
   --site-border-strong: var(--color-line-strong);
-  --site-border-accent: color-mix(
-    in srgb,
-    var(--color-primary) 18%,
-    var(--color-line)
-  );
+  --site-border-accent: color-mix(in srgb, var(--color-primary) 18%, var(--color-line));
   --site-glow-primary: transparent;
   --site-glow-secondary: transparent;
   --site-glow-accent: transparent;
+  --page-shell-background: var(--site-surface-default);
+  --page-shell-border-color: var(--page-rule-color);
+  --page-shell-shadow: var(--shadow-page);
   --site-nav-height: 3.5rem;
   --site-content-max-width: var(--site-max-width);
   --site-footer-bg: var(--site-surface-muted);
   --stage-background: var(--color-bg-subtle);
-  --focus-ring-color: var(--color-primary);
+  --focus-ring-color: color-mix(in srgb, var(--color-primary) 60%, transparent);
   --site-button-radius: var(--radius-md);
   --site-card-radius: var(--radius-lg);
-  --site-shadow-flat: 0 1px 2px rgba(17, 24, 39, 0.06);
-  --site-shadow-raised:
-    0 1px 3px rgba(17, 24, 39, 0.08), 0 4px 6px rgba(17, 24, 39, 0.06);
-  --site-shadow-raised-lg: 0 8px 24px rgba(17, 24, 39, 0.12);
+  --site-shadow-flat: 0 1px 2px var(--shadow-color-soft);
+  --site-shadow-raised: 0 1px 3px var(--shadow-color-default), 0 4px 6px var(--shadow-color-soft);
+  --site-shadow-raised-lg: 0 8px 24px var(--shadow-color-elevated);
   --site-shadow-focus: 0 0 0 calc(var(--focus-ring-width) + 1px)
     color-mix(in srgb, var(--color-primary) 24%, transparent);
   --site-card-shadow: var(--site-shadow-flat);
   --site-card-shadow-hover: var(--site-shadow-raised);
+  --hover-shadow: var(--site-shadow-raised-lg);
   --link-color: var(--color-primary);
-  --chip-border-color: color-mix(
-    in srgb,
-    var(--color-primary) 16%,
-    transparent
-  );
-  --chip-background: color-mix(
-    in srgb,
-    var(--color-primary) 8%,
-    var(--color-paper)
-  );
+  --link-underline-color: color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --chip-border-color: color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --chip-background: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
   --chip-color: var(--color-primary);
-  --status-chip-border-color: color-mix(
-    in srgb,
-    var(--color-secondary) 18%,
-    transparent
-  );
-  --status-chip-background: color-mix(
-    in srgb,
-    var(--color-secondary) 10%,
-    var(--color-paper)
-  );
+  --status-chip-border-color: color-mix(in srgb, var(--color-secondary) 18%, transparent);
+  --status-chip-background: color-mix(in srgb, var(--color-secondary) 10%, var(--color-paper));
   --status-chip-color: var(--color-secondary);
   --panel-border-color: var(--site-border-default);
   --panel-background: var(--site-surface-default);
   --panel-tint-background: var(--site-surface-muted);
+  --panel-tint-border-color: var(--shadow-color-soft);
   --rail-panel-accent: var(--color-primary);
   --eyebrow-color: var(--color-text-muted);
   --section-title-color: var(--color-text);
@@ -138,6 +129,81 @@
   --accent-rule-background: var(--color-primary);
   --timeline-rail-line: var(--site-border-default);
   --timeline-rail-marker: var(--color-primary);
+  --swatch-foreground-color: var(--site-on-inverse);
+  --timeline-marker-ring-shadow: 0 0 0 0.3rem var(--page-shell-background, var(--color-paper));
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #f8fafc;
+  --color-text: var(--color-ink);
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-muted: var(--color-text-muted);
+  --color-primary: #60a5fa;
+  --color-secondary: #a78bfa;
+  --color-accent: #34d399;
+  --color-paper: #111827;
+  --color-bg-page: #020617;
+  --color-bg-surface: #0f172a;
+  --color-bg-subtle: #111827;
+  --color-surface: var(--color-bg-surface);
+  --color-subtle: var(--color-bg-subtle);
+  --color-line: #334155;
+  --color-line-strong: #475569;
+  --site-on-default: var(--color-text);
+  --site-on-muted: var(--color-text-secondary);
+  --site-on-inverse: #eff6ff;
+  --shadow-rgb: 2 6 23;
+  --shadow-color-soft: rgb(var(--shadow-rgb) / 0.28);
+  --shadow-color-default: rgb(var(--shadow-rgb) / 0.38);
+  --shadow-color-strong: rgb(var(--shadow-rgb) / 0.48);
+  --shadow-color-elevated: rgb(var(--shadow-rgb) / 0.58);
+  --shadow-sm: 0 10px 24px var(--shadow-color-soft);
+  --shadow-md: 0 16px 32px var(--shadow-color-default);
+  --shadow-lg: 0 24px 56px var(--shadow-color-strong);
+  --shadow-page: 0 32px 72px var(--shadow-color-elevated);
+  --page-rule-color: color-mix(in srgb, var(--color-line) 54%, transparent);
+  --site-surface-default: color-mix(in srgb, var(--color-paper) 92%, var(--color-bg-surface));
+  --site-surface-elevated: color-mix(in srgb, var(--color-bg-surface) 88%, var(--color-paper));
+  --site-surface-muted: color-mix(in srgb, var(--color-bg-surface) 74%, var(--color-bg-page));
+  --site-border-default: color-mix(in srgb, var(--color-line) 88%, var(--color-bg-surface));
+  --site-border-strong: color-mix(in srgb, var(--color-line-strong) 90%, var(--color-bg-page));
+  --site-border-accent: color-mix(in srgb, var(--color-primary) 32%, var(--color-line));
+  --site-glow-primary: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --site-glow-secondary: color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  --site-glow-accent: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  --page-shell-background: var(--site-surface-default);
+  --page-shell-border-color: color-mix(in srgb, var(--color-line) 72%, transparent);
+  --page-shell-shadow: var(--shadow-page);
+  --site-footer-bg: color-mix(in srgb, var(--color-bg-surface) 86%, var(--color-bg-page));
+  --stage-background: var(--color-bg-page);
+  --focus-ring-color: color-mix(in srgb, var(--color-primary) 70%, var(--site-on-inverse));
+  --site-shadow-flat: 0 10px 20px var(--shadow-color-soft);
+  --site-shadow-raised: 0 18px 36px var(--shadow-color-default);
+  --site-shadow-raised-lg: 0 24px 56px var(--shadow-color-strong);
+  --link-underline-color: color-mix(in srgb, var(--color-primary) 44%, transparent);
+  --chip-border-color: color-mix(in srgb, var(--color-primary) 34%, var(--site-border-default));
+  --chip-background: color-mix(in srgb, var(--color-primary) 18%, var(--site-surface-default));
+  --status-chip-border-color: color-mix(
+    in srgb,
+    var(--color-secondary) 36%,
+    var(--site-border-default)
+  );
+  --status-chip-background: color-mix(
+    in srgb,
+    var(--color-secondary) 18%,
+    var(--site-surface-default)
+  );
+  --status-chip-color: color-mix(in srgb, var(--color-secondary) 72%, var(--site-on-inverse));
+  --panel-border-color: var(--site-border-default);
+  --panel-background: var(--site-surface-default);
+  --panel-tint-background: color-mix(
+    in srgb,
+    var(--site-surface-muted) 82%,
+    var(--site-surface-default)
+  );
+  --panel-tint-border-color: color-mix(in srgb, var(--color-line) 58%, transparent);
 }
 
 body {
@@ -167,8 +233,7 @@ body {
   gap: var(--space-sm);
   margin-bottom: var(--space-2xl);
   padding: clamp(var(--space-lg), 3vw, var(--space-xl));
-  border: 1px solid
-    color-mix(in srgb, var(--site-border-default) 92%, var(--color-paper));
+  border: 1px solid color-mix(in srgb, var(--site-border-default) 92%, var(--color-paper));
   border-radius: calc(var(--site-card-radius) + var(--space-2xs));
   background: var(--site-surface-default);
   box-shadow: var(--site-shadow-flat);
@@ -299,11 +364,7 @@ button.site-button {
 
 .site-button--ghost {
   border-color: var(--site-border-default);
-  background: color-mix(
-    in srgb,
-    var(--site-surface-default) 92%,
-    var(--site-surface-muted)
-  );
+  background: color-mix(in srgb, var(--site-surface-default) 92%, var(--site-surface-muted));
   color: var(--color-text-secondary);
   box-shadow: var(--site-shadow-flat);
 }
@@ -387,16 +448,8 @@ button.site-button {
 }
 
 .site-badge {
-  --site-badge-border: color-mix(
-    in srgb,
-    var(--color-text-muted) 18%,
-    var(--site-border-default)
-  );
-  --site-badge-background: color-mix(
-    in srgb,
-    var(--color-text-muted) 10%,
-    var(--color-paper)
-  );
+  --site-badge-border: color-mix(in srgb, var(--color-text-muted) 18%, var(--site-border-default));
+  --site-badge-background: color-mix(in srgb, var(--color-text-muted) 10%, var(--color-paper));
   --site-badge-color: var(--color-text-secondary);
   display: inline-flex;
   align-items: center;
@@ -416,70 +469,30 @@ button.site-button {
 }
 
 .site-badge--neutral {
-  --site-badge-border: color-mix(
-    in srgb,
-    var(--color-text-muted) 18%,
-    var(--site-border-default)
-  );
-  --site-badge-background: color-mix(
-    in srgb,
-    var(--color-text-muted) 10%,
-    var(--color-paper)
-  );
+  --site-badge-border: color-mix(in srgb, var(--color-text-muted) 18%, var(--site-border-default));
+  --site-badge-background: color-mix(in srgb, var(--color-text-muted) 10%, var(--color-paper));
   --site-badge-color: var(--color-text-secondary);
 }
 
 .site-badge--domain-ai,
 .site-badge--primary {
-  --site-badge-border: color-mix(
-    in srgb,
-    var(--color-primary) 22%,
-    var(--site-border-default)
-  );
-  --site-badge-background: color-mix(
-    in srgb,
-    var(--color-primary) 10%,
-    var(--color-paper)
-  );
+  --site-badge-border: color-mix(in srgb, var(--color-primary) 22%, var(--site-border-default));
+  --site-badge-background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
   --site-badge-color: var(--color-primary);
 }
 
 .site-badge--domain-construction {
-  --site-badge-border: color-mix(
-    in srgb,
-    var(--color-accent) 24%,
-    var(--site-border-default)
-  );
-  --site-badge-background: color-mix(
-    in srgb,
-    var(--color-accent) 10%,
-    var(--color-paper)
-  );
-  --site-badge-color: color-mix(
-    in srgb,
-    var(--color-accent) 56%,
-    var(--color-ink)
-  );
+  --site-badge-border: color-mix(in srgb, var(--color-accent) 24%, var(--site-border-default));
+  --site-badge-background: color-mix(in srgb, var(--color-accent) 10%, var(--color-paper));
+  --site-badge-color: color-mix(in srgb, var(--color-accent) 56%, var(--color-ink));
 }
 
 .site-badge--state,
 .site-badge--secondary,
 .site-badge--accent {
-  --site-badge-border: color-mix(
-    in srgb,
-    var(--color-secondary) 24%,
-    var(--site-border-default)
-  );
-  --site-badge-background: color-mix(
-    in srgb,
-    var(--color-secondary) 10%,
-    var(--color-paper)
-  );
-  --site-badge-color: color-mix(
-    in srgb,
-    var(--color-secondary) 62%,
-    var(--color-ink)
-  );
+  --site-badge-border: color-mix(in srgb, var(--color-secondary) 24%, var(--site-border-default));
+  --site-badge-background: color-mix(in srgb, var(--color-secondary) 10%, var(--color-paper));
+  --site-badge-color: color-mix(in srgb, var(--color-secondary) 62%, var(--color-ink));
 }
 
 .site-form-field {
@@ -532,11 +545,7 @@ textarea.site-form-field__control {
   padding: var(--space-lg);
   border: 1px solid var(--site-border-default);
   border-radius: var(--site-card-radius);
-  background: color-mix(
-    in srgb,
-    var(--site-surface-muted) 78%,
-    var(--site-surface-default)
-  );
+  background: color-mix(in srgb, var(--site-surface-muted) 78%, var(--site-surface-default));
   box-shadow: var(--site-shadow-flat);
 }
 
@@ -580,10 +589,8 @@ html[data-reveal-ready="true"]
     :where([data-reveal="stagger-children"], .stagger-children)
   ) {
   transition:
-    opacity var(--site-reveal-duration) var(--site-reveal-easing)
-      var(--site-reveal-delay),
-    transform var(--site-reveal-duration) var(--site-reveal-easing)
-      var(--site-reveal-delay);
+    opacity var(--site-reveal-duration) var(--site-reveal-easing) var(--site-reveal-delay),
+    transform var(--site-reveal-duration) var(--site-reveal-easing) var(--site-reveal-delay);
 }
 
 html[data-reveal-ready="true"]
@@ -591,11 +598,7 @@ html[data-reveal-ready="true"]
     :where([data-reveal="stagger-children"], .stagger-children)
   )[data-reveal-state="pending"] {
   opacity: 0;
-  transform: translate3d(
-    var(--site-reveal-translate-x),
-    var(--site-reveal-translate-y),
-    0
-  );
+  transform: translate3d(var(--site-reveal-translate-x), var(--site-reveal-translate-y), 0);
   will-change: opacity, transform;
 }
 
@@ -607,22 +610,15 @@ html[data-reveal-ready="true"]
   transform: translate3d(0, 0, 0);
 }
 
-html[data-reveal-ready="true"]
-  :where([data-reveal="stagger-children"], .stagger-children)
-  > * {
+html[data-reveal-ready="true"] :where([data-reveal="stagger-children"], .stagger-children) > * {
   --site-reveal-child-delay: 0ms;
   transition:
-    opacity var(--site-reveal-duration) var(--site-reveal-easing)
-      var(--site-reveal-child-delay),
-    transform var(--site-reveal-duration) var(--site-reveal-easing)
-      var(--site-reveal-child-delay);
+    opacity var(--site-reveal-duration) var(--site-reveal-easing) var(--site-reveal-child-delay),
+    transform var(--site-reveal-duration) var(--site-reveal-easing) var(--site-reveal-child-delay);
 }
 
 html[data-reveal-ready="true"]
-  :where(
-    [data-reveal="stagger-children"],
-    .stagger-children
-  )[data-reveal-state="pending"]
+  :where([data-reveal="stagger-children"], .stagger-children)[data-reveal-state="pending"]
   > * {
   opacity: 0;
   transform: translate3d(0, var(--site-reveal-distance-y), 0);
@@ -630,10 +626,7 @@ html[data-reveal-ready="true"]
 }
 
 html[data-reveal-ready="true"]
-  :where(
-    [data-reveal="stagger-children"],
-    .stagger-children
-  )[data-reveal-state="revealed"]
+  :where([data-reveal="stagger-children"], .stagger-children)[data-reveal-state="revealed"]
   > * {
   opacity: 1;
   transform: translate3d(0, 0, 0);
@@ -641,9 +634,7 @@ html[data-reveal-ready="true"]
 
 html[data-reveal-reduced="true"]
   :where([data-reveal], .fade-in, .slide-up, .slide-in-left, .stagger-children),
-html[data-reveal-reduced="true"]
-  :where([data-reveal="stagger-children"], .stagger-children)
-  > * {
+html[data-reveal-reduced="true"] :where([data-reveal="stagger-children"], .stagger-children) > * {
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
@@ -677,16 +668,8 @@ html[data-reveal-reduced="true"]
   }
 
   html[data-reveal-ready="true"]
-    :where(
-      [data-reveal],
-      .fade-in,
-      .slide-up,
-      .slide-in-left,
-      .stagger-children
-    ),
-  html[data-reveal-ready="true"]
-    :where([data-reveal="stagger-children"], .stagger-children)
-    > * {
+    :where([data-reveal], .fade-in, .slide-up, .slide-in-left, .stagger-children),
+  html[data-reveal-ready="true"] :where([data-reveal="stagger-children"], .stagger-children) > * {
     opacity: 1 !important;
     transform: none !important;
   }
