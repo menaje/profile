@@ -252,14 +252,14 @@
         "teamSize": 2,
         "period": {
           "start": {
-            "value": "2024-05",
+            "value": "2025-01",
             "precision": "month"
           },
           "end": {
             "value": "2025-11",
             "precision": "month"
           },
-          "display": "2024.05 ~ 2025.11",
+          "display": "2025.01 ~ 2025.11",
           "dateKnown": true,
           "ongoing": false
         },
@@ -317,9 +317,9 @@
         "id": "cm-work-management-system",
         "canonicalName": "CM 업무관리 시스템",
         "aliases": ["대전 5개현장 통합건설사업관리"],
-        "classification": "company",
+        "classification": "personal-initiative",
         "organizationId": "junglim-cm",
-        "role": "기획 및 개발",
+        "role": "자체 기획 및 개발, 실무 적용",
         "period": {
           "start": {
             "value": "2023-01",
@@ -344,9 +344,9 @@
               "project/docs/분석/03_건설관련경력.md"
             ]
           },
-          "client": {
-            "value": "대전시청",
-            "label": "대전시청 발주 사업",
+          "context": {
+            "value": "대전 5개현장 통합건설사업관리",
+            "label": "정림CM 재직 중 자체 기획, 대전 5개현장 실무 적용",
             "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
           }
         },
@@ -403,9 +403,9 @@
         "id": "ve-automation",
         "canonicalName": "VE 업무 자동화 시스템",
         "aliases": ["VE 자동화"],
-        "classification": "company",
+        "classification": "personal-initiative",
         "organizationId": "junglim-cm",
-        "role": "VE 프로세스 표준화, 보고서 자동 생성, 아이디어 DB 구축",
+        "role": "자체 기획 · VE 프로세스 표준화, 보고서 자동 생성, 아이디어 DB 구축",
         "period": {
           "start": {
             "value": "2017",
