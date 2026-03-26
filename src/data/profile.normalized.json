@@ -518,8 +518,8 @@
         "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
       },
       "itToolAdoptions": {
-        "value": 3,
-        "label": "3건 IT 도구 현장 도입 (Trello→REDMINE→Obsidian)",
+        "value": 2,
+        "label": "2건 IT 도구 자체 도입 (REDMINE, Obsidian)",
         "sourceRefs": ["project/docs/분석/03_건설관련경력.md"]
       }
     }
