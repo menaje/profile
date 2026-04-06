@@ -8,7 +8,6 @@
         "http://127.0.0.1:4173/profile/about/",
         "http://127.0.0.1:4173/profile/projects/",
         "http://127.0.0.1:4173/profile/blog/",
-        "http://127.0.0.1:4173/profile/contact/",
         "http://127.0.0.1:4173/profile/resume/"
       ],
       "numberOfRuns": 3
