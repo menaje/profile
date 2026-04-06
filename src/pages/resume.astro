@@ -95,18 +95,6 @@ const highlightTiles = [
           업데이트 기준 {asOfDate} · 다운로드 가능 {documents.length}개
         </p>
 
-        <div class="site-resume-hero__actions">
-          <a
-            href={documents[0].href}
-            download
-            class="site-button site-button--primary site-button--glow"
-          >
-            {documents[0].title} PDF 받기
-          </a>
-          <a href="#resume-documents" class="site-button site-button--ghost">
-            다운로드 카드 보기
-          </a>
-        </div>
       </div>
     </div>
   </section>
@@ -455,13 +443,6 @@ const highlightTiles = [
 
   .site-resume-hero__meta {
     color: var(--color-text-secondary);
-  }
-
-  .site-resume-hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-    margin-top: var(--space-sm);
   }
 
   .site-resume-hero__panel-kicker,
