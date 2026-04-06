@@ -5,7 +5,6 @@ import HeroSection from "../components/HeroSection.astro";
 import ProofStrip from "../components/ProofStrip.astro";
 import SelectedWork from "../components/SelectedWork.astro";
 import CareerTimeline from "../components/CareerTimeline.astro";
-import CtaSection from "../components/CtaSection.astro";
 import { getPublicProfile } from "../lib/public-profile";
 import { getFallbackSiteUrl } from "../lib/site";
 
@@ -38,5 +37,4 @@ const structuredData = [
     projects={data.projects.core}
     supportingProjects={data.projects.supporting}
   />
-  <CtaSection profile={data.profile} currentStatus={data.currentStatus} />
 </BaseLayout>
