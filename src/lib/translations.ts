@@ -6,7 +6,6 @@ const translations = {
     projects: { ko: "프로젝트", en: "Projects" },
     resume: { ko: "이력서", en: "Resume" },
     blog: { ko: "블로그", en: "Blog" },
-    contact: { ko: "연락처", en: "Contact" },
     mainNav: { ko: "메인 내비게이션", en: "Main navigation" },
     footerNav: { ko: "푸터 내비게이션", en: "Footer navigation" },
     menuOpen: { ko: "메뉴 열기", en: "Open menu" },
@@ -33,7 +32,6 @@ const translations = {
     },
   },
   common: {
-    contactCta: { ko: "연락하기", en: "Contact" },
     viewProjects: { ko: "프로젝트 보기", en: "View projects" },
   },
   domain: {
