@@ -2,8 +2,10 @@
 title: "설계와 CM에서 데이터 관리와 AI를 어떻게 활용해볼까"
 description: "설계, 입찰, CM 실행에서 실제로 제안 가능한 시스템은 무엇이고, 이를 가능하게 하는 공통 데이터 기반은 무엇인지 정리합니다."
 publishedDate: 2026-03-23
-tags: ["설계", "CM", "데이터관리", "PMIS", "AI"]
+updatedDate: 2026-04-07
 draft: false
+tags: []
+ogImage: "/blog/obsidian-graph-full.png"
 ---
 
 ## 시작하며
