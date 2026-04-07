@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { z } from "zod";
 
 const COMMANDS = new Set(["publish", "validate"]);
 const STRING_OPTIONS = new Set([
@@ -13,6 +15,24 @@ const STRING_OPTIONS = new Set([
   "og-image",
 ]);
 const BOOLEAN_OPTIONS = new Set(["draft", "overwrite", "dry-run", "help"]);
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const BlogFrontmatterSchema = z.object({
+  title: z.string().min(1, "title is required."),
+  description: z.string().min(1, "description is required."),
+  publishedDate: z.string().refine(isValidDateString, {
+    message: "must use YYYY-MM-DD format.",
+  }),
+  updatedDate: z
+    .string()
+    .refine(isValidDateString, {
+      message: "must use YYYY-MM-DD format.",
+    })
+    .optional(),
+  draft: z.boolean(),
+  tags: z.array(z.string()),
+  ogImage: z.string().min(1, "ogImage must not be empty.").optional(),
+});
 
 class CliError extends Error {
   constructor(message, exitCode = 1) {
@@ -37,11 +57,11 @@ Options:
   --og-image <path>            Optional og image path
   --draft                      Mark the post as draft
   --overwrite                  Allow updating an existing post later
-  --dry-run                    Reserved for WP-107 dry-run output
+  --dry-run                    Print the generated MDX and skip auth/API calls
   --help                       Show publish help
 
 Notes:
-  - WP-106 wires the CLI scaffold, argument parsing, and auth resolution only.
+  - WP-107 assembles frontmatter and supports publish --dry-run locally.
   - The actual GitHub Contents API publish flow is intentionally deferred to WP-108.`);
     return;
   }
@@ -59,12 +79,11 @@ Options:
   --format <md|mdx>            Output format scaffold (default: mdx)
   --og-image <path>            Optional og image path
   --draft                      Mark the post as draft
-  --dry-run                    Reserved for WP-107 dry-run output
   --help                       Show validate help
 
 Notes:
-  - WP-106 wires the CLI scaffold and option parsing only.
-  - Lightweight frontmatter validation lands in WP-107.`);
+  - Validates generated frontmatter locally with no auth or network calls.
+  - Prints "Valid" when the assembled document passes the lightweight checks.`);
     return;
   }
 
@@ -74,10 +93,170 @@ Notes:
   npm run blog:validate -- [options]
 
 Commands:
-  publish   Parse publish inputs and resolve GitHub authentication
-  validate  Parse validate inputs for the local preflight flow
+  publish   Assemble a blog post and publish, or preview with --dry-run
+  validate  Validate generated frontmatter locally
 
 Run a command with --help for command-specific options.`);
+}
+
+function isValidDateString(value) {
+  if (!DATE_PATTERN.test(value)) {
+    return false;
+  }
+
+  const [year, month, day] = value.split("-").map((part) => Number(part));
+  const candidate = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    candidate.getUTCFullYear() === year &&
+    candidate.getUTCMonth() === month - 1 &&
+    candidate.getUTCDate() === day
+  );
+}
+
+function getTodayDateString(date = new Date()) {
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function normalizeDateValue(value, fieldName) {
+  if (!isValidDateString(value)) {
+    throw new CliError(`Invalid ${fieldName}: ${value}. Expected YYYY-MM-DD.`);
+  }
+
+  return value;
+}
+
+function parseTags(rawTags) {
+  if (!rawTags) {
+    return [];
+  }
+
+  return rawTags
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
+function stripLeadingFrontmatter(content) {
+  return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+}
+
+function readContentBody(contentFile) {
+  try {
+    const rawContent = readFileSync(contentFile, "utf8").replace(/^\uFEFF/, "");
+    const normalizedBody = stripLeadingFrontmatter(rawContent)
+      .replace(/^\r?\n+/, "")
+      .trimEnd();
+
+    if (!normalizedBody.trim()) {
+      throw new CliError("Content body must not be empty.");
+    }
+
+    return normalizedBody;
+  } catch (error) {
+    if (error instanceof CliError) {
+      throw error;
+    }
+
+    if (error?.code === "ENOENT") {
+      throw new CliError(`Content file not found: ${contentFile}`);
+    }
+
+    throw new CliError(`Unable to read content file: ${contentFile}`);
+  }
+}
+
+function buildFrontmatter(options) {
+  const today = getTodayDateString();
+  const publishedDate = normalizeDateValue(options.publishedDate ?? today, "publishedDate");
+  const updatedDate = options.overwrite ? today : undefined;
+
+  return {
+    title: options.title.trim(),
+    description: options.description.trim(),
+    publishedDate,
+    updatedDate,
+    draft: options.draft,
+    tags: parseTags(options.tags),
+    ogImage: options.ogImage?.trim() || undefined,
+  };
+}
+
+function formatValidationIssues(issues) {
+  return issues
+    .map((issue) => {
+      const field = issue.path.length > 0 ? issue.path.join(".") : "frontmatter";
+      return `${field}: ${issue.message}`;
+    })
+    .join("\n");
+}
+
+function validateGeneratedPost(frontmatter, body) {
+  const result = BlogFrontmatterSchema.safeParse(frontmatter);
+
+  if (!result.success) {
+    throw new CliError(`Invalid frontmatter:\n${formatValidationIssues(result.error.issues)}`);
+  }
+
+  if (!body.trim()) {
+    throw new CliError("Content body must not be empty.");
+  }
+}
+
+function serializeYamlString(value) {
+  return JSON.stringify(value);
+}
+
+function serializeTags(tags) {
+  if (tags.length === 0) {
+    return "[]";
+  }
+
+  return `[${tags.map((tag) => serializeYamlString(tag)).join(", ")}]`;
+}
+
+function serializeFrontmatter(frontmatter) {
+  const lines = [
+    "---",
+    `title: ${serializeYamlString(frontmatter.title)}`,
+    `description: ${serializeYamlString(frontmatter.description)}`,
+    `publishedDate: ${frontmatter.publishedDate}`,
+  ];
+
+  if (frontmatter.updatedDate) {
+    lines.push(`updatedDate: ${frontmatter.updatedDate}`);
+  }
+
+  lines.push(`draft: ${String(frontmatter.draft)}`);
+  lines.push(`tags: ${serializeTags(frontmatter.tags)}`);
+
+  if (frontmatter.ogImage) {
+    lines.push(`ogImage: ${serializeYamlString(frontmatter.ogImage)}`);
+  }
+
+  lines.push("---");
+  return lines.join("\n");
+}
+
+function buildDocument(frontmatter, body) {
+  return `${serializeFrontmatter(frontmatter)}\n\n${body}\n`;
+}
+
+function prepareGeneratedPost(options) {
+  const body = readContentBody(options.contentFile);
+  const frontmatter = buildFrontmatter(options);
+
+  validateGeneratedPost(frontmatter, body);
+
+  return {
+    body,
+    frontmatter,
+    document: buildDocument(frontmatter, body),
+  };
 }
 
 function isBooleanLike(value) {
@@ -301,9 +480,22 @@ function printCommandSummary(command, options, extras = []) {
 
 function handlePublish(options) {
   requireOptions("publish", options);
+
+  const generatedPost = prepareGeneratedPost(options);
+
+  if (options.dryRun) {
+    console.log(generatedPost.document);
+    return;
+  }
+
   const auth = resolveGitHubAuth();
 
   printCommandSummary("publish", options, [
+    `assembled publishedDate: ${generatedPost.frontmatter.publishedDate}`,
+    ...(generatedPost.frontmatter.updatedDate
+      ? [`assembled updatedDate: ${generatedPost.frontmatter.updatedDate}`]
+      : []),
+    "frontmatter: valid",
     `auth source: ${auth.source}`,
     "next step: GitHub Contents API publish flow is implemented in WP-108.",
   ]);
@@ -311,10 +503,8 @@ function handlePublish(options) {
 
 function handleValidate(options) {
   requireOptions("validate", options);
-
-  printCommandSummary("validate", options, [
-    "next step: lightweight frontmatter validation is implemented in WP-107.",
-  ]);
+  prepareGeneratedPost(options);
+  console.log("Valid");
 }
 
 function main() {
