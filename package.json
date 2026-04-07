@@ -7,6 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "blog:publish": "node ./scripts/blog-publish.mjs publish",
+    "blog:validate": "node ./scripts/blog-publish.mjs validate",
     "site:dev": "astro dev",
     "site:build": "astro build",
     "site:preview": "astro preview",
