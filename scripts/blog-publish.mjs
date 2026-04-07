@@ -16,6 +16,11 @@ const STRING_OPTIONS = new Set([
 ]);
 const BOOLEAN_OPTIONS = new Set(["draft", "overwrite", "dry-run", "help"]);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const FRONTMATTER_BLOCK_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/;
+const BLOG_CONTENT_DIRECTORY = "src/content/blog";
+const GITHUB_API_BASE_URL = "https://api.github.com";
+const GITHUB_API_ACCEPT = "application/vnd.github+json";
+const GITHUB_API_VERSION = "2022-11-28";
 
 const BlogFrontmatterSchema = z.object({
   title: z.string().min(1, "title is required."),
@@ -61,8 +66,8 @@ Options:
   --help                       Show publish help
 
 Notes:
-  - WP-107 assembles frontmatter and supports publish --dry-run locally.
-  - The actual GitHub Contents API publish flow is intentionally deferred to WP-108.`);
+  - publish --dry-run prints the generated document locally with no auth or network calls.
+  - publish without --dry-run commits src/content/blog/{slug}.{ext} through the GitHub Contents API.`);
     return;
   }
 
@@ -142,7 +147,7 @@ function parseTags(rawTags) {
 }
 
 function stripLeadingFrontmatter(content) {
-  return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  return content.replace(FRONTMATTER_BLOCK_PATTERN, "");
 }
 
 function readContentBody(contentFile) {
@@ -170,10 +175,19 @@ function readContentBody(contentFile) {
   }
 }
 
-function buildFrontmatter(options) {
-  const today = getTodayDateString();
-  const publishedDate = normalizeDateValue(options.publishedDate ?? today, "publishedDate");
-  const updatedDate = options.overwrite ? today : undefined;
+function buildFrontmatter(options, overrides = {}) {
+  const today = overrides.today ?? getTodayDateString();
+  const hasPublishedDateOverride = Object.hasOwn(overrides, "publishedDate");
+  const hasUpdatedDateOverride = Object.hasOwn(overrides, "updatedDate");
+  const publishedDate = normalizeDateValue(
+    hasPublishedDateOverride ? overrides.publishedDate : (options.publishedDate ?? today),
+    "publishedDate",
+  );
+  const updatedDate = hasUpdatedDateOverride
+    ? overrides.updatedDate
+    : options.overwrite
+      ? today
+      : undefined;
 
   return {
     title: options.title.trim(),
@@ -246,9 +260,8 @@ function buildDocument(frontmatter, body) {
   return `${serializeFrontmatter(frontmatter)}\n\n${body}\n`;
 }
 
-function prepareGeneratedPost(options) {
-  const body = readContentBody(options.contentFile);
-  const frontmatter = buildFrontmatter(options);
+function buildGeneratedPost(options, body, overrides = {}) {
+  const frontmatter = buildFrontmatter(options, overrides);
 
   validateGeneratedPost(frontmatter, body);
 
@@ -257,6 +270,11 @@ function prepareGeneratedPost(options) {
     frontmatter,
     document: buildDocument(frontmatter, body),
   };
+}
+
+function prepareGeneratedPost(options, overrides = {}) {
+  const body = readContentBody(options.contentFile);
+  return buildGeneratedPost(options, body, overrides);
 }
 
 function isBooleanLike(value) {
@@ -449,9 +467,313 @@ function resolveGitHubAuth() {
   );
 }
 
+function parseGitHubRepositoryUrl(rawUrl) {
+  if (!rawUrl) {
+    return null;
+  }
+
+  const normalizedUrl = rawUrl
+    .trim()
+    .replace(/^git\+/, "")
+    .replace(/\/$/, "");
+  const match = normalizedUrl.match(/github\.com[:/](?<owner>[^/]+)\/(?<repo>[^/]+?)(?:\.git)?$/);
+
+  if (!match?.groups?.owner || !match.groups.repo) {
+    return null;
+  }
+
+  return {
+    owner: match.groups.owner,
+    repo: match.groups.repo,
+  };
+}
+
+function readPackageRepositoryUrl() {
+  try {
+    const packageJson = JSON.parse(readFileSync(resolve(process.cwd(), "package.json"), "utf8"));
+
+    if (typeof packageJson.repository === "string") {
+      return packageJson.repository;
+    }
+
+    if (packageJson.repository && typeof packageJson.repository.url === "string") {
+      return packageJson.repository.url;
+    }
+  } catch {
+    // Fall through to the final error message in resolveGitHubRepository().
+  }
+
+  return null;
+}
+
+function resolveGitHubRepository() {
+  try {
+    const remoteUrl = execFileSync("git", ["remote", "get-url", "origin"], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }).trim();
+    const repository = parseGitHubRepositoryUrl(remoteUrl);
+
+    if (repository) {
+      return { ...repository, source: "git remote origin" };
+    }
+  } catch {
+    // Fall back to package.json metadata when git remote lookup is unavailable.
+  }
+
+  const repositoryUrl = readPackageRepositoryUrl();
+  const packageRepository = parseGitHubRepositoryUrl(repositoryUrl);
+
+  if (packageRepository) {
+    return { ...packageRepository, source: "package.json repository" };
+  }
+
+  throw new CliError(
+    "GitHub repository를 확인할 수 없습니다. origin remote 또는 package.json repository.url을 점검하세요.",
+  );
+}
+
+function buildBlogContentPath(slug, extension) {
+  return `${BLOG_CONTENT_DIRECTORY}/${slug}.${extension}`;
+}
+
+function buildGitHubContentsUrl(repository, contentPath) {
+  const encodedPath = contentPath.split("/").map(encodeURIComponent).join("/");
+  return `${GITHUB_API_BASE_URL}/repos/${repository.owner}/${repository.repo}/contents/${encodedPath}`;
+}
+
+async function requestGitHubJson(url, { token, method = "GET", body } = {}) {
+  let response;
+
+  try {
+    response = await fetch(url, {
+      method,
+      headers: {
+        Accept: GITHUB_API_ACCEPT,
+        Authorization: `Bearer ${token}`,
+        "User-Agent": "blog-publish-cli",
+        "X-GitHub-Api-Version": GITHUB_API_VERSION,
+        ...(body ? { "Content-Type": "application/json" } : {}),
+      },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+    });
+  } catch (error) {
+    throw new CliError(
+      `GitHub API 요청에 실패했습니다: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  const rawPayload = await response.text();
+
+  if (!rawPayload) {
+    return { response, payload: null };
+  }
+
+  try {
+    return { response, payload: JSON.parse(rawPayload) };
+  } catch {
+    return { response, payload: rawPayload };
+  }
+}
+
+function extractGitHubMessage(payload) {
+  if (payload && typeof payload === "object" && typeof payload.message === "string") {
+    return payload.message;
+  }
+
+  if (typeof payload === "string" && payload.trim()) {
+    return payload.trim();
+  }
+
+  return null;
+}
+
+function formatGitHubApiError(response, payload, fallbackMessage) {
+  const detail = extractGitHubMessage(payload);
+
+  if (response.status === 401) {
+    return "GitHub 인증에 실패했습니다. 토큰 권한을 확인하세요.";
+  }
+
+  if (response.status === 403) {
+    return detail
+      ? `GitHub API 접근이 거부되었습니다: ${detail}`
+      : "GitHub API 접근이 거부되었습니다. 토큰 권한을 확인하세요.";
+  }
+
+  if (response.status === 409) {
+    return detail
+      ? `GitHub Contents API 충돌이 발생했습니다: ${detail}`
+      : "GitHub Contents API 충돌이 발생했습니다. 다시 시도하세요.";
+  }
+
+  if (detail) {
+    return `${fallbackMessage}: ${detail}`;
+  }
+
+  return `${fallbackMessage} (HTTP ${response.status}).`;
+}
+
+function decodeGitHubContent(payload, contentPath) {
+  if (!payload || typeof payload !== "object" || typeof payload.content !== "string") {
+    throw new CliError(`원격 파일 내용을 읽지 못했습니다: ${contentPath}`);
+  }
+
+  try {
+    return Buffer.from(payload.content.replace(/\n/g, ""), "base64").toString("utf8");
+  } catch {
+    throw new CliError(`원격 파일 내용을 디코드하지 못했습니다: ${contentPath}`);
+  }
+}
+
+function parseFrontmatterValue(document, fieldName, contentPath) {
+  const match = document.match(FRONTMATTER_BLOCK_PATTERN);
+
+  if (!match) {
+    throw new CliError(`원격 파일 frontmatter를 찾지 못했습니다: ${contentPath}`);
+  }
+
+  const line = match[1]
+    .split(/\r?\n/)
+    .find((entry) => entry.trimStart().startsWith(`${fieldName}:`));
+
+  if (!line) {
+    throw new CliError(`원격 파일 frontmatter에 ${fieldName}가 없습니다: ${contentPath}`);
+  }
+
+  const rawValue = line.slice(line.indexOf(":") + 1).trim();
+
+  if (
+    (rawValue.startsWith('"') && rawValue.endsWith('"')) ||
+    (rawValue.startsWith("'") && rawValue.endsWith("'"))
+  ) {
+    if (rawValue.startsWith('"')) {
+      try {
+        return JSON.parse(rawValue);
+      } catch {
+        return rawValue.slice(1, -1);
+      }
+    }
+
+    return rawValue.slice(1, -1);
+  }
+
+  return rawValue;
+}
+
+async function fetchRemoteBlogEntry(repository, token, contentPath) {
+  const { response, payload } = await requestGitHubJson(
+    buildGitHubContentsUrl(repository, contentPath),
+    {
+      token,
+    },
+  );
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new CliError(
+      formatGitHubApiError(response, payload, `원격 블로그 파일을 읽지 못했습니다: ${contentPath}`),
+    );
+  }
+
+  if (!payload || typeof payload !== "object" || typeof payload.sha !== "string") {
+    throw new CliError(`예상하지 못한 GitHub Contents API 응답입니다: ${contentPath}`);
+  }
+
+  const extension = contentPath.slice(contentPath.lastIndexOf(".") + 1);
+  const document = decodeGitHubContent(payload, contentPath);
+  const publishedDate = normalizeDateValue(
+    parseFrontmatterValue(document, "publishedDate", contentPath),
+    `publishedDate in ${contentPath}`,
+  );
+
+  return {
+    path: contentPath,
+    extension,
+    sha: payload.sha,
+    document,
+    publishedDate,
+  };
+}
+
+async function findExistingRemoteEntry(repository, token, slug, preferredFormat) {
+  const formats = preferredFormat === "md" ? ["md", "mdx"] : ["mdx", "md"];
+  const entries = await Promise.all(
+    formats.map((format) =>
+      fetchRemoteBlogEntry(repository, token, buildBlogContentPath(slug, format)),
+    ),
+  );
+  const existingEntries = entries.filter(Boolean);
+
+  if (existingEntries.length > 1) {
+    throw new CliError(
+      `동일 slug의 원격 파일이 둘 이상 존재합니다. 수동 정리가 필요합니다: ${existingEntries
+        .map((entry) => entry.path)
+        .join(", ")}`,
+    );
+  }
+
+  return existingEntries[0] ?? null;
+}
+
+function buildPublishCommitMessage(slug, mode) {
+  return mode === "update" ? `docs(blog): update ${slug}` : `docs(blog): publish ${slug}`;
+}
+
+async function publishRemoteBlogPost(
+  repository,
+  token,
+  contentPath,
+  document,
+  { mode, sha, slug },
+) {
+  const { response, payload } = await requestGitHubJson(
+    buildGitHubContentsUrl(repository, contentPath),
+    {
+      token,
+      method: "PUT",
+      body: {
+        message: buildPublishCommitMessage(slug, mode),
+        content: Buffer.from(document, "utf8").toString("base64"),
+        ...(sha ? { sha } : {}),
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new CliError(
+      formatGitHubApiError(
+        response,
+        payload,
+        `원격 블로그 파일을 저장하지 못했습니다: ${contentPath}`,
+      ),
+    );
+  }
+
+  if (
+    !payload ||
+    typeof payload !== "object" ||
+    !payload.commit ||
+    typeof payload.commit.sha !== "string" ||
+    !payload.content ||
+    typeof payload.content.path !== "string"
+  ) {
+    throw new CliError(`예상하지 못한 GitHub Contents API PUT 응답입니다: ${contentPath}`);
+  }
+
+  return {
+    commitSha: payload.commit.sha,
+    path: payload.content.path,
+  };
+}
+
 function printCommandSummary(command, options, extras = []) {
   const lines = [
-    `${command} scaffold ready`,
+    `${command} result`,
     `slug: ${options.slug}`,
     `title: ${options.title}`,
     `description: ${options.description}`,
@@ -478,10 +800,11 @@ function printCommandSummary(command, options, extras = []) {
   console.log(lines.join("\n"));
 }
 
-function handlePublish(options) {
+async function handlePublish(options) {
   requireOptions("publish", options);
 
-  const generatedPost = prepareGeneratedPost(options);
+  const body = readContentBody(options.contentFile);
+  const generatedPost = buildGeneratedPost(options, body);
 
   if (options.dryRun) {
     console.log(generatedPost.document);
@@ -489,15 +812,49 @@ function handlePublish(options) {
   }
 
   const auth = resolveGitHubAuth();
+  const repository = resolveGitHubRepository();
+  const existingEntry = await findExistingRemoteEntry(
+    repository,
+    auth.token,
+    options.slug,
+    options.format,
+  );
+
+  if (existingEntry && !options.overwrite) {
+    throw new CliError(
+      `이미 존재하는 slug입니다: ${existingEntry.path}. 업데이트하려면 --overwrite를 사용하세요.`,
+    );
+  }
+
+  const publishMode = existingEntry ? "update" : "create";
+  const publishPost = buildGeneratedPost(options, body, {
+    publishedDate: options.publishedDate ?? existingEntry?.publishedDate ?? getTodayDateString(),
+    updatedDate: existingEntry && options.overwrite ? getTodayDateString() : undefined,
+  });
+  const targetPath = existingEntry?.path ?? buildBlogContentPath(options.slug, options.format);
+  const published = await publishRemoteBlogPost(
+    repository,
+    auth.token,
+    targetPath,
+    publishPost.document,
+    {
+      mode: publishMode,
+      sha: existingEntry?.sha,
+      slug: options.slug,
+    },
+  );
 
   printCommandSummary("publish", options, [
-    `assembled publishedDate: ${generatedPost.frontmatter.publishedDate}`,
-    ...(generatedPost.frontmatter.updatedDate
-      ? [`assembled updatedDate: ${generatedPost.frontmatter.updatedDate}`]
+    `mode: ${publishMode}`,
+    `target path: ${published.path}`,
+    `publishedDate: ${publishPost.frontmatter.publishedDate}`,
+    ...(publishPost.frontmatter.updatedDate
+      ? [`updatedDate: ${publishPost.frontmatter.updatedDate}`]
       : []),
     "frontmatter: valid",
     `auth source: ${auth.source}`,
-    "next step: GitHub Contents API publish flow is implemented in WP-108.",
+    `repository: ${repository.owner}/${repository.repo} (${repository.source})`,
+    `commit sha: ${published.commitSha}`,
   ]);
 }
 
@@ -507,7 +864,7 @@ function handleValidate(options) {
   console.log("Valid");
 }
 
-function main() {
+async function main() {
   const { command, options } = parseCli(process.argv.slice(2));
 
   if (!command || options.help) {
@@ -516,7 +873,7 @@ function main() {
   }
 
   if (command === "publish") {
-    handlePublish(options);
+    await handlePublish(options);
     return;
   }
 
@@ -528,9 +885,7 @@ function main() {
   throw new CliError(`Unsupported command: ${command}`);
 }
 
-try {
-  main();
-} catch (error) {
+main().catch((error) => {
   if (error instanceof CliError) {
     console.error(error.message);
     process.exit(error.exitCode);
@@ -538,4 +893,4 @@ try {
 
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
-}
+});
